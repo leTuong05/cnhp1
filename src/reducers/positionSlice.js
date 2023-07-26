@@ -126,11 +126,13 @@ export const fetUpdatePosition = createAsyncThunk('updatePosition/fetUpdatePosit
     return response;
 });
 
-export const fetchDeletePosition = createAsyncThunk('deletePosition/fetchDeletePosition', async (positionID, { rejectWithValue }) => {
+export const fetchDeletePosition = createAsyncThunk('deletePosition/fetchDeletePosition', async (body, { rejectWithValue }) => {
     try {
-        const response = await DeletePosition(positionID);
+        const response = await DeletePosition(body);
+        debugger;
         return response;
     } catch (error) {
+        debugger;
         return rejectWithValue(error);
     }
 });

@@ -130,7 +130,12 @@ function ListPositions({ filteredPosition, listpositionView }) {
                                                 okType: 'danger',
                                                 cancelText: 'No',
                                                 onOk() {
-                                                    dispatch(fetchDeletePosition(record.PositionID)).then(() => {
+                                                    dispatch(
+                                                        fetchDeletePosition({
+                                                            PositionID: record.PositionID,
+                                                            IsDelete: true
+                                                        })
+                                                    ).then(() => {
                                                         // getList();
                                                         message.success('Xóa thành công ');
                                                     });
