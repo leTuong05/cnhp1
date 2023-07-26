@@ -1,36 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Dropdown, Form, Input, Modal, Row, Select } from 'antd';
+import { Button, Col, Dropdown, Form, Input, Modal, Row, Select, message } from 'antd';
 import Title from 'antd/es/skeleton/Title';
 import { WapperModal } from '../../../components/Style/style';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetGetListRegionHP, fetGetListStaff, fetchCreateManageTeam, fetchDeteleManageTeam, fetchGetRegion, fetchGetRegionAll, fetchGetRegionByRegionID, fetchgetListAll } from '../../../reducers/managementTeamSlice';
+import { fetGetListRegionHP, fetGetListStaff, fetchCreateManageTeam, fetchDeteleManageTeam, fetchGetRegion, fetchGetRegionAll, fetchGetRegionByRegionID, fetchUpdateManageTeam, fetchgetList, fetchgetListAll } from '../../../reducers/managementTeamSlice';
 import { TreeSelect } from 'antd';
 
 const ModalAddUnits = (props) => {
     const dispatch = useDispatch();
-    const {title, onOk, handlehideModal, isModalVisiable, selectedRow} = props
+    const {title, onOk, handlehideModal, isModalVisiable, selectedRow, mode} = props
     const { SHOW_PARENT } = TreeSelect;
-
+    
     const [form] = Form.useForm();
     const nameValue = Form.useWatch('name', form);  
-
+    
     const [valueTinh, setValueTinh] = useState('');
     const [valueHuyen, setValueHuyen] = useState('')
     const [valueXa, setValueXa] = useState('')
-
+    
     const [nameManagement, setNameManagement] = useState('');
     const [codeManagement, setCodeManagement] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [address, setAddress] = useState('');
     const [employee, setEmployee] = useState('');
-    const [area, setArea] = useState('');
     const [account, setAccount] = useState('');
     const [password, setPassword] = useState('');
     const [repasword, setRepasword] = useState('');
-
+    const [area, setArea] = useState('');
+    
     const [valueSelected, setValueSelected] = useState('')
-
     const [initialNameManagement, setInitialNameManagement] = useState('');
+    
     // const [codeManagement, setCodeManagement] = useState('');
     // const [phoneNumber, setPhoneNumber] = useState('');
     // const [address, setAddress] = useState('');
@@ -88,6 +88,10 @@ const ModalAddUnits = (props) => {
     useEffect(() => {
         getListStaff();
     }, [])
+    
+    //   useEffect(() => {
+    //     getList()
+    //   }, [])
 
     const createManagement = () => {
         dispatch(fetchCreateManageTeam(
@@ -104,17 +108,37 @@ const ModalAddUnits = (props) => {
                 "UserName": account,
                 "Password": password,
                 "RePassword": repasword,
-                "ProvinceID": valueTinh,
-                "DistrictID": valueHuyen,
-                "WardID": valueXa
+                "RegionID": area,
+              }
+        ))
+    }
+
+    const updateManagement = () => {
+        dispatch(fetchUpdateManageTeam(
+            {
+                "ManagementTeamID": valueSelected.ManagementTeamID,
+                "ManagementTeamName": valueSelected.ManagementTeamName,
+                "ManagementTeamCode": valueSelected.ManagementTeamCode,
+                "PhoneNumber": valueSelected.PhoneNumber,
+                "Address": valueSelected.Address,
+                "Staff": [
+                  {
+                    "UserID": employee,
+                  }
+                ],
+                "UserID": selectedRow.UserID,
+                "Password": valueSelected.Password,
+                "RePassword": valueSelected.RePassword,
+                "RegionID": area
               }
         ))
     }
 
     //add To Quan Ly
-    useEffect(() => {
-        createManagement();
-    }, [])
+    // useEffect(() => {
+    //     createManagement();
+    //     getList();
+    // }, [])
 
    
     const getRegionHP = () => {
@@ -130,7 +154,7 @@ const ModalAddUnits = (props) => {
     const listRegionByID = useSelector((state) => state?.manage?.regionByRegionID?.regionByRegionID?.Object)
     const listStaff = useSelector((state) => state?.manage?.listStaff?.staffAll?.Object)
     const listRegionHP = useSelector((state) => state?.manage?.regionListHP?.regionHP?.Object)
-    console.log("listRegionHP>>>>>",listRegionHP);
+    // console.log("listRegionHP>>>>>",listRegionHP);
 
     const treeData = [];
     {
@@ -197,7 +221,106 @@ const ModalAddUnits = (props) => {
         })
     }
 
+    // SET EDIT
+    //name moi Edit
+    const handleChangeNameEdit = (e) => {
+        setInitialNameManagement(e.target.value);
+        setValueSelected({
+            ...valueSelected,
+            ManagementTeamName: e.target.value
+        })
+    }
+
+    //ma to chuc 
+    const handleCodeManagementEdit = (e) => {
+        setInitialNameManagement(e.target.value);
+        setValueSelected({
+            ...valueSelected,
+            ManagementTeamName: e.target.value
+        })
+    }
+
+     //sdt 
+     const handlePhonetEdit = (e) => {
+        setInitialNameManagement(e.target.value);
+        setValueSelected({
+            ...valueSelected,
+            ManagementTeamName: e.target.value
+        })
+    }
+
+    //diachi
+    const handleAdrressEdit = (e) => {
+        setInitialNameManagement(e.target.value);
+        setValueSelected({
+            ...valueSelected,
+            ManagementTeamName: e.target.value
+        })
+    }
+    //nhanvien trong cong ty
+    // const handleEnolyeeNameEdit = (e) => {
+    //     setInitialNameManagement(e.target.value);
+    //     setValueSelected({
+    //         ...valueSelected,
+    //         ManagementTeamName: e.target.value
+    //     })
+    // }
+
+    //Passord
+    const handlePasswordEdit = (e) => {
+        setInitialNameManagement(e.target.value);
+        setValueSelected({
+            ...valueSelected,
+            ManagementTeamName: e.target.value
+        })
+    }
+    //re mat khau
+    const handleRePasswordEdit = (e) => {
+        setInitialNameManagement(e.target.value);
+        setValueSelected({
+            ...valueSelected,
+            ManagementTeamName: e.target.value
+        })
+    }
+    //kkhu  vuc quan ly
+    const handleAreaEdit = (e) => {
+        setInitialNameManagement(e.target.value);
+        setValueSelected({
+            ...valueSelected,
+            ManagementTeamName: e.target.value
+        })
+    }
+
+    const getList = () => {
+        dispatch(fetchgetList(
+          {
+            "PageSize": 20,
+            "CurrentPage": 1,
+            "TextSearch": "",
+            "ManagementTeamStatus": "",
+            "ProvinceID": "",
+            "DistrictID": "",
+            "WardID": ""
+          }
+        ))
+    }
+
+    useEffect(() => {
+        getList()
+      }, [])
+
     const onFinish = () => {
+        // createManagement().then(() => {
+        //         getList();
+        //         message.succeeded("Thêm thành công");
+        //     })
+        //     // .catch((error) => {
+        //     // console.error(error);
+        //     // message.failed("Thêm thất bại");
+        //     // });
+        updateManagement().then(() => {
+            message.success("Update thành công")
+        })
     }
 
     const handleChangeName = (e) => {
@@ -232,9 +355,8 @@ const ModalAddUnits = (props) => {
         setPassword(e.target.value)
     }
 
-
-    const handleResspassword = () => {
-
+    const handleResspassword = (e) => {
+        setRepasword(e.target.value)
     }
 
     console.log(valueTinh,valueHuyen,valueXa);
@@ -262,15 +384,19 @@ const ModalAddUnits = (props) => {
         },
     };
 
-    //name moi Edit
-    const handleChangeNameEdit = (e) => {
-        setInitialNameManagement(e.target.value);
-        setValueSelected({
-            ...valueSelected,
-            ManagementTeamName: e.target.value
-        })
-    }
-    // console.log("selectedRow: ", selectedRow);
+    
+
+    console.log("selectedRow: ", selectedRow);
+
+    // const [managementTeamName, setManagementTeamName] = useState('');
+
+    // useEffect(() => {
+    //     if (mode === 'edit') {
+    //       setManagementTeamName(selectedRow?.ManagementTeamName || '');
+    //     } else {
+    //       setManagementTeamName('');
+    //     }
+    //   }, [mode, selectedRow]);
 
     return (
         <>
@@ -286,24 +412,15 @@ const ModalAddUnits = (props) => {
                                     required: true,
                                     },
                                 ]}
+                                key={valueSelected?.ManagementTeamID} // Sử dụng key để re-render component khi valueSelected thay đổi
                             >
-                            {
-                                selectedRow && selectedRow ? (
-                                    <>
-                                        <Input defaultValue={selectedRow?.ManagementTeamName} onChange={handleChangeNameEdit}  placeholder='Nhập nội dụng' style={{ width: '100%', display: 'block' }}/>         
-                                    </>
-
-                                ) : (
-                                    <>
-                                        <Input defaultValue={initialNameManagement} onChange={handleChangeName}  placeholder='Nhập nội dụng' style={{ width: '100%', display: 'block' }}/>         
-                                    </>
-                                )
-                            }
-
-                            {/* {
-                                selectedRow && selectedRow ? (console.log('1')) : (console.log('0'))
-                            } */}
-                                {/* <Input value={""} onChange={handleChangeName}  placeholder='Nhập nội dụng' style={{ width: '100%', display: 'block' }}/>          */}
+                            <div>
+                                <Input 
+                                       defaultValue={valueSelected?.ManagementTeamName || ''}
+                                       onChange={mode === 'edit' ? handleChangeNameEdit : handleChangeName} 
+                                       placeholder='Nhập nội dụng' style={{ width: '100%', display: 'block' }}
+                                />   
+                            </div>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -316,8 +433,12 @@ const ModalAddUnits = (props) => {
                                     required: true,
                                     },
                                 ]}
+                                key={valueSelected?.ManagementTeamCode}
                                 >
-                                <Input onChange={handleDeparment} placeholder='Nhập nội dụng' />
+                                <Input 
+                                defaultValue={valueSelected?.ManagementTeamCode || ''}
+                                onChange={mode === 'edit' ? handleCodeManagementEdit : handleDeparment} 
+                                placeholder='Nhập nội dụng' />
                             </Form.Item>
                         </Col>
                         <Col span={1}>
@@ -329,14 +450,17 @@ const ModalAddUnits = (props) => {
                                     required: true,
                                     },
                                 ]}
+                                key={valueSelected?.PhoneNumber}
                                 >
-                                <Input onChange={handlePhone} placeholder='Nhập nội dụng' />
+                                <Input 
+                                defaultValue={valueSelected?.PhoneNumber || ''}
+                                onChange={mode === 'edit' ? handlePhonetEdit : handlePhone} 
+                                placeholder='Nhập nội dụng' />
                             </Form.Item>
                         </Col>
                     </Row>
 
-                   
-
+        
                     <Row>
                         <Col span={24}>
                             <Form.Item name="address" label="Địa chỉ"
@@ -345,8 +469,13 @@ const ModalAddUnits = (props) => {
                                     required: true,
                                     },
                                 ]}
+                                key={valueSelected?.Address}
                                 >
-                                <Input onChange={handleAddress}/>
+                                <Input 
+                                defaultValue={valueSelected?.Address || ''}
+                                onChange={mode === 'edit' ? handleAdrressEdit : handleAddress} 
+                                placeholder='Chọn nôi dụng'
+                                />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -359,6 +488,7 @@ const ModalAddUnits = (props) => {
                                     required: true,
                                     },
                                 ]}
+                                key={valueSelected?.UserName}
                                 >
                                 {/* <Input onChange={handleEmployee} /> */}
                                 <Select
@@ -372,6 +502,7 @@ const ModalAddUnits = (props) => {
                                     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                                     }
                                     options={optionsStaff}
+                                    defaultValue={valueSelected?.UserName || ''}
                                 />
                             </Form.Item>
                         </Col>
@@ -382,11 +513,12 @@ const ModalAddUnits = (props) => {
                             <Form.Item name="account" label="Tài khoản"
                                 rules={[
                                     {
-                                    required: true,
+                                    required: mode === 'edit' ? false : true ,
                                     },
                                 ]}
+                                // key={valueSelected?.ManagementTeamID}
                                 >
-                                <Input onChange={handleAccount} />
+                                <Input defaultValue={ mode === 'edit' ? "Không được nhập" : "" } onChange={handleAccount} />
                             </Form.Item>
                         </Col>
                         <Col span={1}>
@@ -398,8 +530,13 @@ const ModalAddUnits = (props) => {
                                         required: true,
                                         },
                                     ]}
+                                    // key={valueSelected?.ManagementTeamID}
                                     >
-                                    <Input onChange={handlePassword} />
+                                    <Input 
+                                        defaultValue={""}
+                                        onChange={mode === 'edit' ? handlePasswordEdit : handlePassword} 
+                                        placeholder='Chọn nôi dung'
+                                    />
                                 </Form.Item>
                         </Col>
                         <Col span={1}>
@@ -411,8 +548,13 @@ const ModalAddUnits = (props) => {
                                         required: true,
                                         },
                                     ]}
+                                    // key={valueSelected?.ManagementTeamID}
                                     >
-                                    <Input onChange={handleResspassword} />
+                                    <Input 
+                                        defaultValue={""}
+                                        onChange={mode === 'edit' ? handleRePasswordEdit : handleResspassword} 
+                                        placeholder='Chọn nôi dung'
+                                    />
                                 </Form.Item>
                         </Col>
                     </Row>
@@ -425,9 +567,14 @@ const ModalAddUnits = (props) => {
                                     required: true,
                                     },
                                 ]}
+                                key={valueSelected?.RegionName}
                                 >
                                 {/* <Input onChange={handleArea} /> */}
-                                <TreeSelect {...tProps} onChange={handleTreeArea}/>
+                                <TreeSelect 
+                                {...tProps} 
+                                onChange={handleTreeArea}
+                                defaultValue={valueSelected?.RegionName || ''}
+                                />
                             </Form.Item>
                         </Col>
                     </Row>
