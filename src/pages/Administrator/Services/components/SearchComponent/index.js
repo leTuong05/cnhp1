@@ -4,12 +4,20 @@ import { Col, DatePicker, Input, Row, Select } from 'antd'
 
 
 const { Search } = Input;
-const onSearch = (value) => console.log(value);
-const SearchComponent = ({ onSearchData }) => {
+
+const SearchComponent = ({ onSearchData, onSearchDate, onSearchStatus }) => {
     const handleSearch = (value) => {
         // Assuming 'data' is the result of the search operation
         onSearchData(value);
     };
+
+    const handleSearchDate = (date) => {
+        onSearchDate(date)
+    }
+    const handleSelect = (value) => {
+        onSearchStatus(value)
+    }
+
 
     return (
         <Wrapper>
@@ -29,34 +37,36 @@ const SearchComponent = ({ onSearchData }) => {
                         style={{
                             width: '100%',
                         }}
+                        format={"DD/MM/YYYY"}
                         placeholder='Thời gian'
+                        onChange={handleSearchDate}
                     />
                 </Col>
                 <Col span={5}>
                     <Select
-                        defaultValue="lucy"
+                        defaultValue="Trạng thái"
                         style={{
                             width: '100%',
                         }}
-
+                        onChange={handleSelect}
                         options={[
                             {
-                                value: 'jack',
-                                label: 'Jack',
+                                value: 0,
+                                label: 'Trạng thái',
                             },
                             {
-                                value: 'lucy',
-                                label: 'Lucy',
+                                value: 1,
+                                label: 'Mới',
                             },
                             {
-                                value: 'Yiminghe',
-                                label: 'yiminghe',
+                                value: 2,
+                                label: 'Đang hỗ trợ',
                             },
                             {
-                                value: 'disabled',
-                                label: 'Disabled',
-                                disabled: true,
+                                value: 3,
+                                label: 'Hoàn thành',
                             },
+
                         ]}
                     />
                 </Col>

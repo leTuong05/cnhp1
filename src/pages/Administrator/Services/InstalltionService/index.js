@@ -10,6 +10,26 @@ import { useState } from 'react';
 
 
 const InstalltionService = () => {
+    const [searchData, setSearchData] = useState("");
+    const [searchDate, setSearchDate] = useState("");
+    const [searchStatus, setSearchStatus] = useState(0)
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [listTicket, setListTicket] = useState([]);
+
+    const handleSetListTicket = (newListTicket) => {
+        setListTicket(newListTicket);
+    };
+    const handleSearchData = (data) => {
+        setSearchData(data);
+    };
+    const handleSearchDate = (data) => {
+        setSearchDate(data);
+    };
+    const handleSearchStatus = (data) => {
+        setSearchStatus(data);
+    };
+console.log(searchStatus);
     const [ticketType, setTicketType] = useState(1)
     const handleTabChange = (activeKey) => {
         // Update ticketType based on the active tab key
@@ -18,28 +38,59 @@ const InstalltionService = () => {
         } else {
             setTicketType(2);
         }
-
-        
     };
-    console.log(ticketType);
+
     const items = [
         {
             key: '1',
             label: `Yêu cầu lắp đặt`,
-            children: <TableContent type={ticketType} />,
+            children: <TableContent
+                listTicket={listTicket}
+                setListTicket={handleSetListTicket}
+                selected={selectedRowKeys}
+                setSelected={setSelectedRowKeys}
+                searchData={searchData}
+                searchDate={searchDate}
+                searchStatus={searchStatus}
+                type={ticketType}
+            />,
         },
         {
             key: '2',
             label: `Yêu cầu di chuyển`,
-            children: <TableContent type={ticketType} />,
+            children: <TableContent
+                listTicket={listTicket}
+                setListTicket={handleSetListTicket}
+                selected={selectedRowKeys}
+                setSelected={setSelectedRowKeys}
+                searchData={searchData}
+                searchDate={searchDate}
+                searchStatus={searchStatus}
+                type={ticketType}
+            />,
         },
 
     ];
     return (
         <>
-            <SearchComponent />
+            <SearchComponent
+                onSearchData={handleSearchData}
+                onSearchDate={handleSearchDate}
+                onSearchStatus={handleSearchStatus}
+            />
             <Divider />
-            <TabStyled defaultActiveKey="1" onChange={handleTabChange} tabBarExtraContent={<ListButton />}>
+            <TabStyled
+                defaultActiveKey="1"
+                onChange={handleTabChange}
+                tabBarExtraContent={
+                    <ListButton
+                        id={selectedRowKeys}
+                        listTicket={listTicket}
+                        setListTicket={handleSetListTicket}
+                        type={ticketType}
+                    />
+                }
+            >
                 {items.map((item) => (
                     <TabPane tab={item.label} key={item.key}>
                         {item.children}
