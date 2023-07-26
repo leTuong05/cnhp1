@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CustomTabs from '../../../components/Tabs';
-import { Image, Table } from 'antd';
+import { Row, Col, Image } from 'antd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import productImg from '../../../common/images/imageAdministrator_page/product.png';
 import { EyeOutlined } from '@ant-design/icons';
 import CustomButton from '../../../components/Button/ButtonPrimary';
@@ -9,9 +10,12 @@ import CustomModal from './components/Modal';
 import { ProductsStyled } from './styles';
 import CustomTable from '../../../components/Table';
 import { getAllProductInCard } from '../../../services/apis/cart';
+import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { getAdminProduct, getAllProduct } from '../../../services/apis/products';
 const Products = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataProduct, setDataProduct] = useState([]);
+    const [hoveredRow, setHoveredRow] = useState(null);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -24,12 +28,14 @@ const Products = () => {
     };
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const onSelectChange = (newSelectedRowKeys) => {
+        console.log('selectedRowKeys', selectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
     const rowSelection = {
         selectedRowKeys,
         onChange: onSelectChange
     };
+    const hasSelected = selectedRowKeys.length > 0;
     const columns = [
         {
             title: 'STT',
@@ -39,9 +45,17 @@ const Products = () => {
         {
             title: 'Tên sản phẩm',
             dataIndex: 'ProductName',
-            render: (text) => (
+            render: (text, record) => (
                 <a style={{ display: 'flex' }}>
-                    <img src={productImg} />
+                    {record.Image ? (
+                        <div style={{ width: '100px', height: '100px', backgroundColor: 'gray' }}>
+                            <img src={record.Image} alt={text} />
+                        </div>
+                    ) : (
+                        <div style={{ width: '100px', height: '100px', backgroundColor: 'gray' }}>
+                            <Image src="error" />
+                        </div>
+                    )}
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <span>{text}</span>
                         <div>
@@ -58,52 +72,100 @@ const Products = () => {
         },
         {
             title: 'Giảm Giá(%)',
-            dataIndex: 'SalePrice',
+            dataIndex: 'Discount',
             sorter: (a, b) => a.discout - b.discout
         },
         {
             title: 'Kho hàng',
-            dataIndex: 'Quantity',
+            dataIndex: 'QuantityStock',
             sorter: (a, b) => a.warehouse - b.warehouse
         },
         {
             title: 'Doanh số',
-            dataIndex: 'revenue',
-            sorter: (a, b) => a.revenue - b.revenue
+            dataIndex: 'Sold',
+            sorter: (a, b) => a.revenue - b.revenue,
+            render: (value, record) => (
+                <div className="action">
+                    <div>{value}</div>
+                    {hoveredRow === record.ProductID && (
+                        <>
+                            <Row gutter={8} className="edit">
+                                <Col span={12}>
+                                    <CustomButton
+                                        className={'icon-edit icon'}
+                                        // onClick={() => {
+                                        //     setIsModalOpen(true);
+                                        //     setDataInfo(record);
+                                        //     // console.log(record.PositionID);
+                                        // }}
+                                    >
+                                        <FontAwesomeIcon icon={faPen} />
+                                    </CustomButton>
+                                </Col>
+                                {/* <Col span={12}>
+                                    <CustomButton
+                                        className={'icon-delete icon'}
+                                        // onClick={() => {
+                                        //     confirm({
+                                        //         title: 'Are you sure delete this task?',
+                                        //         icon: <ExclamationCircleFilled />,
+                                        //         content: 'Some descriptions',
+                                        //         okText: 'Yes',
+                                        //         okType: 'danger',
+                                        //         cancelText: 'No',
+                                        //         onOk() {
+                                        //             dispatch(
+                                        //                 fetchDeletePosition({
+                                        //                     PositionID: record.PositionID,
+                                        //                     IsDelete: true
+                                        //                 })
+                                        //             ).then(() => {
+                                        //                 // getList();
+                                        //                 message.success('Xóa thành công ');
+                                        //             });
+                                        //         },
+                                        //         onCancel() {
+                                        //             console.log('Cancel');
+                                        //         }
+                                        //     });
+
+                                        //     console.log('record', record.PositionID);
+                                        // }}
+                                    >
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </CustomButton>
+                                </Col> */}
+                            </Row>
+                        </>
+                    )}
+                </div>
+            )
         }
     ];
-    const data = dataProduct?.Object;
+    const data = dataProduct;
 
-    //     {
-    //         key: 1,
-    //         name: `Sản phẩm nước uống tinh khiết HaiPhong Water - Thùng 24 chai 500ml`,
-    //         price: 250000,
-    //         discout: 50,
-    //         warehouse: 500,
-    //         revenue: 10
-    //     },
-    //     {
-    //         key: 2,
-    //         name: `Sản phẩm nước uống tinh khiết HaiPhong Water - Thùng 24 chai 500ml`,
-    //         price: 300000,
-    //         discout: 50,
-    //         warehouse: 500,
-    //         revenue: 10
-    //     },
-    //     {
-    //         key: 3,
-    //         name: `Sản phẩm nước uống tinh khiết HaiPhong Water - Thùng 24 chai 500ml`,
-    //         price: 150000,
-    //         discout: 50,
-    //         warehouse: 500,
-    //         revenue: 10
-    //     }
-    // ];
     const items = [
         {
             key: '1',
             label: `Tất cả`,
-            children: <CustomTable columns={columns} dataSource={data} rowSelection={rowSelection} />
+            children: (
+                <CustomTable
+                    rowKey="ProductID"
+                    columns={columns}
+                    dataSource={data}
+                    rowSelection={rowSelection}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onMouseEnter: () => {
+                                setHoveredRow(record.ProductID);
+                            }, // mouse enter row
+                            onMouseLeave: () => {
+                                setHoveredRow(null);
+                            } // mouse leave row
+                        };
+                    }}
+                />
+            )
         },
         {
             key: '2',
@@ -111,7 +173,6 @@ const Products = () => {
             children: <CustomTable columns={columns} dataSource={data} rowSelection={rowSelection} />
         }
     ];
-    const hasSelected = selectedRowKeys.length > 0;
     const operations = (
         <div className="group-btn">
             <CustomButton onClick={showModal}>Thêm sản phẩm</CustomButton>
@@ -120,11 +181,18 @@ const Products = () => {
             </CustomButton>
         </div>
     );
-
+    console.log('dataProduct', dataProduct);
     useEffect(() => {
         const getList = async () => {
-            const res = await getAllProductInCard();
-            setDataProduct(res);
+            try {
+                const response = await getAdminProduct();
+                setDataProduct(response.Object?.listProduct);
+                // debugger;
+                return response;
+            } catch (error) {
+                // debugger;
+                return error;
+            }
         };
         getList();
     }, []);
@@ -144,7 +212,14 @@ const Products = () => {
                     {hasSelected}
                 </span>
             </div>
-            <CustomModal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
+            <CustomModal
+                open={isModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                onClick={() => {
+                    setIsModalOpen(false);
+                }}
+            />
         </ProductsStyled>
     );
 };

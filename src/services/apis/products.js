@@ -1,7 +1,7 @@
-import axiosInstance from "../axios";
+import axiosInstance from '../axios';
 
-export const getAllProduct = (body) =>
-  axiosInstance.post("Guest/GetAllProduct", body);
+export const getAllProduct = () => axiosInstance.get('Product');
 
-export const getProductDetail = (id) =>
-  axiosInstance.get(`Guest/GetProductDetails?ProductID=${id}`);
+export const getAdminProduct = () => axiosInstance.get(`Product/Manage`);
+
+export const adminAddProduct = () => axiosInstance.post(`Product/Manage/Insert`);
