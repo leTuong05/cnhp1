@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Sort, Wrapper } from './styles'
+import React, { useEffect, useState } from 'react';
+import { Sort, Wrapper } from './styles';
 
-import { Col, Row, Select } from 'antd'
-import ProductItem from './components/ProductItem'
-import { useNavigate } from 'react-router-dom'
-import { getAllProduct } from '../../../services/apis/Products'
+import { Col, Row, Select } from 'antd';
+import ProductItem from './components/ProductItem';
+import { useNavigate } from 'react-router-dom';
+import { getAllProduct } from '../../../services/apis/products';
 
 const Product = () => {
     const [productList, setProductList] = useState([]);
@@ -12,42 +12,41 @@ const Product = () => {
 
     const navigate = useNavigate();
     const handleSelect = (value) => {
-        setTypeOfSort(value)
-    }
+        setTypeOfSort(value);
+    };
     useEffect(() => {
         const getListProduct = async () => {
             const res = await getAllProduct(50, 1, typeOfSort);
             setProductList(res.Object.listProduct);
-            console.log(typeof (res.Object.listProduct));
+            console.log(typeof res.Object.listProduct);
         };
         getListProduct();
     }, [typeOfSort]);
     console.log(productList);
     return (
-        <Wrapper >
+        <Wrapper>
             <h2>Danh sach san pham</h2>
             <Sort>
-                <span className='label'>Sắp xếp theo: </span>
+                <span className="label">Sắp xếp theo: </span>
                 <Select
                     defaultValue="Tên sản phẩm"
                     style={{
-                        width: 200,
+                        width: 200
                     }}
                     onChange={handleSelect}
                     options={[
                         {
                             value: 1,
-                            label: 'Tên sản phẩm',
+                            label: 'Tên sản phẩm'
                         },
                         {
                             value: 2,
-                            label: 'Giá từ thấp đến cao',
+                            label: 'Giá từ thấp đến cao'
                         },
                         {
                             value: 3,
-                            label: 'Giá từ cao đến thấp',
-                        },
-
+                            label: 'Giá từ cao đến thấp'
+                        }
                     ]}
                 />
             </Sort>
@@ -58,11 +57,9 @@ const Product = () => {
                         <ProductItem key={product.ProductID} product={product} />
                     </Col>
                 ))}
-
-
             </Row>
         </Wrapper>
-    )
-}
+    );
+};
 
-export default Product
+export default Product;
