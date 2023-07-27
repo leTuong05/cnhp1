@@ -1,14 +1,13 @@
-import React from 'react';
+import { Col, Divider, Row, Input } from 'antd';
+import { ManageSystemStyled } from '../styles';
 import CustomButton from '../../../../components/Button/ButtonPrimary';
 import { colors } from '../../../../styles';
-import { Row, Col, Input, Divider } from 'antd';
-import { ManageSystemStyled } from '../styles';
 import ListLocation from './components/ListLocation';
-import ListEnterPrise from './components/ListEnterPrise';
+import ListGuest from './components/ListGuest';
 
 const { Search } = Input;
 
-function EnterPrise() {
+function GuestDirectory() {
     const onSearch = (value) => console.log(value);
     return (
         <ManageSystemStyled>
@@ -17,8 +16,8 @@ function EnterPrise() {
                 <Divider />
             </div>
             <div className="head-group">
-                <div className="title">Danh bạ doanh nghiệp</div>
-                <CustomButton backgroundColor={colors.primary}>Thêm doanh nghiệp</CustomButton>
+                <div className="title">Danh bạ khách hàng</div>
+                <CustomButton backgroundColor={colors.primary}>Thêm khách hàng</CustomButton>
             </div>
             <Divider />
             <Row gutter={16}>
@@ -26,11 +25,11 @@ function EnterPrise() {
                     <ListLocation />
                 </Col>
                 <Col span={19}>
-                    <ListEnterPrise />
+                    <ListGuest />
                 </Col>
             </Row>
         </ManageSystemStyled>
     );
 }
 
-export default EnterPrise;
+export default GuestDirectory;

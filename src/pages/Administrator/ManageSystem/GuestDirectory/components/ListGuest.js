@@ -6,7 +6,7 @@ import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 const { confirm } = Modal;
-function ListEnterPrise() {
+function ListGuest() {
     const [hoveredRow, setHoveredRow] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -49,26 +49,17 @@ function ListEnterPrise() {
             render: (value, record, index) => index + 1
         },
         {
-            title: 'Tài khoản',
-            dataIndex: 'accout'
+            title: 'Mã khách hàng',
+            dataIndex: 'ma'
         },
         {
-            title: 'Doanh nghiệp',
-            dataIndex: 'enterprise',
-            width: 300
+            title: 'Email',
+            dataIndex: 'email'
         },
         {
-            title: 'mã ĐKKD',
-            dataIndex: 'madky'
-        },
-        {
-            title: 'Số điện thoại',
-            dataIndex: 'sdt'
-        },
-        {
-            title: 'Ghi chú',
-            dataIndex: 'Note',
-
+            title: 'địa chỉ dùng nước',
+            dataIndex: 'dchi',
+            width: 300,
             render: (value, record) => (
                 <div className="action">
                     <div>{value}</div>
@@ -111,6 +102,10 @@ function ListEnterPrise() {
                     )}
                 </div>
             )
+        },
+        {
+            title: 'Loại',
+            dataIndex: 'type'
         }
     ];
 
@@ -135,4 +130,4 @@ function ListEnterPrise() {
     );
 }
 
-export default ListEnterPrise;
+export default ListGuest;

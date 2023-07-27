@@ -37,11 +37,10 @@ function ListPositions({ filteredPosition, listpositionView }) {
 
     const handleSearch = (event) => {
         const value = event.target.value;
-        const filteredData = dataListView?.filter((item) => {
+        const filteredData = dataDefault?.filter((item) => {
             return item.PositionName.toLowerCase().includes(value.toLowerCase());
         });
         setSearchedData(filteredData);
-        console.log('searchedData', searchedData);
     };
 
     useEffect(() => {
@@ -121,27 +120,39 @@ function ListPositions({ filteredPosition, listpositionView }) {
                                 <Col span={12}>
                                     <CustomButton
                                         className={'icon-delete icon'}
-                                        onClick={() => {
-                                            confirm({
-                                                title: 'Are you sure delete this task?',
-                                                icon: <ExclamationCircleFilled />,
-                                                content: 'Some descriptions',
-                                                okText: 'Yes',
-                                                okType: 'danger',
-                                                cancelText: 'No',
-                                                onOk() {
-                                                    dispatch(fetchDeletePosition(record.PositionID)).then(() => {
-                                                        // getList();
-                                                        message.success('Xóa thành công ');
-                                                    });
-                                                },
-                                                onCancel() {
-                                                    console.log('Cancel');
-                                                }
-                                            });
-
-                                            console.log('record', record.PositionID);
-                                        }}
+                                        onClick={
+                                            () => handleDelete(record)
+                                            // {
+                                            // confirm({
+                                            //     title: 'Are you sure delete this task?',
+                                            //     icon: <ExclamationCircleFilled />,
+                                            //     content: 'Some descriptions',
+                                            //     okText: 'Yes',
+                                            //     okType: 'danger',
+                                            //     cancelText: 'No',
+                                            //     onOk() {
+                                            //         dispatch(
+                                            //             fetchDeletePosition({
+                                            //                 PositionID: record.PositionID
+                                            //             })
+                                            //         ).then(() => {
+                                            //             dispatch(
+                                            //                 fetchPosition({
+                                            //                     TextSearch: '',
+                                            //                     PageSize: 20,
+                                            //                     CurrentPage: 1
+                                            //                 })
+                                            //             );
+                                            //             message.success('Xóa thành công ');
+                                            //         });
+                                            //     },
+                                            //     onCancel() {
+                                            //         console.log('Cancel');
+                                            //     }
+                                            // });
+                                            // // console.log(record.PositionID);
+                                            // // }
+                                        }
                                     >
                                         <FontAwesomeIcon icon={faTrash} />
                                     </CustomButton>
@@ -153,6 +164,27 @@ function ListPositions({ filteredPosition, listpositionView }) {
             )
         }
     ];
+
+    const handleDelete = (record) => {
+        Modal.confirm({
+            title: 'Xóa',
+            content: 'Bạn chắc chắn muốn xóa tổ quản lý này không?',
+            onOk: () => {
+                dispatch(fetchDeletePosition(record.PositionID)).then(() => {
+                    dispatch(
+                        fetchPosition({
+                            TextSearch: '',
+                            PageSize: 20,
+                            CurrentPage: 1
+                        })
+                    );
+                    message.success('Xóa thành công ');
+                });
+            }
+        });
+        console.log('??>>>>>>>', record);
+    };
+
     return (
         <>
             <Search placeholder="input search text" onChange={handleSearch} style={{ width: 200 }} />

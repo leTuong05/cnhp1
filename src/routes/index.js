@@ -73,14 +73,15 @@ import DangBai from "../pages/Administrator/ManagePosts/Posts/Posts";
 import ListUser from "../pages/Administrator/ManageSystem/ListUser";
 import EnterPrise from "../pages/Administrator/ManageSystem/EnterPrise";
 
-import Order from "../pages/Administrator/Order";
-import InstalltionService from "../pages/Administrator/Services/InstalltionService";
-import ContractNameService from "../pages/Administrator/Services/ContractNameService";
-import ContractRenewalService from "../pages/Administrator/Services/ContractRenewalService";
-import PaymentService from "../pages/Administrator/Services/PaymentService";
-import RepairService from "../pages/Administrator/Services/RepairService";
-import EditInfoService from "../pages/Administrator/Services/EditInfoService";
-import SearchInfoService from "../pages/Administrator/Services/SearchInfoService";
+import Order from '../pages/Administrator/Order';
+import InstalltionService from '../pages/Administrator/Services/InstalltionService';
+import ContractNameService from '../pages/Administrator/Services/ContractNameService';
+import ContractRenewalService from '../pages/Administrator/Services/ContractRenewalService';
+import PaymentService from '../pages/Administrator/Services/PaymentService';
+import RepairService from '../pages/Administrator/Services/RepairService';
+import EditInfoService from '../pages/Administrator/Services/EditInfoService';
+import SearchInfoService from '../pages/Administrator/Services/SearchInfoService';
+import GuestDirectory from '../pages/Administrator/ManageSystem/GuestDirectory';
 import WaterConfig from "../pages/Administrator/WaterConfig";
 
 export const routeAdmin = [
@@ -111,11 +112,12 @@ export const routeAdmin = [
   // SẢn phẩm
   { path: "/kho-hang", component: SanPham, layout: true },
 
-  // Quản trị hệ thống
-  { path: "/phong-ban-chuc-vu", component: Department, layout: true },
-  { path: "/danh-ba-nguoi-dung", component: UserDirectory, layout: true },
-  { path: "/phan-quyen", component: ListUser, layout: true },
-  { path: "/danh-ba-doanh-nghiep", component: EnterPrise, layout: true },
+    // Quản trị hệ thống
+    { path: '/phong-ban-chuc-vu', component: Department, layout: true },
+    { path: '/danh-ba-nguoi-dung', component: UserDirectory, layout: true },
+    { path: '/phan-quyen', component: ListUser, layout: true },
+    { path: '/danh-ba-doanh-nghiep', component: EnterPrise, layout: true },
+    { path: '/danh-ba-khach-hang', component: GuestDirectory, layout: true },
 
   { path: "/to-quan-ly", component: ToQuanLy, layout: true },
   { path: "/danh-muc-the", component: DanhMucThe, layout: true },
