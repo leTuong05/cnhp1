@@ -5,49 +5,57 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import { fetchRole } from '../../../../../reducers/roleSlice';
+import { useDispatch, useSelector } from 'react-redux';
 function ListPermission() {
     const [hoveredRow, setHoveredRow] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [data, setData] = useState([]);
+    const dispatch = useDispatch();
 
     const { confirm } = Modal;
 
     const showModal = () => {
         setIsModalOpen(true);
     };
-
-    const handleOk = () => {
-        setIsModalOpen(false);
+    const getList = () => {
+        dispatch(
+            fetchRole({
+                PageSize: 10,
+                CurrentPage: 1,
+                TextSearch: ''
+            })
+        );
     };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-    const dataSource = [
-        {
-            key: '1',
-            groupPermission: 'Giám đốc',
-            permission: (
-                <div>
-                    - Giám đốc
-                    <br />
-                    - Quản lý chủ đề/đề tài: Truy cập trang; Đăng ký chủ đề/đề tài; Cập nhật thông tin; Xóa thông tin; Thêm chủ đề/đề tài; Import chủ đề/đề tài; Xuất file; Duyệt chủ đề/đề tài
-                    <br />
-                    - Quản lý sản phẩm: Truy cập trang; Thêm sản phẩm; Cập nhật sản phẩm; Xóa sản phẩm; Thêm nhận xét; Duyệt nội dung; Hoàn trả sản phẩm; Xuất file; Nhập xếp loại; Chuyển duyệt; Chuyển duyệt luồng tắt; Chuyển lãnh đạo duyệt; Thu hồi; Chuyển phát sóng; Phát sóng; Sửa bảng kê; Chuyển sản xuất; Chuyển xếp lịch; Biên dịch lại
-                    <br />
-                    - Quản lý lịch phát sóng: Truy cập trang; Nhập lịch phát sóng; Sửa lịch phát sóng; Xóa lịch phát sóng; Cập nhật phát lại chương trình; Export file; Import file
-                    <br />
-                    - Quản lý phân quyền: Truy cập trang; Thêm quyền; Cập nhật quyền; Xóa quyền
-                    <br />
-                </div>
-            ),
-            status: 'Đang hoạt động'
-        },
-        {
-            key: '2',
-            groupPermission: 'Phó Giám đốc',
-            permission: 'Nội dung....'
-        }
-    ];
+    useEffect(() => {
+        getList();
+    }, []);
+    const dataRole = useSelector((state) => state?.role?.getRole?.Object);
+    //     {
+    //         key: '1',
+    //         groupPermission: 'Giám đốc',
+    //         permission: (
+    //             <div>
+    //                 - Giám đốc
+    //                 <br />
+    //                 - Quản lý chủ đề/đề tài: Truy cập trang; Đăng ký chủ đề/đề tài; Cập nhật thông tin; Xóa thông tin; Thêm chủ đề/đề tài; Import chủ đề/đề tài; Xuất file; Duyệt chủ đề/đề tài
+    //                 <br />
+    //                 - Quản lý sản phẩm: Truy cập trang; Thêm sản phẩm; Cập nhật sản phẩm; Xóa sản phẩm; Thêm nhận xét; Duyệt nội dung; Hoàn trả sản phẩm; Xuất file; Nhập xếp loại; Chuyển duyệt; Chuyển duyệt luồng tắt; Chuyển lãnh đạo duyệt; Thu hồi; Chuyển phát sóng; Phát sóng; Sửa bảng kê; Chuyển sản xuất; Chuyển xếp lịch; Biên dịch lại
+    //                 <br />
+    //                 - Quản lý lịch phát sóng: Truy cập trang; Nhập lịch phát sóng; Sửa lịch phát sóng; Xóa lịch phát sóng; Cập nhật phát lại chương trình; Export file; Import file
+    //                 <br />
+    //                 - Quản lý phân quyền: Truy cập trang; Thêm quyền; Cập nhật quyền; Xóa quyền
+    //                 <br />
+    //             </div>
+    //         ),
+    //         status: 'Đang hoạt động'
+    //     },
+    //     {
+    //         key: '2',
+    //         groupPermission: 'Phó Giám đốc',
+    //         permission: 'Nội dung....'
+    //     }
+    // ];
 
     const columns = [
         {
@@ -59,11 +67,11 @@ function ListPermission() {
         },
         {
             title: 'Nhóm quyền',
-            dataIndex: 'groupPermission'
+            dataIndex: 'RoleName'
         },
         {
             title: 'Quyền',
-            dataIndex: 'permission',
+            dataIndex: 'Description',
             width: 900
         },
         {
@@ -116,7 +124,7 @@ function ListPermission() {
             <>
                 <CustomTable
                     columns={columns}
-                    dataSource={dataSource}
+                    // dataSource={dataSource}
                     onRow={(record, rowIndex) => {
                         return {
                             onMouseEnter: () => {

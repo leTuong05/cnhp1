@@ -75,6 +75,7 @@ import PaymentService from '../pages/Administrator/Services/PaymentService';
 import RepairService from '../pages/Administrator/Services/RepairService';
 import EditInfoService from '../pages/Administrator/Services/EditInfoService';
 import SearchInfoService from '../pages/Administrator/Services/SearchInfoService';
+import GuestDirectory from '../pages/Administrator/ManageSystem/GuestDirectory';
 
 export const routeAdmin = [
     { path: '/tong-quan', component: TongQuan, layout: true },
@@ -96,6 +97,7 @@ export const routeAdmin = [
     { path: '/danh-ba-nguoi-dung', component: UserDirectory, layout: true },
     { path: '/phan-quyen', component: ListUser, layout: true },
     { path: '/danh-ba-doanh-nghiep', component: EnterPrise, layout: true },
+    { path: '/danh-ba-khach-hang', component: GuestDirectory, layout: true },
 
     { path: '/to-quan-ly', component: ToQuanLy, layout: true },
     { path: '/danh-muc-the', component: DanhMucThe, layout: true },

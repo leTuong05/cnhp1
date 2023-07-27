@@ -8,8 +8,8 @@ export const UpdateListPosition = (body) => {
     return axiosInstance.patch('Position/update', body);
 };
 
-export const DeletePosition = (body) => {
-    return axiosInstance.delete(`Position/delete`, body);
+export const DeletePosition = (PositionID) => {
+    return axiosInstance.delete(`Position/delete?PositionID=${PositionID}`);
 };
 
 export const AddPosition = (body) => {
