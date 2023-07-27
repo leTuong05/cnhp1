@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Row, Space, message } from 'antd';
-import { Button, Table } from 'antd';
-import { ButtonAddUnits, Wapper, WapperTable } from '../Style/style';
-import { Modal } from 'antd';
-import ModalAddUnits from '../../pages/Administrator/Units/ModalAddUnits';
-import SearchStatus from '../../pages/Administrator/Units/SearchStatus';
-import { useSelector, useDispatch } from 'react-redux'
-import { fetchDeteleManageTeam, fetchgetList } from '../../reducers/managementTeamSlice';
+import React, { useEffect, useState } from "react";
+import { Card, Row, Space, message } from "antd";
+import { Button, Table } from "antd";
+import { ButtonAddUnits, Wapper, WapperTable } from "../Style/style";
+import { Modal } from "antd";
+import ModalAddUnits from "../../pages/Administrator/Units/ModalAddUnits";
+import SearchStatus from "../../pages/Administrator/Units/SearchStatus";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchDeteleManageTeam,
+  fetchgetList,
+} from "../../reducers/managementTeamSlice";
 
-import {EditOutlined, DeleteOutlined} from '@ant-design/icons'
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const data = [];
 for (let i = 0; i < 9; i++) {
@@ -27,120 +30,130 @@ for (let i = 0; i < 9; i++) {
 }
 
 const TableCommon = (props) => {
-  const {title} = props
+  const { title } = props;
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [isVisible, setIsVisiable] = useState(false)
+  const [isVisible, setIsVisiable] = useState(false);
 
-  const [valueIDDelete, setValuIDDelete] = useState('')
+  const [valueIDDelete, setValuIDDelete] = useState("");
 
   const dispatch = useDispatch();
 
-  const [mode, setMode] = useState('add'); // Thêm mới là chế độ mặc định
+  const [mode, setMode] = useState("add"); // Thêm mới là chế độ mặc định
 
   const columnsToQuanLy = [
     {
-      title: 'STT',
-      dataIndex: 'stt',
-      render: (_, __, index) => index + 1
+      title: "STT",
+      dataIndex: "stt",
+      render: (_, __, index) => index + 1,
     },
     {
-      title: 'Tài khoản',
-      dataIndex: 'UserName'
+      title: "Tài khoản",
+      dataIndex: "UserName",
     },
     {
-      title: 'Mã tổ quản lý',
-      dataIndex: 'ManagementTeamCode'
+      title: "Mã tổ quản lý",
+      dataIndex: "ManagementTeamCode",
     },
     {
-      title: 'Tên tổ quản lý',
-      dataIndex: 'ManagementTeamName'
+      title: "Tên tổ quản lý",
+      dataIndex: "ManagementTeamName",
     },
     {
-      title: 'Số điện thoại',
-      dataIndex: 'PhoneNumber'
+      title: "Số điện thoại",
+      dataIndex: "PhoneNumber",
     },
     {
-      title: 'Địa chỉ',
-      dataIndex: 'Address'
+      title: "Địa chỉ",
+      dataIndex: "Address",
     },
     {
-      title: 'Khu vực quản lý',
-      dataIndex: 'RegionName'
+      title: "Khu vực quản lý",
+      dataIndex: "RegionName",
     },
     {
-      title: 'Nhân viên',
-      dataIndex: 'nv'
+      title: "Nhân viên",
+      dataIndex: "UserNameEmployee",
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'ManagementTeamStatus',
-      render : (text,record) => (
+      title: "Trạng thái",
+      dataIndex: "ManagementTeamStatus",
+      render: (text, record) => (
         <Space>
-          <Button type="default" icon={<EditOutlined />} onClick={() => handleEdit(record)}></Button>
-          <Button type="default" icon={<DeleteOutlined />} onClick={() => handleDelete(record)}></Button>
+          <Button
+            type="default"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          ></Button>
+          <Button
+            type="default"
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record)}
+          ></Button>
         </Space>
-      )
+      ),
     },
   ];
 
-  const [valueRecord, setValueRecord] = useState(null)
+  const [valueRecord, setValueRecord] = useState(null);
 
   const handleEdit = (record) => {
-    setIsVisiable(true)
-    setMode('edit');
+    setIsVisiable(true);
+    setMode("edit");
     setSelectedRow(record);
-  }
+  };
 
   useEffect(() => {
     setSelectedRow(valueRecord);
-  }, [valueRecord])
+  }, [valueRecord]);
 
   const getList = () => {
-    dispatch(fetchgetList(
-      {
-        "PageSize": 20,
-        "CurrentPage": 1,
-        "TextSearch": "",
-        "ManagementTeamStatus": "",
-        "ProvinceID": "",
-        "DistrictID": "",
-        "WardID": ""
-      }
-    ))
-  }
+    dispatch(
+      fetchgetList({
+        PageSize: 20,
+        CurrentPage: 1,
+        TextSearch: "",
+        ManagementTeamStatus: "",
+        ProvinceID: "",
+        DistrictID: "",
+        WardID: "",
+      })
+    );
+  };
 
   useEffect(() => {
-    getList()
-  }, [])
+    getList();
+  }, []);
 
   //DELETE
   // setValuIDDelete(record.ManagementTeamID);
   const handleDelete = (record) => {
     // console.log(record.ManagementTeamID);
     Modal.confirm({
-      title: 'Xóa',
-      content: 'Bạn chắc chắn muốn xóa tổ quản lý này không?',
+      title: "Xóa",
+      content: "Bạn chắc chắn muốn xóa tổ quản lý này không?",
       onOk: () => {
-        dispatch(fetchDeteleManageTeam(record.ManagementTeamID)).then(() =>{
+        dispatch(fetchDeteleManageTeam(record.ManagementTeamID)).then(() => {
           getList();
-          message.success('Xóa thành công');  
-      })
+          message.success("Xóa thành công");
+        });
       },
     });
     getList();
-  }
+  };
 
-  const listManage = useSelector((state) => state?.manage?.listMagagementTeam?.listAllStatus?.Object)
+  const listManage = useSelector(
+    (state) => state?.manage?.listMagagementTeam?.listAllStatus?.Object
+  );
   // console.log(listManage);
 
   const handleShowModal = () => {
     setIsVisiable(true);
-    setMode('add'); // Đặt chế độ là Thêm mới khi mở Modal
+    setMode("add"); // Đặt chế độ là Thêm mới khi mở Modal
   };
   const handleHideModal = () => {
     setIsVisiable(false);
@@ -148,13 +161,13 @@ const TableCommon = (props) => {
   };
 
   const isShowModal = () => {
-    setIsVisiable(true)
-  }
-  
+    setIsVisiable(true);
+  };
+
   const showModal = () => {
-    setIsVisiable(true)
-  }
-  
+    setIsVisiable(true);
+  };
+
   const start = () => {
     setLoading(true);
     setTimeout(() => {
@@ -163,7 +176,7 @@ const TableCommon = (props) => {
     }, 1000);
   };
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -176,44 +189,51 @@ const TableCommon = (props) => {
     <>
       <SearchStatus />
       <Wapper>
-          <Card
-            title={title}
-            bordered={false}
-            style={{
-              width: '100%',
-            }}
-          >
-            <div>
-              <div
+        <Card
+          title={title}
+          bordered={false}
+          style={{
+            width: "100%",
+          }}
+        >
+          <div>
+            <div
+              style={{
+                marginBottom: 16,
+              }}
+            >
+              <span
                 style={{
-                  marginBottom: 16,
+                  marginLeft: 8,
                 }}
-              >
-                <span
-                  style={{
-                    marginLeft: 8,
-                  }}
-                >
-                </span>
-              </div>
-              <WapperTable columns={columnsToQuanLy} dataSource={listManage} bordered/>
+              ></span>
+            </div>
+            <WapperTable
+              columns={columnsToQuanLy}
+              dataSource={listManage}
+              bordered
+            />
           </div>
-          </Card>
+        </Card>
 
-          <ButtonAddUnits type="primary" style={{background: 'var(--btn-primary-color)'}} onClick={handleShowModal}>
-              Thêm tổ quản lý
-          </ButtonAddUnits>
-          
-          <ModalAddUnits 
-            title={mode == 'add' ? 'Thêm tổ quản lý' : 'Sửa tổ quản lý'}
-            handlehideModal={handleHideModal}
-            isModalVisiable={isVisible}
-            selectedRow={selectedRow}
-            mode={mode}
-          />
+        <ButtonAddUnits
+          type="primary"
+          style={{ background: "var(--btn-primary-color)" }}
+          onClick={handleShowModal}
+        >
+          Thêm tổ quản lý
+        </ButtonAddUnits>
+
+        <ModalAddUnits
+          title={mode == "add" ? "Thêm tổ quản lý" : "Sửa tổ quản lý"}
+          handlehideModal={handleHideModal}
+          isModalVisiable={isVisible}
+          selectedRow={selectedRow}
+          mode={mode}
+        />
       </Wapper>
     </>
-  )
-}
+  );
+};
 
-export default TableCommon
+export default TableCommon;
