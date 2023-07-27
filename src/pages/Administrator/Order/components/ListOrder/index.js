@@ -225,10 +225,10 @@ const ListOrder = ({ textSearch, requestFromDate, requestToDate, deliveryFromDat
                 textSearch || "",
                 1,
                 50,
-                requestToDate || "",
-                requestFromDate || "",
-                deliveryToDate || "",
-                deliveryFromDate || "",
+                requestToDate || null,
+                requestFromDate || null,
+                deliveryToDate || null,
+                deliveryFromDate || null,
                 status || 0
             );
             setListOrders(response.Object.data)

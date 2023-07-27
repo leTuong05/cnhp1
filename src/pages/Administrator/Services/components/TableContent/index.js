@@ -115,6 +115,7 @@ const TableContent = ({ type, searchData, searchDate, searchStatus, selected, se
                 columns={columns}
                 dataSource={listTicket}
                 bordered
+                scroll={{ y: 600 }}
                 onRow={(record) => ({
                     onClick: () => handleRowClick(record, record.orderID),
                 })}

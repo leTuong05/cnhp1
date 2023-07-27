@@ -17,6 +17,10 @@ export const Wrapper = styled.div`
     .bg-gray{
         background-color: #EFF0F5;
     }
+
+    .anticon-star{
+        font-size: 30px;
+    }
 `
 export const WrapperHeader = styled.div`
     display: flex;
@@ -37,7 +41,6 @@ export const TotalRate = styled.div`
     }
 
     .rate-star{
-        font-size: 36px;
         margin-bottom: 10px;
     }
     .rate-text{
@@ -63,6 +66,9 @@ gap: 15px;
         width: 140px;
         height: 12px;
         margin-right: 15px;
+    }
+    .anticon-star{
+        font-size: 20px;
     }
 `
 

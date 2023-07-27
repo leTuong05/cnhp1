@@ -14,7 +14,7 @@ const Order = () => {
     const [deliveryToDate, setDeliveryToDate] = useState("");
     const [status, setStatus] = useState("");
 
-    const outputFormat = "YYYY-MM-DDTHH:mm:ssZ";
+    const outputFormat = "YYYY-MM-DD";
     
     const handleSearch = (value) => {
         setTextSeach(value);
