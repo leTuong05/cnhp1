@@ -20,10 +20,10 @@ const ListOrder = ({ textSearch, requestFromDate, requestToDate, deliveryFromDat
     const [listOrders, setListOrders] = useState([])
     const [moneyRepay, setMoneyRepay] = useState(0)
     const [reasonCancel, setReasonCancel] = useState("")
-    const dataWithSTT = listOrders.map((item, index) => ({
-        ...item,
-        index: index + 1, // Tính toán giá trị STT bằng cách thêm 1 vào index
-    }));
+    // const dataWithSTT = listOrders.map((item, index) => ({
+    //     ...item,
+    //     index: index + 1, // Tính toán giá trị STT bằng cách thêm 1 vào index
+    // }));
     const handleHide = () => {
         setShowOrderDetail(false)
     }
@@ -65,6 +65,7 @@ const ListOrder = ({ textSearch, requestFromDate, requestToDate, deliveryFromDat
         {
             title: 'STT',
             dataIndex: 'index',
+            render: (_, __, index) => index + 1
         },
         {
             title: <div className='title'>
@@ -279,7 +280,7 @@ const ListOrder = ({ textSearch, requestFromDate, requestToDate, deliveryFromDat
                 bordered
                 rowSelection={rowSelection}
                 columns={columns}
-                dataSource={dataWithSTT}
+                dataSource={listOrders}
                 scroll={{ y: 600 }}
                 pagination={{
                     total: listOrders.length, // Tổng số bản ghi
