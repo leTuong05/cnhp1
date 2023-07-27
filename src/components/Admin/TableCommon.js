@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Space } from 'antd';
+import { Card, Row, Space, message } from 'antd';
 import { Button, Table } from 'antd';
 import { ButtonAddUnits, Wapper, WapperTable } from '../Style/style';
 import { Modal } from 'antd';
@@ -39,6 +39,8 @@ const TableCommon = (props) => {
   const [valueIDDelete, setValuIDDelete] = useState('')
 
   const dispatch = useDispatch();
+
+  const [mode, setMode] = useState('add'); // Thêm mới là chế độ mặc định
 
   const columnsToQuanLy = [
     {
@@ -89,30 +91,14 @@ const TableCommon = (props) => {
   const [valueRecord, setValueRecord] = useState(null)
 
   const handleEdit = (record) => {
+    setIsVisiable(true)
+    setMode('edit');
     setSelectedRow(record);
-    handleShowModal();
   }
 
   useEffect(() => {
     setSelectedRow(valueRecord);
   }, [valueRecord])
-
-  //DELETE
-  // setValuIDDelete(record.ManagementTeamID);
-  const handleDelete = (record) => {
-    console.log(record.ManagementTeamID);
-    Modal.confirm({
-      title: 'Xóa',
-      content: 'Bạn chắc chắn muốn xóa tổ quản lý này không?',
-      onOk: () => {
-        dispatch(fetchDeteleManageTeam(record.ManagementTeamID))
-      },
-    });
-    getList();
-  }
-
-  const listManage = useSelector((state) => state?.manage?.listMagagementTeam?.listAllStatus?.Object)
-  // console.log(listManage);
 
   const getList = () => {
     dispatch(fetchgetList(
@@ -132,12 +118,33 @@ const TableCommon = (props) => {
     getList()
   }, [])
 
+  //DELETE
+  // setValuIDDelete(record.ManagementTeamID);
+  const handleDelete = (record) => {
+    // console.log(record.ManagementTeamID);
+    Modal.confirm({
+      title: 'Xóa',
+      content: 'Bạn chắc chắn muốn xóa tổ quản lý này không?',
+      onOk: () => {
+        dispatch(fetchDeteleManageTeam(record.ManagementTeamID)).then(() =>{
+          getList();
+          message.success('Xóa thành công');  
+      })
+      },
+    });
+    getList();
+  }
+
+  const listManage = useSelector((state) => state?.manage?.listMagagementTeam?.listAllStatus?.Object)
+  // console.log(listManage);
+
   const handleShowModal = () => {
     setIsVisiable(true);
+    setMode('add'); // Đặt chế độ là Thêm mới khi mở Modal
   };
   const handleHideModal = () => {
     setIsVisiable(false);
-    // setSelectedRow(null);
+    setSelectedRow(null);
   };
 
   const isShowModal = () => {
@@ -163,6 +170,8 @@ const TableCommon = (props) => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
+  console.log("mode", mode);
   return (
     <>
       <SearchStatus />
@@ -196,10 +205,11 @@ const TableCommon = (props) => {
           </ButtonAddUnits>
           
           <ModalAddUnits 
-            title="Thêm tổ quản lý"
+            title={mode == 'add' ? 'Thêm tổ quản lý' : 'Sửa tổ quản lý'}
             handlehideModal={handleHideModal}
             isModalVisiable={isVisible}
             selectedRow={selectedRow}
+            mode={mode}
           />
       </Wapper>
     </>
