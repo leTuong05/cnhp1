@@ -2,14 +2,14 @@ import CustomButton from '../../../../components/Button/ButtonPrimary';
 import { Row, Col, Input, Divider } from 'antd';
 import { colors } from '../../../../styles';
 import ListDirector from './components/ListDirector';
-import ListDepartment from '../Department/components/ListDepartment';
+import ListDepartment from './components/ListDepartment';
 import { ManageSystemStyled } from '../styles';
 
 function UserDirectory() {
     return (
         <ManageSystemStyled>
             <div className="head-group">
-                <div className="title">Phòng ban - Chức danh</div>
+                <div className="title">Danh bạ người dùng</div>
                 <div>
                     <CustomButton backgroundColor={colors.white}>Xuất file</CustomButton>
                     <CustomButton backgroundColor={colors.white}>Import file</CustomButton>

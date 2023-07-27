@@ -19,7 +19,6 @@ const roleSlice = createSlice({
             .addCase(fetchRole.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.getRole = action.payload;
-                message.error('Cập nhật thẻ thành công!');
             })
             .addCase(fetchRole.rejected, (state, action) => {
                 state.isLoading = false;

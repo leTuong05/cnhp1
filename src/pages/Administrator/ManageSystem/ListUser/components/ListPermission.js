@@ -124,7 +124,7 @@ function ListPermission() {
             <>
                 <CustomTable
                     columns={columns}
-                    // dataSource={dataSource}
+                    dataSource={dataRole}
                     onRow={(record, rowIndex) => {
                         return {
                             onMouseEnter: () => {
