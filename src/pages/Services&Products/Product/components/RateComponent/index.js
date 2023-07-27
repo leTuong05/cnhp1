@@ -1,34 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { DetailRate, TabsStyled, TotalRate, Wrapper, WrapperHeader } from './styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
-import { Tabs } from 'antd';
+import { Rate, Tabs } from 'antd';
 import RateItem from '../RateItem';
+import { useState } from 'react';
 
-const items = [
-    {
-        key: '1',
-        label: `Đánh giá sản phẩm`,
-        children: `Content of Tab Pane 1`,
-        disabled: true,
-    },
-    {
-        key: '2',
-        label: `Tab 1`,
-        children: `Content of Tab Pane 1`,
-    },
-    {
-        key: '3',
-        label: `Tab 2`,
-        children: `Content of Tab Pane 2`,
-    },
-    {
-        key: '4',
-        label: `Tab 3`,
-        children: `Content of Tab Pane 3`,
-    },
-];
-const RateComponent = () => {
+
+const RateComponent = ({ id, listRate }) => {
+    const [rate, setRate] = useState([]);
+    const [listRates, setListRates] = useState([]);
+
+    console.log(listRate);
     return (
         <Wrapper>
             <WrapperHeader>
@@ -39,88 +22,64 @@ const RateComponent = () => {
                         <span>5</span>
                     </p>
                     <p className='rate-star'>
-                        <FontAwesomeIcon className='yellow' icon={faStar} />
-                        <FontAwesomeIcon className='yellow' icon={faStar} />
-                        <FontAwesomeIcon className='yellow' icon={faStar} />
-                        <FontAwesomeIcon className='yellow' icon={faStar} />
-                        <FontAwesomeIcon className='yellow' icon={faStar} />
+                        <Rate disabled defaultValue={5} />
                     </p>
                     <p className='rate-text'>55 đánh giá</p>
                 </TotalRate>
                 <DetailRate>
                     <p>
                         <span className='rate-star'>
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
+                            <Rate disabled defaultValue={5} />
                         </span>
                         <div className='range bg-yellow'>
 
                         </div>
                         <span className='number-rate'>
-                            5
+                            {/* {listRate[4].Quanity} */}
                         </span>
                     </p>
                     <p>
                         <span className='rate-star'>
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
+                            <Rate disabled defaultValue={4} />
                         </span>
                         <div className='range bg-gray'>
 
                         </div>
                         <span className='number-rate'>
-                            0
+                            {/* {listRate[3].Quanity} */}
                         </span>
                     </p>
                     <p>
                         <span className='rate-star'>
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
+                            <Rate disabled defaultValue={3} />
                         </span>
                         <div className='range bg-gray'>
 
                         </div>
                         <span className='number-rate'>
-                            0
+                            {/* {listRate[2].Quanity} */}
                         </span>
                     </p>
                     <p>
                         <span className='rate-star'>
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
+                            <Rate disabled defaultValue={2} />
                         </span>
                         <div className='range bg-gray'>
 
                         </div>
                         <span className='number-rate'>
-                            0
+                            {/* {listRate[1].Quanity} */}
                         </span>
                     </p>
                     <p>
                         <span className='rate-star'>
-                            <FontAwesomeIcon className='yellow' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
-                            <FontAwesomeIcon className='gray' icon={faStar} />
+                            <Rate disabled defaultValue={1} />
                         </span>
                         <div className='range bg-gray'>
 
                         </div>
                         <span className='number-rate'>
-                            0
+                            {/* {listRate[0].Quanity} */}
                         </span>
                     </p>
                 </DetailRate>

@@ -8,43 +8,47 @@ import { WrapperRate } from './styles';
 import RateComponent from '../components/RateComponent';
 import ProductBestSaler from '../components/ProductBestSaler';
 import { GetBestSellProduct } from '../../../../services/apis/bestSaleProduct';
+import { useParams } from 'react-router-dom';
+import { getProductBestSell, getProductDetail } from '../../../../services/apis/Products';
 
 const listImage = [
     require('../../../../common/images/sanpham-1.png'),
     require('../../../../common/images/sanpham-1.png'),
     require('../../../../common/images/sanpham-1.png'),
     require('../../../../common/images/sanpham-1.png'),
-
-
-
 ]
 
 const ProductDettail = () => {
+    const { id } = useParams();
+    const [productDetail, setProductDetail] = useState({});
+    console.log(id);
     let carouselRef = null;
     const [listBest, setListBest] = useState([]);
 
     useEffect(() => {
         const getBest = async () => {
-            const response = await GetBestSellProduct({
-                "PageSize": 10,
-                "CurrentPage": 1,
-                "CategoryPostID": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-            });
-            console.log(response);
+            const response = await getProductBestSell();
+            setListBest(response.Object);
         }
         getBest()
-    },[])
+    }, [])
 
+    useEffect(() => {
+        const getDetail = async () => {
+            const response = await getProductDetail(id)
+            setProductDetail(response.Object)
+        }
+        getDetail()
+    }, [id])
+    console.log(productDetail);
     const handleButtonClick = (slideNumber) => {
         carouselRef.goTo(slideNumber);
     };
     return (
         <Wrapper>
             <WrapperInfo>
-
                 <Row>
                     <Col span={8}>
-
                         <div>
                             <Carousel ref={(ref) => (carouselRef = ref)}>
                                 {/* Các mục trong carousel */}
@@ -61,42 +65,39 @@ const ProductDettail = () => {
                                     </div>
                                 ))}
                             </div>
-
                         </div>
                     </Col>
                     <Col span={8}>
                         <TitleStyled size='24px' color='#212529' weight='600'>
-                            Nước uống tinh khiết HaiPhong Water - Thùng 24 chai 500 ml
+                            {productDetail.ProductName}
                         </TitleStyled>
 
                         <ProductRate>
                             <span className='rate-star'>
-                                <FontAwesomeIcon className='star' icon={faStar} />
-                                <FontAwesomeIcon className='star' icon={faStar} />
-                                <FontAwesomeIcon className='star' icon={faStar} />
-                                <FontAwesomeIcon className='star' icon={faStar} />
-                                <FontAwesomeIcon className='star' icon={faStar} />
+                                <Rate disabled defaultValue={5} />
                             </span>
                             <span className='rate-text'>
-                                5 đánh giá
+                                {productDetail.QuantityRating} đánh giá
                             </span>
                         </ProductRate>
 
                         <ProductPrice>
                             <p className='price'>
                                 <span className='underline'>đ</span>
-                                <span>50000</span>
+                                <span>{productDetail.Price}</span>
                             </p>
-                            <p>
-                                <span className='price-sale'>
-                                    <span className='underline'>đ</span>
-                                    <span>100000</span>
-                                </span>
+                            {productDetail.Discount === 0 ? <></> : (
+                                <p>
+                                    <span className='price-sale'>
+                                        <span className='underline'>đ</span>
+                                        <span>{productDetail.Discount}</span>
+                                    </span>
 
-                                <span className='sale-percent'>
-                                    -50%
-                                </span>
-                            </p>
+                                    <span className='sale-percent'>
+                                        -50%
+                                    </span>
+                                </p>
+                            )}
                         </ProductPrice>
 
                         <ProductQuantity>
@@ -108,6 +109,7 @@ const ProductDettail = () => {
                             </span>
                             <span className='total'>190 sản phẩm có sẵn</span>
                         </ProductQuantity>
+
                         <WrapperButton>
                             <div>
                                 <Button className='btn-cart'>
@@ -124,7 +126,6 @@ const ProductDettail = () => {
                     </Col>
                 </Row>
 
-
             </WrapperInfo>
             <Row gutter={15} >
                 <Col span={18} className='content'>
@@ -133,22 +134,22 @@ const ProductDettail = () => {
                             <TitleStyled size='18px' weight='600' >Mô tả</TitleStyled>
                             <Line />
                         </div>
-                        <div className='description'>
-
+                        <div dangerouslySetInnerHTML={{ __html: productDetail.Description }} className='description'>
                         </div>
                     </WrapperDescription>
                     <WrapperRate>
                         <div className='title'>
-                            <TitleStyled size='18px' weight='600' >Đánh giá Nước uống tinh khiết HaiPhong Water - Thùng 24 chai 500 ml </TitleStyled>
+                            <TitleStyled size='18px' weight='600' >Đánh giá {productDetail.ProductName} </TitleStyled>
                             <Line />
                         </div>
-                        <RateComponent>
-
-                        </RateComponent>
+                        
+                                <RateComponent id={id} listRate={productDetail.Stars}>
+                                </RateComponent>
+                        
                     </WrapperRate>
                 </Col>
                 <Col span={6}>
-                    <ProductBestSaler />
+                    <ProductBestSaler listBest={listBest} />
                 </Col>
             </Row>
         </Wrapper>
