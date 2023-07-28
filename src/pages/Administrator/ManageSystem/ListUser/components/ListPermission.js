@@ -7,17 +7,16 @@ import { Col, Row, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { fetchRole } from '../../../../../reducers/roleSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import ModalEdit from './ModalEdit';
 function ListPermission() {
     const [hoveredRow, setHoveredRow] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [data, setData] = useState([]);
+    const [dataInfo, setDataInfo] = useState(undefined);
+
     const dispatch = useDispatch();
 
     const { confirm } = Modal;
 
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
     const getList = () => {
         dispatch(
             fetchRole({
@@ -30,7 +29,7 @@ function ListPermission() {
     useEffect(() => {
         getList();
     }, []);
-    const dataRole = useSelector((state) => state?.role?.getRole?.Object);
+    const dataRole = useSelector((state) => state?.role?.role?.getRole?.Object);
     //     {
     //         key: '1',
     //         groupPermission: 'Giám đốc',
@@ -84,7 +83,13 @@ function ListPermission() {
                         <>
                             <Row gutter={8} className="edit">
                                 <Col span={12}>
-                                    <CustomButton className={'icon-edit icon'} onClick={showModal}>
+                                    <CustomButton
+                                        className={'icon-edit icon'}
+                                        onClick={() => {
+                                            setIsModalOpen(true);
+                                            setDataInfo(record);
+                                        }}
+                                    >
                                         <FontAwesomeIcon icon={faPen} />
                                     </CustomButton>
                                 </Col>
@@ -137,6 +142,20 @@ function ListPermission() {
                     }}
                     bordered
                 />
+                {dataInfo ? (
+                    <ModalEdit
+                        open={isModalOpen}
+                        onCancel={() => {
+                            setIsModalOpen(false);
+                        }}
+                        onOk={() => {
+                            setIsModalOpen(false);
+                        }}
+                        dataInfo={dataInfo}
+                    />
+                ) : (
+                    <></>
+                )}
             </>
         </div>
     );
