@@ -30,6 +30,10 @@ import {
 } from "@ant-design/icons";
 import { fetDeleteTagsList } from "../../../reducers/tagsSlice";
 import moment from "moment";
+import iconEdit from "../../../common/images/imageHome_page/edit.png";
+import cacel from "../../../common/images/imageHome_page/cacel.png";
+import xoa from "../../../common/images/imageHome_page/delete.png";
+import danglai from "../../../common/images/imageHome_page/repost.png";
 
 // GET dữ liệu dạng TreeData
 // const getTreeData = (data) => {
@@ -83,13 +87,14 @@ import moment from "moment";
 const options = [
   {
     value: 2,
-    label: 'Đang đăng'
-  }, 
-  { 
+    label: "Đang đăng",
+  },
+  {
     value: 3,
-    label: 'Đã gỡ'
-  }
+    label: "Đã gỡ",
+  },
 ];
+
 // for (let i = 10; i < 36; i++) {
 //   options.push({
 //     value: i.toString(36) + i,
@@ -97,9 +102,7 @@ const options = [
 //   });
 // }
 
-
 const { Search } = Input;
-
 
 const ManagePosts = () => {
   const navigate = useNavigate();
@@ -131,27 +134,20 @@ const ManagePosts = () => {
     const parent = {
       key: item.CategoryPostID,
       title: item.CategoryPostName,
-      children: []
+      children: [],
     };
     treeData.push(parent);
-  
+
     if (item.GetList && item.GetList.length > 0) {
       item.GetList.forEach((child) => {
         const childNode = {
           key: child.CategoryPostID,
           title: child.CategoryPostName,
-        }
+        };
         parent.children.push(childNode);
-      })
+      });
     }
   });
-  
-  // console.log("treeData", treeData);
-
-
-  // console.log('postCategoryList>>>', postCategoryList);
-
-  // console.log("treeData: ", treeData);
 
   const columns = [
     {
@@ -178,8 +174,8 @@ const ManagePosts = () => {
         if (value == 3) {
           return (
             <>
-              <div style={{ display: "flex" }}>
-                <Button
+              <div className="set-hover" style={{ display: "flex" }}>
+                {/* <Button
                   onClick={() => navigateToPost("edit", record)}
                   style={{
                     borderRadius: "50%",
@@ -191,7 +187,10 @@ const ManagePosts = () => {
                   }}
                 >
                   <EditOutlined style={{ fontSize: "14px" }} />
-                </Button>
+                </Button> */}
+                <div onClick={() => navigateToPost("edit", record)}>
+                  <img src={iconEdit}></img>
+                </div>
 
                 <Popconfirm
                   title="Xóa thẻ"
@@ -201,7 +200,7 @@ const ManagePosts = () => {
                   okText="Yes"
                   cancelText="No"
                 >
-                  <Button
+                  {/* <Button
                     // onClick={(record) => handleDelete(record)}
                     style={{
                       borderRadius: "50%",
@@ -213,7 +212,10 @@ const ManagePosts = () => {
                     }}
                   >
                     <DeleteOutlined style={{ fontSize: "14px" }} />
-                  </Button>
+                  </Button> */}
+                  <div>
+                    <img src={xoa}></img>
+                  </div>
                 </Popconfirm>
 
                 <Popconfirm
@@ -224,7 +226,7 @@ const ManagePosts = () => {
                   okText="Yes"
                   cancelText="No"
                 >
-                  <Button
+                  {/* <Button
                     onClick={(record) => handleCacel(record)}
                     style={{
                       borderRadius: "50%",
@@ -235,7 +237,10 @@ const ManagePosts = () => {
                     }}
                   >
                     <ReloadOutlined style={{ fontSize: "14px" }} />
-                  </Button>
+                  </Button> */}
+                  <div onClick={(record) => handleCacel(record)}>
+                    <img src={danglai}></img>
+                  </div>
                 </Popconfirm>
               </div>
             </>
@@ -244,7 +249,7 @@ const ManagePosts = () => {
           return (
             <>
               <div style={{ display: "flex" }}>
-                <Button
+                {/* <Button
                   onClick={() => navigateToPost("edit", record)}
                   style={{
                     borderRadius: "50%",
@@ -256,7 +261,10 @@ const ManagePosts = () => {
                   }}
                 >
                   <EditOutlined style={{ fontSize: "14px" }} />
-                </Button>
+                </Button> */}
+                <div onClick={() => navigateToPost("edit", record)}>
+                  <img src={iconEdit}></img>
+                </div>
 
                 <Popconfirm
                   title="Xóa thẻ"
@@ -266,7 +274,7 @@ const ManagePosts = () => {
                   okText="Yes"
                   cancelText="No"
                 >
-                  <Button
+                  {/* <Button
                     // onClick={(record) => handleDelete(record)}
                     style={{
                       borderRadius: "50%",
@@ -278,7 +286,10 @@ const ManagePosts = () => {
                     }}
                   >
                     <DeleteOutlined style={{ fontSize: "14px" }} />
-                  </Button>
+                  </Button> */}
+                  <div>
+                    <img src={xoa}></img>
+                  </div>
                 </Popconfirm>
 
                 <Popconfirm
@@ -289,7 +300,7 @@ const ManagePosts = () => {
                   okText="Yes"
                   cancelText="No"
                 >
-                  <Button
+                  {/* <Button
                     onClick={(record) => handleRepost(record)}
                     style={{
                       borderRadius: "50%",
@@ -300,7 +311,13 @@ const ManagePosts = () => {
                     }}
                   >
                     <CloseCircleOutlined style={{ fontSize: "14px" }} />
-                  </Button>
+                  </Button> */}
+                  <div>
+                    <img
+                      src={cacel}
+                      onClick={(record) => handleRepost(record)}
+                    ></img>
+                  </div>
                 </Popconfirm>
               </div>
             </>
@@ -345,31 +362,30 @@ const ManagePosts = () => {
     );
   };
 
-
   //hàm SEARCH theo textSearch
   const onSearch = (value) => {
     console.log(value);
     dispatch(
       fetchPostList({
-        "PageSize": 20,
-        "CurrentPage": currentPage,
-        "TextSearch": value,
-        "Status": 0,
-        "CategoryPostID": keySelect,
+        PageSize: 20,
+        CurrentPage: currentPage,
+        TextSearch: value,
+        Status: 0,
+        CategoryPostID: keySelect,
       })
     );
-  }
+  };
 
   //LỌC TRẠNG THÁI
   const handleChange = (value) => {
     console.log(`selected ${value}`);
     dispatch(
       fetchPostList({
-        "PageSize": 20,
-        "CurrentPage": currentPage,
-        "TextSearch": '',
-        "Status": value,
-        "CategoryPostID": keySelect,
+        PageSize: 20,
+        CurrentPage: currentPage,
+        TextSearch: "",
+        Status: value,
+        CategoryPostID: keySelect,
       })
     );
   };

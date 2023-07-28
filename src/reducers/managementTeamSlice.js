@@ -313,10 +313,8 @@ export const fetchDeteleManageTeam = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await deleteManagementTeam(id);
-      // debugger;
       return response;
     } catch (error) {
-      // debugger;
       return rejectWithValue(error);
     }
   }

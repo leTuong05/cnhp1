@@ -267,11 +267,11 @@ const Genaral = () => {
   const handleColClick = (itemId) => {
     setSelectedItemId(itemId.toString());
     if (itemId === "1") {
-      showModal1("Danh sách hóa đơn chưa thanh toán");
+      // showModal1("Danh sách hóa đơn chưa thanh toán");
     } else if (itemId === "3") {
       showModal2("Danh sách khách hàng", columns1, overViewDetail);
     } else if (itemId === "5") {
-      showModal2("Yêu cầu hỗ trợ", columns1, overViewDetail);
+      // showModal2("Yêu cầu hỗ trợ", columns1, overViewDetail);
     }
   };
 

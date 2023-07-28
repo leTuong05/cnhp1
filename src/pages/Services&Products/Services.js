@@ -9,6 +9,14 @@ import hoaDonDienTu from "../../common/images/imageHome_page/hoa-don-dien-tu.png
 import traCuu from "../../common/images/imageHome_page/tra-cuu-su-dung-nuoc.png";
 import { Wrapper } from "./style/ServicesStyle";
 
+import dangkithaydoithongtin from "../../common/images/imageHome_page/dangkithaydoithongtin.png";
+import lapdatmoi from "../../common/images/imageHome_page/lapdatmoi.png";
+import suachua from "../../common/images/imageHome_page/suachua.png";
+import lapdatdichuyenmay from "../../common/images/imageHome_page/lapdatdichuyenmay.png";
+import sangtenhopdong from "../../common/images/imageHome_page/sangten.png";
+import caplaihopdong from "../../common/images/imageHome_page/caplaihopdong.png";
+import thanhtoantructuyen from "../../common/images/imageHome_page/thanhtoantructuyen.png";
+
 const style = {
   background: '#fff',
   padding: '8px 0',
@@ -41,11 +49,11 @@ const Services = ( props ) => {
                   onClick={() => navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")}
                   >
                   <Row className="row">
-                    <Image preview={false} src={hoaDonDienTu} />
+                    <Image preview={false} src={lapdatdichuyenmay} />
                   </Row>
                   <Row className="row">
                     <Typography.Text className="text" style={{color: 'rgb(21, 67, 152)', fontSize: '16px', fontWeight: 600}}>
-                      Hóa đơn điện tử
+                      Lắp đặt/di chuyển máy nước
                     </Typography.Text>
                   </Row>
               </Card>
@@ -63,7 +71,7 @@ const Services = ( props ) => {
                   </Row>
                   <Row className="row">
                     <Typography.Text className="text" style={{color: 'rgb(21, 67, 152)', fontSize: '16px', fontWeight: 600}}>
-                      Hóa đơn điện tử
+                      Sang tên hợp đồng DVCN
                     </Typography.Text>
                   </Row>
               </Card>
@@ -77,11 +85,11 @@ const Services = ( props ) => {
                   onClick={() => navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")}
                   >
                   <Row className="row">
-                    <Image preview={false} src={hoaDonDienTu} />
+                    <Image preview={false} src={caplaihopdong} />
                   </Row>
                   <Row className="row">
                     <Typography.Text className="text" style={{color: 'rgb(21, 67, 152)', fontSize: '16px', fontWeight: 600}}>
-                      Hóa đơn điện tử
+                      Cấp lại hợp đồng DVCN
                     </Typography.Text>
                   </Row>
               </Card>
@@ -95,11 +103,11 @@ const Services = ( props ) => {
                   onClick={() => navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")}
                   >
                   <Row className="row">
-                    <Image preview={false} src={hoaDonDienTu} />
+                    <Image preview={false} src={thanhtoantructuyen} />
                   </Row>
                   <Row className="row">
                     <Typography.Text className="text" style={{color: 'rgb(21, 67, 152)', fontSize: '16px', fontWeight: 600}}>
-                      Hóa đơn điện tử
+                      Thanh toán trực tuyến
                     </Typography.Text>
                   </Row>
               </Card>
@@ -113,11 +121,11 @@ const Services = ( props ) => {
                   onClick={() => navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")}
                   >
                   <Row className="row">
-                    <Image preview={false} src={hoaDonDienTu} />
+                    <Image preview={false} src={suachua} />
                   </Row>
                   <Row className="row">
                     <Typography.Text className="text" style={{color: 'rgb(21, 67, 152)', fontSize: '16px', fontWeight: 600}}>
-                      Hóa đơn điện tử
+                      Sửa chữa(ĐH, mạng lưới cấp cấp nước sau ĐH)
                     </Typography.Text>
                   </Row>
               </Card>
@@ -131,11 +139,11 @@ const Services = ( props ) => {
                   onClick={() => navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")}
                   >
                   <Row className="row">
-                    <Image preview={false} src={hoaDonDienTu} />
+                    <Image preview={false} src={dangkithaydoithongtin} />
                   </Row>
                   <Row className="row">
                     <Typography.Text className="text" style={{color: 'rgb(21, 67, 152)', fontSize: '16px', fontWeight: 600}}>
-                      Hóa đơn điện tử
+                      Đăng ký thay đổi thông tin khách hàng
                     </Typography.Text>
                   </Row>
               </Card>
