@@ -19,6 +19,8 @@ export const ProductImage = styled.img`
     border-radius: 4px;
     margin-bottom: 20px;
     width: 100%;
+    object-fit: contain;
+    height: 300px;
 `
 export const ProductRate = styled.h3`
     margin-top: 20px;
