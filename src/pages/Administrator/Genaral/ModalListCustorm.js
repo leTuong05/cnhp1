@@ -18,16 +18,16 @@ const suffix = (
 
 
 const ModalListCustorm = (props) => {
-    const {title, visible, onOk, onCancel, columns, dataSource} = props;
+    const {title, visible, onOk, onCancel, columns, dataSource, onSearch } = props;
     const [searchedData, setSearchedData] = useState([]);//get data sau khi tìm kiếm
-    console.log("dataSource", dataSource);
 
-    const onSearch = (value) => {
-      const filteredData = dataSource.filter((item) => {
-        return item.PhoneNumber.toLowerCase().includes(value.toLowerCase());
-      });
-      setSearchedData(filteredData);
-    }
+    // const onSearch = (value) => {
+    //   console.log(value.target.value);
+    //   // const filteredData = dataSource.filter((item) => {
+    //   //   return item.PhoneNumber.toLowerCase().includes(value.toLowerCase());
+    //   // });
+    //   // setSearchedData(filteredData);
+    // }
 
     return (
       <WapperModal 
@@ -40,12 +40,12 @@ const ModalListCustorm = (props) => {
             width={1024}
             >
             <Search
-                placeholder="Nhâp mã, tên , SĐT khách hàng"
+                placeholder="Nhâp mã, tên , SĐT khách hànggg"
                 onSearch={onSearch}
                 style={{
                     width: '100%',
                 }}
-                />
+            />
             <TableComponentCustorm columns={columns} dataSource={searchedData.length > 0 ? searchedData : dataSource} />
       </WapperModal>
   )

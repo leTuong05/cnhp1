@@ -70,3 +70,7 @@ html *::-webkit-scrollbar-track {
           }          
       }
   }
+
+  .ant-btn-primary {
+    background: #154398;
+  }

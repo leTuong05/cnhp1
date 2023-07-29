@@ -22,7 +22,7 @@ const items = [
     getItem('Quản lý bài đăng', 'sub4', <AppstoreOutlined />, [getItem('Danh mục - Bài viết', '/danh-sach-bai-viet'), getItem('Danh mục thẻ', '/danh-muc-the')]),
     getItem('Lịch tạm ngừng cấp nước', '/lich-cap-nuoc', <MailOutlined />),
 
-    getItem('Quản lý bài đăng', 'sub7', <AppstoreOutlined />, [getItem('Danh mục - Bài viết', '/danh-sach-bai-viet'), getItem('Danh mục thẻ', '/danh-muc-the')]),
+    // getItem('Quản lý bài đăng', 'sub7', <AppstoreOutlined />, [getItem('Danh mục - Bài viết', '/danh-sach-bai-viet'), getItem('Danh mục thẻ', '/danh-muc-the')]),
     getItem('Đơn vị hành chính', 'sub5', <SettingOutlined />, [getItem('Tổ quản lý', '/to-quan-ly')]),
     getItem('Quản trị hệ thống', 'sub6', <SettingOutlined />, [getItem('Phòng ban - Chức vụ', '/phong-ban-chuc-vu'), getItem('Danh bạ người dùng', '/danh-ba-nguoi-dung'), getItem('Phân quyền', '/phan-quyen'), getItem('Danh bạ doanh nghiệp', '/danh-ba-doanh-nghiep'), getItem('danh bạ khách hàng', '/danh-ba-khach-hang')]),
     getItem('Đơn giá - Định mức', '/don-gia-dinh-muc', <MailOutlined />)

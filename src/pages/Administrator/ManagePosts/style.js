@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const Wapper = styled.div`
     .ant-pagination {
-        display: none;
+        /* display: none; */
     }
     .ant-table {
         thead {
