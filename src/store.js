@@ -9,6 +9,7 @@ import postCategoryReducer from './reducers/categoryPostsSlice';
 import managementTeamReducer from "./reducers/managementTeamSlice.js";
 import positionSlice from './reducers/positionSlice.js';
 import departmentReducer from "./reducers/departmentSlice.js";
+import guestServiceReducer from "./reducers/guestServicesSlice.js";
 const authPersistConfig = {
     key: 'auth',
     storage
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   manage: managementTeamReducer,
   position: positionSlice,
   department: departmentReducer,
+  guestSerives: guestServiceReducer,
 });
 
 const store = configureStore({

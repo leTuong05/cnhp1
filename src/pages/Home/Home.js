@@ -14,7 +14,7 @@ const Home = () => {
     <Divider className="mt-[0px]" />
     <Service />
     <Divider className="mt-[0px]" />
-    <PostsHome />
+    {/* <PostsHome /> */}
     <Divider className="mt-[0px]" />
     <img preview={false} src={bg2} style={{width: '100%'}}/>
     <Grid />

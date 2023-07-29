@@ -179,7 +179,7 @@ export function Router() {
                     <Route path="tim-kiem" element={<ContentLayout />}>
                         <Route path="" element={<Search />} />
                     </Route>
-                    <Route path="*" element={<div>Trang khong ton tai</div>} />
+                    <Route path="*" element={<div>Đang cập nhật ...</div>} />
                 </Route>
 
                 {routeAdmin.map((route) => {

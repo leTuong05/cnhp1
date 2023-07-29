@@ -1,51 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Wapper } from "./style";
 import { Col, Divider, Row, Tabs } from "antd";
 import { Typography } from "antd";
 import HomeNews from "./compoent/HomeNews";
 import Activity from "./compoent/Activity";
+import { getPostHome } from "../../services/apis/guestHome";
 
 const { Title } = Typography;
 
 const PostsHome = () => {
+  const [selectedTabKey, setSelectedTabKey] = useState("");
 
-    const [selectedTabKey, setSelectedTabKey] = useState('');
+  const onChange = (key) => {
+    setSelectedTabKey(key);
+  };
+  const [dataPost, setDataPost] = useState("");
 
-    const onChange = (key) => {
-      setSelectedTabKey(key)
+  useEffect(() => {
+    const getListPost = async () => {
+      const res = await getPostHome();
+      // console.log(res.Object.ListPostHomeLeft);
+      setDataPost(res.Object.ListPostHomeLeft);
     };
-    const items = [
-      {
-        key: "1",
-        label: (
-          <>
-            <Title level={3} style={{ color: "rgb(21, 67, 152)" }}>
-              Tin tức / Sự kiện
-            </Title>
-          </>
-        ),
-        children: (
-          <>
-            <HomeNews selectedTabKey={selectedTabKey} />
-          </>
-        ),
-      },
-      {
-        key: "2",
-        label: (
-          <>
-            <Title level={3} style={{ color: "rgb(21, 67, 152)" }}>
-              Hoạt động công ty
-            </Title>
-          </>
-        ),
-        children: (
-          <>
-            <Activity selectedTabKey={selectedTabKey} />
-          </>
-        ),
-      },
-    ];
+    getListPost();
+  }, []);
+
+  const items = [
+    {
+      key: "1",
+      label: (
+        <>
+          <Title level={3} style={{ color: "rgb(21, 67, 152)" }}>
+            Tin tức / Sự kiện
+          </Title>
+        </>
+      ),
+      children: (
+        <>
+          <HomeNews selectedTabKey={selectedTabKey} dataPost={dataPost} />
+        </>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <>
+          <Title level={3} style={{ color: "rgb(21, 67, 152)" }}>
+            Hoạt động công ty
+          </Title>
+        </>
+      ),
+      children: (
+        <>
+          <Activity selectedTabKey={selectedTabKey} />
+        </>
+      ),
+    },
+  ];
   return (
     <Wapper>
       <Row gutter={16} style={{ width: "100%" }}>

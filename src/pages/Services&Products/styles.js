@@ -61,3 +61,9 @@ export const PayOnline = styled.div`
         }
     }
 `;
+
+export const WapperInstall = styled.div`
+    label {
+        font-size: 22px;
+    }
+`
