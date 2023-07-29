@@ -3,8 +3,12 @@ import { Row, Col, Input, Divider } from 'antd';
 import { colors } from '../../../../styles';
 import ListPermission from './components/ListPermission';
 import { ManageSystemStyled } from '../styles';
+import ModalAdd from './components/ModalAdd';
+import { useState } from 'react';
 function ListUser() {
     const { Search } = Input;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const onSearch = (value) => console.log(value);
     return (
         <ManageSystemStyled>
@@ -15,11 +19,24 @@ function ListUser() {
             <div className="head-group">
                 <div className="title">Danh sách nhóm quyền</div>
                 <div>
-                    <CustomButton backgroundColor={colors.primary}>Thêm nhóm quyền</CustomButton>
+                    <CustomButton
+                        backgroundColor={colors.primary}
+                        onClick={() => {
+                            setIsModalOpen(true);
+                        }}
+                    >
+                        Thêm nhóm quyền
+                    </CustomButton>
                 </div>
             </div>
             <Divider />
             <ListPermission />
+            <ModalAdd
+                open={isModalOpen}
+                closeModal={() => {
+                    setIsModalOpen(false);
+                }}
+            />
         </ManageSystemStyled>
     );
 }

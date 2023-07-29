@@ -1,7 +1,14 @@
-import axiosInstance from "../axios";
+import axiosInstance from '../axios';
 
-export const getAllProduct = (body) =>
-  axiosInstance.post("Guest/GetAllProduct", body);
+export const getAllProduct = () => axiosInstance.get('Product');
 
-export const getProductDetail = (id) =>
-  axiosInstance.get(`Guest/GetProductDetails?ProductID=${id}`);
+export const getAdminProduct = () => axiosInstance.get(`Product/Manage`);
+
+export const adminAddProduct = () => axiosInstance.post(`Product/Manage/Insert`);
+export const getAllProduct1 = (PageSize, CurrentPage, SortType) => axiosInstance.get(`Product?PageSize=${PageSize}&CurrentPage=${CurrentPage}&SortType=${SortType}`);
+
+export const getProductDetail = (id) => axiosInstance.get(`Product/GetByID?id=${id}`);
+
+export const getProductBestSell = () => {
+    return axiosInstance.get('Product/ProductBestSell');
+};

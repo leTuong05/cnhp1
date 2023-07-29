@@ -17,7 +17,7 @@ const data = [
         image: require('../../../../../common/images/sanpham-2.png')
     },
 ]
-const ProductBestSaler = () => {
+const ProductBestSaler = ({listBest}) => {
     return (
         <Wrapper>
             <WrapperTitle>
@@ -26,11 +26,11 @@ const ProductBestSaler = () => {
             </WrapperTitle>
 
             <WrapperItem>
-                {data.map((item) => (
-                    <Link to={'#'}>
-                        <img className='image' src={item.image} />
-                        <TitleStyled size='16px' >{item.name}</TitleStyled>
-                        <p className='price'>{item.price} <span>đ</span></p>
+                {listBest.map((item) => (
+                    <Link to={`/san-pham-va-dich-vu/san-pham/${item.ProductID}`}>
+                        <img className='image' src={item.Image} />
+                        <TitleStyled size='16px' >{item.ProductName}</TitleStyled>
+                        <p className='price'>{item.Price} <span>đ</span></p>
                     </Link>
                 ))}
 

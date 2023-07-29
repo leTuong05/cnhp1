@@ -58,32 +58,32 @@ const positionSlice = createSlice({
 // });
 
 //Slice delete
-// const delelePositionSlice = createSlice({
-//     name: 'deletePosition',
-//     initialState: {
-//         deletePosition: [],
-//         isLoading: false,
-//         error: null
-//     },
-//     extraReducers: (builder) => {
-//         builder
-//             //fetchOverView
-//             .addCase(fetUpdatePosition.pending, (state) => {
-//                 state.isLoading = true;
-//                 state.error = null;
-//             })
-//             .addCase(fetUpdatePosition.fulfilled, (state, action) => {
-//                 state.isLoading = false;
-//                 state.updatePosition = action.payload;
-//                 message.error('Cập nhật thẻ thành công!');
-//             })
-//             .addCase(fetUpdatePosition.rejected, (state, action) => {
-//                 state.isLoading = false;
-//                 state.error = action.error.message;
-//                 message.error('Cập nhật thẻ thất bại!');
-//             });
-//     }
-// });
+const delelePositionSlice = createSlice({
+    name: 'deletePosition',
+    initialState: {
+        deletePosition: [],
+        isLoading: false,
+        error: null
+    },
+    extraReducers: (builder) => {
+        builder
+            //fetchOverView
+            .addCase(fetchDeletePosition.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(fetchDeletePosition.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.deletePosition = action.payload;
+                message.error('Cập nhật thẻ thành công!');
+            })
+            .addCase(fetchDeletePosition.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message;
+                message.error('Cập nhật thẻ thất bại!');
+            });
+    }
+});
 
 // Slide add
 const addPositionSlice = createSlice({
@@ -126,11 +126,13 @@ export const fetUpdatePosition = createAsyncThunk('updatePosition/fetUpdatePosit
     return response;
 });
 
-export const fetchDeletePosition = createAsyncThunk('deletePosition/fetchDeletePosition', async (positionID, { rejectWithValue }) => {
+export const fetchDeletePosition = createAsyncThunk('deletePosition/fetchDeletePosition', async (PositionID, { rejectWithValue }) => {
     try {
-        const response = await DeletePosition(positionID);
+        const response = await DeletePosition(PositionID);
+        // debugger;
         return response;
     } catch (error) {
+        // debugger;
         return rejectWithValue(error);
     }
 });

@@ -1,71 +1,77 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
-import Login from '../pages/Auth/Login';
-import MainLayout from '../layout/MainLayout';
-import ContentFullWidth from '../layout/ContentFullWidth';
-import Home from '../pages/Home/Home';
-import OpenLetter from '../pages/About/OpenLetter';
-import History from '../pages/About/History';
-import Fields from '../pages/About/Fields';
-import CoreValue from '../pages/About/CoreValue';
-import Moral from '../pages/About/Moral';
-import Culture from '../pages/About/Culture';
-import Structure from '../pages/About/Structure';
-import ContentLayout from '../layout/ContentLayout';
-import Product from '../pages/Services&Products/Product';
-import Services from '../pages/Services&Products/Services';
-import Installation from '../pages/Services&Products/Installation';
-import WaterUsageSearch from '../pages/Services&Products/WaterUsageSearch';
-import Bill from '../pages/Services&Products/Bill';
-import OnlinePayment from '../pages/Services&Products/OnlinePayment';
-import Repair from '../pages/Services&Products/Repair';
-import ChangeNameContract from '../pages/Services&Products/ChangeNameContract';
-import RenewContract from '../pages/Services&Products/RenewContract';
-import ChangeInfo from '../pages/Services&Products/ChangeInfo';
-import Procedure from '../pages/CustomerService/Procedure';
-import SuspendSchedule from '../pages/CustomerService/SuspendSchedule';
-import MeterSchedule from '../pages/CustomerService/MeterSchedule';
-import MeterSearch from '../pages/CustomerService/MeterSearch';
-import Consumption from '../pages/CustomerService/Consumption';
-import InvoiceTool from '../pages/CustomerService/InvoiceTool';
-import WaterPrice from '../pages/CustomerService/WaterPrice';
-import GeneralPolicy from '../pages/CustomerService/GeneralPolicy';
-import SecurityPolicy from '../pages/CustomerService/SecurityPolicy';
-import FinancialReport from '../pages/Shareholder/FinancialReport';
-import AnnualReport from '../pages/Shareholder/AnnualReport';
-import ManagementReport from '../pages/Shareholder/ManagementReport';
-import ShareholderInfo from '../pages/Shareholder/ShareholderInfo';
-import AnnualMeeting from '../pages/Shareholder/AnnualMeeting';
-import ProductionActivity from '../pages/News/ProductionActivity';
-import Union from '../pages/News/Union';
-import RelatedNews from '../pages/News/RelatedNews';
-import Quality from '../pages/Quality';
-import Contact from '../pages/Contact/Contact';
-import Search from '../pages/Search/Search';
-import { useSelector } from 'react-redux';
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
+import Login from "../pages/Auth/Login";
+import MainLayout from "../layout/MainLayout";
+import ContentFullWidth from "../layout/ContentFullWidth";
+import Home from "../pages/Home/Home";
+import OpenLetter from "../pages/About/OpenLetter";
+import History from "../pages/About/History";
+import Fields from "../pages/About/Fields";
+import CoreValue from "../pages/About/CoreValue";
+import Moral from "../pages/About/Moral";
+import Culture from "../pages/About/Culture";
+import Structure from "../pages/About/Structure";
+import ContentLayout from "../layout/ContentLayout";
+import Product from "../pages/Services&Products/Product";
+import Services from "../pages/Services&Products/Services";
+import Installation from "../pages/Services&Products/Installation";
+import WaterUsageSearch from "../pages/Services&Products/WaterUsageSearch";
+import Bill from "../pages/Services&Products/Bill";
+import OnlinePayment from "../pages/Services&Products/OnlinePayment";
+import Repair from "../pages/Services&Products/Repair";
+import ChangeNameContract from "../pages/Services&Products/ChangeNameContract";
+import RenewContract from "../pages/Services&Products/RenewContract";
+import ChangeInfo from "../pages/Services&Products/ChangeInfo";
+import Procedure from "../pages/CustomerService/Procedure";
+import SuspendSchedule from "../pages/CustomerService/SuspendSchedule";
+import MeterSchedule from "../pages/CustomerService/MeterSchedule";
+import MeterSearch from "../pages/CustomerService/MeterSearch";
+import Consumption from "../pages/CustomerService/Consumption";
+import InvoiceTool from "../pages/CustomerService/InvoiceTool";
+import WaterPrice from "../pages/CustomerService/WaterPrice";
+import GeneralPolicy from "../pages/CustomerService/GeneralPolicy";
+import SecurityPolicy from "../pages/CustomerService/SecurityPolicy";
+import FinancialReport from "../pages/Shareholder/FinancialReport";
+import AnnualReport from "../pages/Shareholder/AnnualReport";
+import ManagementReport from "../pages/Shareholder/ManagementReport";
+import ShareholderInfo from "../pages/Shareholder/ShareholderInfo";
+import AnnualMeeting from "../pages/Shareholder/AnnualMeeting";
+import ProductionActivity from "../pages/News/ProductionActivity";
+import Union from "../pages/News/Union";
+import RelatedNews from "../pages/News/RelatedNews";
+import Quality from "../pages/Quality";
+import Contact from "../pages/Contact/Contact";
+import Search from "../pages/Search/Search";
+import { useSelector } from "react-redux";
 
-import DetailNews from '../pages/News/components/DetailNews';
-import ProductDettail from '../pages/Services&Products/Product/ProductDetail';
-import Genaral from '../pages/Administrator/Genaral/Genaral';
+import DetailNews from "../pages/News/components/DetailNews";
+import ProductDettail from "../pages/Services&Products/Product/ProductDetail";
+import Genaral from "../pages/Administrator/Genaral/Genaral";
 
 // route Admin
-import LayoutAdmin from '../layout/Admin/LayoutAdmin';
+import LayoutAdmin from "../layout/Admin/LayoutAdmin";
 // import TongQuann from "../pages/Admin/TongQuann";
 
-import { Fragment } from 'react';
+import { Fragment } from "react";
 // import HoaDonNuoc from '../pages/Admin/HoaDonNuoc';
 // import DonHang from '../pages/Admin/DonHang';
-import WaterBill from '../pages/Administrator/WaterBill';
+import WaterBill from "../pages/Administrator/WaterBill";
 // import Order from '../pages/Administrator/Order';
-import TongQuan from '../pages/Administrator/Genaral/Genaral';
-import DanhMucThe from '../pages/Administrator/ManagePosts/CategoryCard';
-import SanPham from '../pages/Administrator/Products/Products';
-import ToQuanLy from '../pages/Administrator/Units/Units';
-import Department from '../pages/Administrator/ManageSystem/Department';
-import UserDirectory from '../pages/Administrator/ManageSystem/UserDirectory';
-import DanhMucBaiViet from '../pages/Administrator/ManagePosts/ManagePosts';
-import DangBai from '../pages/Administrator/ManagePosts/Posts/Posts';
-import ListUser from '../pages/Administrator/ManageSystem/ListUser';
-import EnterPrise from '../pages/Administrator/ManageSystem/EnterPrise';
+import TongQuan from "../pages/Administrator/Genaral/Genaral";
+import DanhMucThe from "../pages/Administrator/ManagePosts/CategoryCard";
+import SanPham from "../pages/Administrator/Products/Products";
+import ToQuanLy from "../pages/Administrator/Units/Units";
+import Department from "../pages/Administrator/ManageSystem/Department";
+import UserDirectory from "../pages/Administrator/ManageSystem/UserDirectory";
+import DanhMucBaiViet from "../pages/Administrator/ManagePosts/ManagePosts";
+import DangBai from "../pages/Administrator/ManagePosts/Posts/Posts";
+import ListUser from "../pages/Administrator/ManageSystem/ListUser";
+import EnterPrise from "../pages/Administrator/ManageSystem/EnterPrise";
 
 import Order from '../pages/Administrator/Order';
 import InstalltionService from '../pages/Administrator/Services/InstalltionService';
@@ -75,37 +81,53 @@ import PaymentService from '../pages/Administrator/Services/PaymentService';
 import RepairService from '../pages/Administrator/Services/RepairService';
 import EditInfoService from '../pages/Administrator/Services/EditInfoService';
 import SearchInfoService from '../pages/Administrator/Services/SearchInfoService';
+import GuestDirectory from '../pages/Administrator/ManageSystem/GuestDirectory';
+import WaterConfig from "../pages/Administrator/WaterConfig";
 
 export const routeAdmin = [
-    { path: '/tong-quan', component: TongQuan, layout: true },
-    { path: '/hoa-don-nuoc', component: WaterBill, layout: true },
-    { path: '/don-hang', component: Order, layout: true },
-    { path: '/dv-lap-dat-may-nuoc', component: InstalltionService, layout: true },
-    { path: '/dv-sang-ten-hop-dong', component: ContractNameService, layout: true },
-    { path: '/dv-cap-lai-hop-dong', component: ContractRenewalService, layout: true },
-    { path: '/dv-thanh-toan-tien-nuoc', component: PaymentService, layout: true },
-    { path: '/dv-sua-chua', component: RepairService, layout: true },
-    { path: '/dv-thong-tin-khach-hang', component: EditInfoService, layout: true },
-    { path: '/dv-tra-cuu', component: SearchInfoService, layout: true },
+  { path: "/tong-quan", component: TongQuan, layout: true },
+  { path: "/hoa-don-nuoc", component: WaterBill, layout: true },
+  { path: "/don-hang", component: Order, layout: true },
+  { path: "/dv-lap-dat-may-nuoc", component: InstalltionService, layout: true },
+  {
+    path: "/dv-sang-ten-hop-dong",
+    component: ContractNameService,
+    layout: true,
+  },
+  {
+    path: "/dv-cap-lai-hop-dong",
+    component: ContractRenewalService,
+    layout: true,
+  },
+  { path: "/dv-thanh-toan-tien-nuoc", component: PaymentService, layout: true },
+  { path: "/dv-sua-chua", component: RepairService, layout: true },
+  {
+    path: "/dv-thong-tin-khach-hang",
+    component: EditInfoService,
+    layout: true,
+  },
+  { path: "/dv-tra-cuu", component: SearchInfoService, layout: true },
+  { path: "/don-gia-dinh-muc", component: WaterConfig, layout: true },
 
-    // SẢn phẩm
-    { path: '/kho-hang', component: SanPham, layout: true },
+  // SẢn phẩm
+  { path: "/kho-hang", component: SanPham, layout: true },
 
     // Quản trị hệ thống
     { path: '/phong-ban-chuc-vu', component: Department, layout: true },
     { path: '/danh-ba-nguoi-dung', component: UserDirectory, layout: true },
     { path: '/phan-quyen', component: ListUser, layout: true },
     { path: '/danh-ba-doanh-nghiep', component: EnterPrise, layout: true },
+    { path: '/danh-ba-khach-hang', component: GuestDirectory, layout: true },
 
-    { path: '/to-quan-ly', component: ToQuanLy, layout: true },
-    { path: '/danh-muc-the', component: DanhMucThe, layout: true },
+  { path: "/to-quan-ly", component: ToQuanLy, layout: true },
+  { path: "/danh-muc-the", component: DanhMucThe, layout: true },
 
-    { path: '/dang-bai', component: DangBai, layout: true },
+  { path: "/dang-bai", component: DangBai, layout: true },
 
-    { path: '/danh-sach-bai-viet', component: DanhMucBaiViet, layout: true },
-    { path: '/to-quan-ly', component: ToQuanLy, layout: true },
-    { path: '/danh-muc-the', component: DanhMucThe, layout: true },
-    { path: '/kho-hang', component: SanPham, layout: true }
+  { path: "/danh-sach-bai-viet", component: DanhMucBaiViet, layout: true },
+  { path: "/to-quan-ly", component: ToQuanLy, layout: true },
+  { path: "/danh-muc-the", component: DanhMucThe, layout: true },
+  { path: "/kho-hang", component: SanPham, layout: true },
 ];
 // export const publicRoutes = [
 //   { path: '/tong-quan', component: Home },
@@ -179,36 +201,35 @@ export function Router() {
                     <Route path="tim-kiem" element={<ContentLayout />}>
                         <Route path="" element={<Search />} />
                     </Route>
-                    <Route path="*" element={<div>Đang cập nhật ...</div>} />
+                    <Route path="*" element={<div>Trang khong ton tai</div>} />
                 </Route>
+        {routeAdmin.map((route) => {
+          const Page = route.component;
+          let Layout;
+          if (route.layout) {
+            Layout = LayoutAdmin;
+          } else {
+            Layout = Fragment;
+          }
 
-                {routeAdmin.map((route) => {
-                    const Page = route.component;
-                    let Layout;
-                    if (route.layout) {
-                        Layout = LayoutAdmin;
-                    } else {
-                        Layout = Fragment;
-                    }
-
-                    return (
-                        <Route
-                            path={route.path}
-                            element={
-                                <Layout>
-                                    <Page />
-                                </Layout>
-                            }
-                        />
-                    );
-                })}
-            </Routes>
-        </BrowserRouter>
-    );
+          return (
+            <Route
+              path={route.path}
+              element={
+                <Layout>
+                  <Page />
+                </Layout>
+              }
+            />
+          );
+        })}
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-const Protected = ({ redirectPath = '/dang-nhap' }) => {
-    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+const Protected = ({ redirectPath = "/dang-nhap" }) => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-    return isAuthenticated ? <Outlet /> : <Navigate to={redirectPath} replace />;
+  return isAuthenticated ? <Outlet /> : <Navigate to={redirectPath} replace />;
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { TableStyled } from './styles'
 import OrderDetail from '../../../Order/components/OrderDetail';
 import TicketDetail from '../TicketDetail';
@@ -67,49 +67,25 @@ const columns = [
     },
 
 ];
-const data = [
-    {
-        key: 1,
-        Address: "Mễ Trì Hạ, Nam Từ Liêm, Hà Nội",
-        FullName: "Quản trị",
-        PhoneNumber: "0358120912",
-        RequestDate: "2022-11-29T15:04:40+07:00",
-        TicketListID: "ce97599a-acf7-435a-9a51-33c1dad5e192",
-        TicketStatus: 3,
-        TicketType: 1,
-        UserCode: "ADMIN",
-    },
-    {
-        key: 2,
-        Address: "hà đông",
-        FullName: "Nguyễn văn A",
-        PhoneNumber: "0963049748",
-        RequestDate: "2022-11-25T13:06:47+07:00",
-        TicketListID: "c9cb9333-d123-416f-a6f0-ecea106eaa8a",
-        TicketStatus: 3,
-        TicketType: 1,
-        UserCode: "PD091296",
-    }
-]
-const TableContent = ({ type }) => {
+
+const TableContent = ({ type, searchData, searchDate, searchStatus, selected, setSelected, listTicket, setListTicket }) => {
     const [showDetailTicket, setShowDetailTicket] = useState(false);
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    const [listTicket, setListTicket] = useState([]);
+    // const [listTicket, setListTicket] = useState([]);
     const [idTicket, setIdTicket] = useState();
-    const [customerCode, setCustomerCode] = useState('')
-    const onSelectChange = (newSelectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
+
+
+    const onSelectChange = (selectedRowKeys) => {
+        setSelected(selectedRowKeys);
     };
-    const rowSelection = {
-        selectedRowKeys,
+
+    const rowSelection = ({
+        selected,
         onChange: onSelectChange,
-    };
+    })
+
 
     const handleRowClick = (record, id) => {
-
         setIdTicket(record.TicketListID)
-        // Handle row click event
         setShowDetailTicket(true)
 
     };
@@ -122,21 +98,24 @@ const TableContent = ({ type }) => {
             const response = await GetListTicket({
                 PageSize: 50,
                 CurrentPage: 1,
-                TextSearch: "",
-                Date: "",
+                TextSearch: searchData || "",
+                Date: searchDate || "",
+                TicketStatus: searchStatus === 0 ? "" : searchStatus,
                 TicketType: type || 0
             })
             setListTicket(response.Object)
         }
         getListTicket();
-    }, [type])
+    }, [type, searchData, searchDate,searchStatus])
     return (
         <>
             <TableStyled
+                rowKey="TicketListID"
                 rowSelection={rowSelection}
                 columns={columns}
                 dataSource={listTicket}
                 bordered
+                scroll={{ y: 600 }}
                 onRow={(record) => ({
                     onClick: () => handleRowClick(record, record.orderID),
                 })}
