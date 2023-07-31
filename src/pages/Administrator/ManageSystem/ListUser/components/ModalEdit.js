@@ -92,26 +92,18 @@ function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo }) {
                     <Form.Item name="checkbox-group" label={item.Description}>
                         <Checkbox.Group style={{ width: '100%' }}>
                             <Row>
-                                <Col>
-                                    <Checkbox
-                                        value="A"
-                                        style={{
-                                            lineHeight: '32px'
-                                        }}
-                                    >
-                                        A
-                                    </Checkbox>
-                                </Col>
-                                <Col>
-                                    <Checkbox
-                                        value="A"
-                                        style={{
-                                            lineHeight: '32px'
-                                        }}
-                                    >
-                                        A
-                                    </Checkbox>
-                                </Col>
+                                {item.ltFunctionID?.map((childItem) => {
+                                    <Col>
+                                        <Checkbox
+                                            value={childItem.FunctionID}
+                                            style={{
+                                                lineHeight: '32px'
+                                            }}
+                                        >
+                                            {childItem.FunctionDescription}
+                                        </Checkbox>
+                                    </Col>;
+                                })}
                             </Row>
                         </Checkbox.Group>
                     </Form.Item>

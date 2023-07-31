@@ -1,7 +1,7 @@
 import { Modal, Upload } from 'antd';
 import React, { useState } from 'react';
 
-function CustomUpload({ children, onChange, fileList }) {
+function CustomUpload({ children, onChange, fileList, beforeUpload }) {
     const getBase64 = (file) =>
         new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -25,7 +25,7 @@ function CustomUpload({ children, onChange, fileList }) {
 
     return (
         <>
-            <Upload action="https://www.mocky.io/v2/5cc8019d300000980a055e76" onPreview={handlePreview} onChange={onChange} fileList={fileList} listType="picture-card">
+            <Upload action="https://www.mocky.io/v2/5cc8019d300000980a055e76" onPreview={handlePreview} onChange={onChange} fileList={fileList} beforeUpload={beforeUpload} listType="picture-card">
                 {children}
             </Upload>
             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>

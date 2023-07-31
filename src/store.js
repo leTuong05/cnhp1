@@ -12,6 +12,7 @@ import departmentReducer from './reducers/departmentSlice.js';
 import roleSlice from './reducers/roleSlice.js';
 import roleReducer from './reducers/roleSlice.js';
 import categoryReducer from './reducers/functionSlice.js';
+import userDirectSlice from './reducers/UserSlice.js';
 const authPersistConfig = {
     key: 'auth',
     storage
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
     position: positionSlice,
     department: departmentReducer,
     role: roleReducer,
-    category: categoryReducer
+    category: categoryReducer,
+    user: userDirectSlice.reducer
 });
 
 const store = configureStore({

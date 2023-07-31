@@ -93,11 +93,11 @@ const Products = () => {
                                 <Col span={12}>
                                     <CustomButton
                                         className={'icon-edit icon'}
-                                        // onClick={() => {
-                                        //     setIsModalOpen(true);
-                                        //     setDataInfo(record);
-                                        //     // console.log(record.PositionID);
-                                        // }}
+                                        onClick={() => {
+                                            setIsModalOpen(true);
+                                            // setDataInfo(record);
+                                            // console.log(record.PositionID);
+                                        }}
                                     >
                                         <FontAwesomeIcon icon={faPen} />
                                     </CustomButton>
