@@ -6,53 +6,37 @@ import TinyEditor from '../../Products/components/TinyEditor';
 import { Wrapper } from './style';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategoryPost, fetchGetDetailByID, fetchInsertPostList, fetchPostList, fetchUpdatePostList } from '../../../../reducers/categoryPostsSlice';
-import { fetchTags } from '../../../../reducers/tagsSlice';
+import { fetTagsList, fetchTags } from '../../../../reducers/tagsSlice';
 import { useLocation, useNavigate } from "react-router-dom";
 
 const { TextArea } = Input;
 
-// GET dữ liệu dạng TreeData
-const getTreeData = (data) => {
-  const treeData = [];
-  data?.forEach((category) => {
-    if (category.Level === 1) {
-      treeData.push({
-        title: category.CategoryPostName,
-        value: category.CategoryPostID,
-        children: [],
-      });
-    } else {
-      const parentId = category.ParentID;
-      treeData?.forEach((parent) => {
-        if (parent.value === parentId) {
-          parent.children.push({
-            title: category.CategoryPostName,
-            value: category.CategoryPostID,
-          });
-        }
-      });
-    }
-  });
-  return treeData;
-};
+// GET dữ liệu dạng TreeData (cnhp.h2q)
+// const getTreeData = (data) => {
+//   const treeData = [];
+//   data?.forEach((category) => {
+//     if (category.Level === 1) {
+//       treeData.push({
+//         title: category.CategoryPostName,
+//         value: category.CategoryPostID,
+//         children: [],
+//       });
+//     } else {
+//       const parentId = category.ParentID;
+//       treeData?.forEach((parent) => {
+//         if (parent.value === parentId) {
+//           parent.children.push({
+//             title: category.CategoryPostName,
+//             value: category.CategoryPostID,
+//           });
+//         }
+//       });
+//     }
+//   });
+//   return treeData;
+// };
 
-const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-};
+
 
 // const handleChange = (value) => {
 //     console.log(`selected ${value}`);
@@ -68,14 +52,16 @@ const Posts = () => {
     const [valueCategoryID, setValueCategoryID] = useState("");
     const [textContent, setTextContent] = useState("");
     const [valueTagsID, setValueTagsID] = useState("");
+    const location = useLocation();
+    const [fileList, setFileList] = useState([]);
 
-
-    const location = useLocation()
     // const { type, record } = location.state || {} //lay Params qua navigate
     // const type= location.state.type || {} //lay Params qua navigate
     const {record} = location.state || {} //lay Params qua navigate
     const params = new URLSearchParams(location.search);
     const type = params.get("type");
+
+    console.log('record>>>>:', record);
 
     const title = type === "add" ? "Thêm bài viết" : "Sửa bài viết";
     const titleSubmit = type === "add" ? "Đăng bài" : "Sửa bài";
@@ -85,10 +71,8 @@ const Posts = () => {
 
     // const [value, setValue] = useState(['0-0-0']);
 
-    const postCategoryList = useSelector((state) => state?.postCategory?.listsCategory?.listsCategory?.Object?.data)
-    // console.log("postCategoryList>>", postCategoryList);
-    const tagsList = useSelector((state) => state?.tags?.tags?.tags?.Object)
-    // console.log(tagsList);
+    const postCategoryList = useSelector((state) => state?.postCategory?.listsCategory?.listsCategory?.Object)
+    const tagsList = useSelector((state) => state?.tags?.tagsList?.tagsList?.Object)
     const [titleInitial, setTitleInitial] = useState('');
     const [defaultTitle, setDefaultTitle] = useState('');
 
@@ -107,7 +91,7 @@ const Posts = () => {
       }
     }, [getPostDetail]);
 
-    console.log("titleInitial", getPostDetail);
+    // console.log("titleInitial", getPostDetail);
 
     //get data detail by ID
     useEffect(() => {
@@ -115,6 +99,36 @@ const Posts = () => {
         dispatch(fetchGetDetailByID(record?.PostID))
       }
     }, [])
+
+
+    //get TAGS danh sách -> select Tags
+    useEffect(() => {
+      dispatch(
+        fetTagsList({
+          "PageSize": 20,
+          "CurrentPage": 1,
+          "TextSearch": ""
+      })
+      )
+    }, [])
+
+    const file = fileList ? Object.values(fileList)[0] : null;
+    console.log("fileList>>>>", file);
+
+    //CREATE
+    const submitFormPost = () => {
+      dispatch(fetchInsertPostList(
+        {
+          Title: valueTitle,
+          file: file,
+          Summary: valueSummary,
+          CategoryPostID: valueCategoryID,
+          Content: 'textContent',
+          listTag: valueTagsID
+        }
+      )
+      )
+    }
 
     //get list ALL
     const getList = () => {
@@ -142,20 +156,6 @@ const Posts = () => {
     };
 
     
-
-    //submit
-    const submitFormPost = () => {
-      dispatch(fetchInsertPostList({
-        Title: valueTitle,
-        Summary: valueSummary,
-        CategoryPostID: valueCategoryID,
-        Content: textContent,
-        // ListTagsID: [
-        //   valueTagsID
-        // ],
-      })
-      )
-    }
     const valueCate = getPostDetail?.CategoryPostID || valueCategoryID ;
 
     const submitEditPost = () => {
@@ -165,9 +165,7 @@ const Posts = () => {
         Summary: valueSummary,
         CategoryPostID: valueCate,
         Content: textContent,
-        // ListTagsID: [
-        //   valueTagsID
-        // ],
+        ListTagsID: valueTagsID
       })
       )
     }
@@ -180,7 +178,6 @@ const Posts = () => {
         label: item.TagsName,
       })
     })
-    // console.log("options", options);
 
     //getCategory
     useEffect(() =>{
@@ -193,24 +190,41 @@ const Posts = () => {
     },[]);
     
     const onChange = (newValue) => {
-      console.log(newValue);
+      // console.log(newValue);
       setValue(newValue);
     };
 
     const handleChange = (value) => {
-      console.log(`Selected: ${value}`);
+      // console.log(`Selected: ${value}`);
     };
 
-    const treeDataPush = getTreeData(postCategoryList);
-    // console.log("treeDataPush", treeDataPush);
+    // get SELECT DANH MỤC
+    const treeDataPush = [];
+    postCategoryList?.forEach((item) => {
+      const parent = {
+        title: item.CategoryPostName,
+        value: item.CategoryPostID,
+        children: []
+      };
+      treeDataPush.push(parent);
+      if (item.GetList && item.GetList.length > 0) {
+        item.GetList.forEach((child) => {
+          const childNode = {
+            title: child.CategoryPostName,
+            value: child.CategoryPostID,
+          }
+          parent.children.push(childNode);
+        })
+      }
+  });
 
     const handleChangeTitleInitial = (event) => {
-      console.log(event.target.value);
+      // console.log(event.target.value);
       setTitleInitial(event.target.value);
     };
 
     const handleChangeTitle = (e) => {
-      console.log(e.target.value);
+      // console.log(e.target.value);
       setValueTitle(e.target.value);
     }
     const handleChangeSummary = (e) => {
@@ -220,30 +234,36 @@ const Posts = () => {
       setValueContent(e.target.value);
     }
     const handleChangeCategoryID = (value) => {
-      console.log("Category:",value);
       setValueCategoryID(value);
     }
     const handleChangeTagID = (value) => {
-      setValueTagsID(value);
+      setValueTagsID(value.toString());
     }
 
-    // const handleEditorChange = (content, editor) => {
-    //     console.log("content", content);
-    //     setTextContent(editor.getContent({format: 'text'}));
-    // };
+    console.log(valueTagsID);
+
+    const handleEditorChange = (content, editor) => {
+        // console.log("content", content);
+        setTextContent(editor.getContent({format: 'text'}));
+    };
     // console.log(textContent);
     useEffect(() => {
       setTextContent(value);
     }, [])
 
+    // console.log('valueContent>>', textContent);
     // const [nameValueInittial, setNameValueInitial] = useState('');
 
     // const handleNameInitialChange = (event) => {
     //   setNameValueInitial(event.target.value);
     // }
 
-    const defaultValueCategory = record ? getPostDetail?.CategoryPostName : null;
-  
+    const defaultValueCategory = record ? record?.CategoryPostID : null;
+
+    const defatTags = record ? record?.TagsIDList : null
+    // 1API lấy được category postName
+
+
     return (
         <Wrapper>
             <Card
@@ -260,11 +280,12 @@ const Posts = () => {
                       required: true,
                     },
                   ]}
+                  // key={record.CategoryPostID}
                 > 
                 {
                     record 
                     ?  
-                    (<Input defaultValue={getPostDetail?.Title} onChange={handleChangeTitleInitial} placeholder='Nhập tiêu đề' />) 
+                    (<Input defaultValue={record?.Title} onChange={handleChangeTitleInitial} placeholder='Nhập tiêu đề' />) 
                     : 
                     (<Input onChange={handleChangeTitle} placeholder='Nhập tiêu đề'/>)
                 }
@@ -272,10 +293,48 @@ const Posts = () => {
                 <Row flexDirection="column" flexWrap="wrap"  style={{marginBottom: '10px'}}>
                     <Col span={24} style={{fontSize: '16px', fontWeight: 600, marginBottom: '10px'}}>Hình thu nhỏ</Col>
                     <Col span={24} style={{marginBottom: '10px'}}>Dung lượng file tối đa 1MB, định dạng:... JPEG, .PNG</Col>
-                    <Upload {...props}>
-                      <Row/>
-                      <Button icon={<UploadOutlined />}>Thêm video</Button>
-                    </Upload>
+                    <Form.Item
+                      valuePropName='fileList'
+                      getValueFromEvent={(event) => {
+                        return event?.fileList;
+                      }}
+                      rules={[
+                        {
+                          validator(_,fileList) {
+                            return new Promise((resolve, reject) => {
+                              if(fileList && fileList[0].size > 90000000) {
+                                reject("File size exceeded");
+                              } else {
+                                resolve("Success")
+                              }
+                            })
+                          }
+                        }
+                      ]}
+                    >
+                        <Upload 
+                          maxCount={1}
+                          beforeUpload={(file) => {
+                            return new Promise((resolve, reject) => {
+                              if(file.size > 9000000) {
+                                reject("File size exceeded");
+                                // message.error("File size exceeded");
+                              } else {
+                                resolve("Success")
+                              }
+                            })
+                          }}
+                          customRequest={(info) => {
+                            setFileList([info.file])
+                          }}
+                          showUploadList={false}
+                          defaultValue={file || null}
+                          >
+                          <Row/>
+                          <Button icon={<UploadOutlined />}>Thêm video</Button>
+                        </Upload>
+                        {fileList[0]?.name}
+                    </Form.Item>
                 </Row>
                 <Form.Item name="summary" label="Tóm tắt"
                   rules={[
@@ -286,7 +345,7 @@ const Posts = () => {
                 >
                 {
                   record ?
-                  (<TextArea onChange={handleChangeSummary} rows={4} defaultValue={getPostDetail?.Summary} placeholder="Nhập nội dung"/>)
+                  (<TextArea onChange={handleChangeSummary} rows={4} defaultValue={record?.Summary} placeholder="Nhập nội dung"/>)
                   :
                   (<TextArea onChange={handleChangeSummary} rows={4} placeholder="Nhập nội dung"/>)
                 }
@@ -300,7 +359,7 @@ const Posts = () => {
                   // ]}
                 >
                     <TinyEditor 
-                        // handleEditorChange={handleEditorChange}
+                        handleEditorChange={handleEditorChange}
                         value={value}
                     />
                 </Form.Item>
@@ -323,7 +382,7 @@ const Posts = () => {
                         treeData={treeDataPush}
                         placeholder="Chọn danh mục"
                         onChange={handleChangeCategoryID}
-                        defaultValue={defaultValueCategory}
+                        defaultValue={type === "edit" ? defaultValueCategory : null}
                     />
                 </Form.Item>
 
@@ -336,7 +395,8 @@ const Posts = () => {
                         width: '100%',
                       }}
                       options={options}
-                    />
+                      defaultValue={type === "edit" ? defatTags : null}
+                     />
                 </Form.Item>
                 
                 <Form.Item>

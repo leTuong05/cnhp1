@@ -1,5 +1,5 @@
 import { combineReducers, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { cancelGetListPost, deleteGetListPost, getAllCategoryPost, getDetailPostByID, insertPostList, postGetList, repostGetListPost, updatePostList } from "../services/apis/postsCategoryy";
+import { cancelGetListPost, deleteGetListPost, getAllCategoryPost, getDetailPostByID, insertPostList, postGetList, repostGetListPost, updatePostList, uploadFileMuti } from "../services/apis/postsCategoryy";
 
 //danh muc Categoy
 const listCategoryPostSlice = createSlice({
@@ -212,8 +212,10 @@ export const fetchPostList = createAsyncThunk(
     ,{rejectWithValue }) => {
         try {
             const response = await postGetList(body);
+            // debugger;
             return response;
         } catch (error) {
+            // debugger;
             return rejectWithValue(error);
     }
 })
@@ -250,8 +252,10 @@ export const fetchUpdatePostList = createAsyncThunk(
     ,{rejectWithValue }) => {
         try {
             const response = await updatePostList(body);
+            // debugger;
             return response;
         } catch (error) {
+            // debugger;
             return rejectWithValue(error);
     }
 })
@@ -292,6 +296,21 @@ export const fetchGetDetailByID = createAsyncThunk(
         }
     }
 )
+
+//upload file Muti play
+export const fetupLoadMuti = createAsyncThunk(
+    "uploadMuti/fetupLoadMuti", async(
+        body
+    ,{rejectWithValue }) => {
+        try {
+            const response = await uploadFileMuti(body);
+            debugger;
+            return response;
+        } catch (error) {
+            debugger;
+            return rejectWithValue(error);
+    }
+})
 
 const postsCategoryReducer = combineReducers({
     listsCategory: listCategoryPostSlice.reducer,

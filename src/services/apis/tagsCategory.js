@@ -1,17 +1,18 @@
 import axiosInstance from "../axios";
 
-//get Tabs list
+
 export const getAllCategoryTags = () => axiosInstance.get("Tags/GetAllForCombobox");
 
-export const getListsTag = (body) => axiosInstance.post("Tags/GetList", body);
+//get ALL Tabs list
+export const getListsTag = (body) => axiosInstance.post("Tags/GetAll", body);
 
 //delete thẻ
-export const deleteTags = (tagsID) => axiosInstance.post(`Tags/Delete?TagsID=${tagsID}`);
+export const deleteTags = (tagsID) => axiosInstance.delete(`Tags/Delete?Id=${tagsID}`);
 
 //update
-export const updateTags = (body) => axiosInstance.post("Tags/Update", body)
+export const updateTags = (body) => axiosInstance.put("Tags/Update", body)
 
 //add 
-export const addNewTags = (body) => axiosInstance.post("Tags/Insert", body);
+export const addNewTags = (body) => axiosInstance.post("Tags/Create", body);
 
 

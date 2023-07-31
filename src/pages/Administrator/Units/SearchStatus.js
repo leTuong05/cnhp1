@@ -1,83 +1,220 @@
-import React from 'react';
-import { Button, Col, Dropdown, Input, Row, Space } from 'antd';
+import React, { useEffect, useState } from "react";
+import { Button, Col, Dropdown, Input, Row, Select, Space } from "antd";
+import {
+  fetchGetRegion,
+  fetchGetRegionAll,
+  fetchGetRegionByRegionID,
+  fetchgetList,
+} from "../../../reducers/managementTeamSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const items = [
-    {
-      key: '1',
-      label: (
-        <a target="_blank">
-          Không hoạt động
-        </a>
-      ),
-    },
-  ];
 const { Search } = Input;
 
-const onSearch = (value) => console.log(value);
+const optionsStatus = [
+  {
+    value: "1",
+    label: <a>Đang hoạt động</a>,
+  },
+  {
+    value: "2",
+    label: <a>Không hoạt động</a>,
+  },
+];
 
-const SearchStatus = () => {
+const SearchStatus = (props) => {
+  const { onSearch, onChangeStatus } = props;
+
+  const dispatch = useDispatch();
+
+  const [valueTinh, setValueTinh] = useState("");
+  const [valueHuyen, setValueHuyen] = useState("");
+  const [valueXa, setValueXa] = useState("");
+
+  const listRegionAll = useSelector(
+    (state) => state?.manage?.regionAll?.regionAll?.Object
+  );
+
+  const listRegion = useSelector(
+    (state) => state?.manage?.region?.region?.Object
+  );
+  const listRegionByID = useSelector(
+    (state) => state?.manage?.regionByRegionID?.regionByRegionID?.Object
+  );
+
+  const options = [];
+  {
+    listRegionAll &&
+      listRegionAll?.forEach((item) => {
+        options.push({
+          value: item.RegionID,
+          label: item.RegionName,
+        });
+      });
+  }
+
+  const optionsLevelOne = [];
+  {
+    listRegion &&
+      listRegion?.forEach((item) => {
+        optionsLevelOne.push({
+          value: item.RegionID,
+          label: item.RegionName,
+        });
+      });
+  }
+
+  const optionsLevelTwo = [];
+  {
+    listRegionByID &&
+      listRegionByID?.forEach((item) => {
+        optionsLevelTwo.push({
+          value: item.RegionID,
+          label: item.RegionName,
+        });
+      });
+  }
+
+  const onChange = (value) => {
+    setValueTinh(value);
+    dispatch(
+      fetchgetList({
+        PageSize: 20,
+        CurrentPage: 1,
+        ProvinceID: value,
+      })
+    );
+  };
+
+  const onChangeLevelOne = (value) => {
+    setValueHuyen(value);
+    dispatch(
+      fetchgetList({
+        PageSize: 20,
+        CurrentPage: 1,
+        DistrictID: value,
+      })
+    );
+  };
+
+  const onSearchLeveTwo = (value) => {
+    setValueXa(value);
+    dispatch(
+      fetchgetList({
+        PageSize: 20,
+        CurrentPage: 1,
+        WardID: value,
+      })
+    );
+  };
+
+  const getRegionAll = () => {
+    dispatch(fetchGetRegionAll());
+  };
+  //region ALL
+  useEffect(() => {
+    getRegionAll();
+  }, []);
+
+  //region Huyen/Quan
+  const getRegion = () => {
+    dispatch(fetchGetRegion(valueTinh));
+  };
+
+  useEffect(() => {
+    getRegion();
+  }, [valueTinh]);
+
+  //region xa/phuong
+  const regionByID = () => {
+    dispatch(fetchGetRegionByRegionID(valueHuyen));
+  };
+  useEffect(() => {
+    regionByID();
+  }, [valueHuyen]);
+
   return (
     <>
-        <Row gutter={16}>
-            <Col span={8} >
-                <Space direction="vertical" >
-                    <Search
-                        placeholder="Nhập mã, tên, SĐT khách hàng"
-                        onSearch={onSearch}
-                        style={{
-                            width: '100%',
-                        }}
-                    />
-                </Space>    
-            </Col>
-            <Col span={4}>
-                <Dropdown
-                    menu={{
-                        items,
-                    }}
-                    placement="bottomLeft"
-                    arrow
-                    style={{width: '100vh'}}
-                    >
-                    <Button style={{width: '100%'}}>Đang hoạt động</Button>
-                </Dropdown>
-            </Col>
-            <Col span={4}>
-                <Dropdown
-                    menu={{
-                        items,
-                    }}
-                    placement="bottomLeft"
-                    arrow
-                    >
-                    <Input placeholder='Tỉnh/Thành phố'/>
-                </Dropdown>
-            </Col>
-            <Col span={4}>
-                <Dropdown
-                    menu={{
-                        items,
-                    }}
-                    placement="bottomLeft"
-                    arrow
-                    >
-                    <Input placeholder='Quận/Huyện'/>
-                </Dropdown>
-            </Col>
-            <Col span={4}>
-                <Dropdown
-                    menu={{
-                        items,
-                    }}
-                    placement="bottomLeft"
-                    arrow
-                    >
-                    <Input placeholder='Xã/Phường'/>
-                </Dropdown>
-            </Col>
-        </Row>
-    </>
-  )
-}
+      <Row gutter={16}>
+        <Col span={8}>
+          <Space direction="vertical">
+            <Search
+              placeholder="Nhập mã, tên, SĐT khách hàng"
+              onSearch={onSearch}
+              style={{
+                width: "50vh",
+              }}
+            />
+          </Space>
+        </Col>
+        <Col span={4}>
+          <Select
+            defaultValue="1"
+            style={{
+              width: "100%",
+            }}
+            onChange={onChangeStatus}
+            options={optionsStatus}
+          />
+        </Col>
+        <Col span={4}>
+          {/* <Dropdown menu={items} placement="bottomLeft" arrow>
+            <Input placeholder="Tỉnh/Thành phố" />
+          </Dropdown> */}
+          <Select
+            showSearch
+            placeholder="Tỉnh/Thành phố"
+            optionFilterProp="children"
+            onChange={onChange}
+            onSearch={onSearch}
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={options}
+            style={{ width: "100%" }}
+          />
+        </Col>
+        <Col span={4}>
+          {/* <Dropdown menu={items1} placement="bottomLeft" arrow>
+            <Input placeholder="Quận/Huyện" />
+          </Dropdown>
+        </Col>
+        <Col span={4}>
+          <Dropdown menu={items2} placement="bottomLeft" arrow>
+            <Input placeholder="Xã/Phường" />
+          </Dropdown> */}
+          <Select
+            showSearch
+            placeholder="Quận/huyện"
+            optionFilterProp="children"
+            onChange={onChangeLevelOne}
+            onSearch={onSearch}
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={optionsLevelOne}
+            style={{ width: "100%" }}
+            disabled={valueTinh ? false : true}
+          />
+        </Col>
 
-export default SearchStatus
+        <Col span={4}>
+          <Select
+            showSearch
+            placeholder="Xã/Phường"
+            optionFilterProp="children"
+            onChange={onSearchLeveTwo}
+            onSearch={onSearch}
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={optionsLevelTwo}
+            style={{ width: "100%" }}
+            disabled={valueHuyen ? false : true}
+          />
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+export default SearchStatus;
