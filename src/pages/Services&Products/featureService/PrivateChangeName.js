@@ -12,9 +12,9 @@ import {
 } from "../../../reducers/managementTeamSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
 const { TextArea } = Input;
-const Private = () => {
+
+const PrivateChangeName = () => {
   const dispatch = useDispatch();
   const navigave = useNavigate();
 
@@ -30,7 +30,6 @@ const Private = () => {
   const [valueContent, setValueContent] = useState("");
   const [valueFileIDCard, setValueFileIDCard] = useState("");
   const [valueFileQSD, setValueFileQSD] = useState("");
-  const [valueFile, setValueFile] = useState("");
 
   // ================ CALL select tinh/huyen xa
   const [valueTinh, setValueTinh] = useState("");
@@ -150,8 +149,8 @@ const Private = () => {
       return isPNG || Upload.LIST_IGNORE;
     },
     onChange: (info) => {
-      const fileID = info ? Object?.values(info?.fileList[0]) : null;
-      setValueFileIDCard(fileID);
+      // console.log(info.fileList);
+      setValueFileIDCard(info.fileList);
     },
   };
 
@@ -164,8 +163,8 @@ const Private = () => {
       return isPNG || Upload.LIST_IGNORE;
     },
     onChange: (info) => {
-      const fileLand = info ? Object?.values(info?.fileList[0]) : null;
-      setValueFileQSD(fileLand);
+      // console.log(info.fileList);
+      setValueFileQSD(info.fileList);
     },
   };
 
@@ -178,8 +177,7 @@ const Private = () => {
       return isPNG || Upload.LIST_IGNORE;
     },
     onChange: (info) => {
-      const file = info ? Object?.values(info?.fileList[0]) : null;
-      setValueFile(file);
+      // console.log(info.fileList);
     },
   };
 
@@ -201,37 +199,13 @@ const Private = () => {
   const handleContent = (e) => {
     setValueContent(e.target.value);
   };
-
-  // const onFinish = () => {
-  //   dispatch(
-  //     fetchContractInstallForIndividual({
-  //       CustomerName: nameClient,
-  //       RequestType: 1,
-  //       PhoneNumber: valuePhone,
-  //       Email: valueEmail,
-  //       ProvinceID: valueTinh,
-  //       DistrictID: valueHuyen,
-  //       WardID: valueXa,
-  //       AddressUseWater: valueAdress,
-  //       PurposeUseType: valuePurpose,
-  //       Content: valueContent,
-  //       file_CCCD: fileIDCard,
-  //       file_QSD: "",
-  //       file: "",
-  //     })
-  //   );
-  // };
-
-  const onFinish = () => {};
-
   const handleOnclickBtn = () => {
     if (nameClient == null) {
       navigave("/dang-nhap");
     }
   };
 
-  const fileIDCard = valueFileIDCard ? Object.values(valueFileIDCard)[0] : null;
-
+  const onFinish = () => {};
   return (
     <Wrapper>
       <Form
@@ -242,15 +216,7 @@ const Private = () => {
       >
         <Row gutter={16}>
           <Col span={8}>
-            <Form.Item
-              label="Tên khách hàng"
-              name="tenKH"
-              // rules={[
-              //   {
-              //     required: true,
-              //   },
-              // ]}
-            >
+            <Form.Item label="Mã khách hàng" name="tenKH">
               <Input
                 defaultValue={nameClient ? nameClient : null}
                 onChange={handleName}
@@ -259,7 +225,44 @@ const Private = () => {
               ></Input>
             </Form.Item>
           </Col>
+
           <Col span={8}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="Tên chủ hợp đồng cũ"
+              name="tenOld"
+            >
+              <Input
+                onChange={handleName}
+                placeholder="Nhập tên"
+              ></Input>
+            </Form.Item>
+          </Col>
+
+          <Col span={8}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="Tên chủ hợp đồng mới"
+              name="tenNew"
+            >
+              <Input
+                onChange={handleName}
+                placeholder="Nhập tên"
+              ></Input>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
             <Form.Item
               label="Điện thoại liên hệ"
               name="dienthoai"
@@ -272,7 +275,7 @@ const Private = () => {
               <Input onChange={handlePhone} placeholder="Nhập số"></Input>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
               label="Email liên hệ"
               name="email"
@@ -286,7 +289,7 @@ const Private = () => {
             </Form.Item>
           </Col>
         </Row>
-        <h2>Địa chỉ lắp đặt:</h2>
+        <h2>Địa chỉ sử dụng nước:</h2>
         <Row gutter={16}>
           <Col span={8}>
             <Form.Item
@@ -429,46 +432,13 @@ const Private = () => {
           <Form.Item
             label="Giấy chứng minh thư nhân dân/Căn cước công dân"
             name="cccd"
-            valuePropName="fileList"
-            getValueFromEvent={(event) => {
-              return event?.fileList;
-            }}
             rules={[
               {
                 required: true,
               },
-              {
-                validator(_, fileList) {
-                  return new Promise((resolve, reject) => {
-                    if (fileList && fileList[0].size > 90000000) {
-                      reject("File size exceeded");
-                    } else {
-                      resolve("Success");
-                    }
-                  });
-                },
-              },
             ]}
           >
-            <Upload
-              // {...propsIDCard}
-              maxCount={1}
-              beforeUpload={(file) => {
-                return new Promise((resolve, reject) => {
-                  if (file.size > 9000000) {
-                    reject("File size exceeded");
-                    // message.error("File size exceeded");
-                  } else {
-                    resolve("Success");
-                  }
-                });
-              }}
-              customRequest={(info) => {
-                setValueFileIDCard([info.file]);
-              }}
-              showUploadList={false}
-              defaultValue={fileIDCard || null}
-            >
+            <Upload {...propsIDCard}>
               <Button icon={<FileImageOutlined />}>Chọn ảnh</Button>
             </Upload>
           </Form.Item>
@@ -478,11 +448,11 @@ const Private = () => {
           <Form.Item
             label="Giấy chứng nhận Quyền sở hữu/sử dụng nhà đất"
             name="sohudat"
-            // rules={[
-            //   {
-            //     required: true,
-            //   },
-            // ]}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
           >
             <Upload {...propsUsingLand}>
               <Button icon={<FileImageOutlined />}>Chọn ảnh</Button>
@@ -524,4 +494,4 @@ const Private = () => {
   );
 };
 
-export default Private;
+export default PrivateChangeName;

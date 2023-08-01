@@ -62,25 +62,6 @@ const style = (borderColor) => {
   };
 };
 
-const items = [
-  {
-    key: "1",
-    label: <a>Hôm nay</a>,
-  },
-  // {
-  //     key: '2',
-  //     label: <a>Hôm qua</a>
-  // },
-  // {
-  //     key: '3',
-  //     label: <a>Trong 7 ngày qua</a>
-  // },
-  // {
-  //     key: '3',
-  //     label: <a>Trong 30 ngày qua</a>
-  // }
-];
-
 //data y/c số khach hang
 const data1 = [];
 for (let i = 0; i < 4; i++) {
@@ -264,6 +245,7 @@ const Genaral = () => {
     setModalVisible2(false);
   };
 
+  
   const handleColClick = (itemId) => {
     setSelectedItemId(itemId.toString());
     if (itemId === "1") {

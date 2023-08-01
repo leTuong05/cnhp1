@@ -75,7 +75,9 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate(
+                    "/san-pham-va-dich-vu/dich-vu/sang-ten-hop-dong-dvcn"
+                  )
                 }
               >
                 <Row className="row">
@@ -102,7 +104,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/cap-lai-hop-dong-dvcn")
                 }
               >
                 <Row className="row">
@@ -129,7 +131,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
                 }
               >
                 <Row className="row">
@@ -156,7 +158,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/sua-chua")
                 }
               >
                 <Row className="row">
@@ -183,7 +185,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/dang-ky-thay-doi-TTKH")
                 }
               >
                 <Row className="row">
@@ -237,7 +239,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
                 }
               >
                 <Row className="row">

@@ -12,6 +12,7 @@ import {
   fetchGetRegionByRegionID,
   fetchgetList,
 } from "../../../reducers/managementTeamSlice";
+import { fetchContractInstallForAgent } from "../../../reducers/guestServicesSlice";
 
 const { TextArea } = Input;
 
@@ -226,7 +227,28 @@ const Common = () => {
     }
   };
 
-  const onFinish = () => {};
+  const onFinish = () => {
+    dispatch(
+      fetchContractInstallForAgent({
+        BussinessCode: "0",
+        AgentName: nameClient,
+        CustomerName: valueName,
+        RequestType: 1,
+        PhoneNumber: valuePhone,
+        Email: valueEmail,
+        ProvinceID: valueTinh,
+        DistrictID: valueHuyen,
+        WardID: valueXa,
+        AddressUseWater: valueAdress,
+        PurposeUseType: valuePurpose,
+        Content: valueContent,
+        file_CCCD: valueFileIDCard,
+        file_QSD: valueFileQSD,
+        file_DKKD: valueFileSigin,
+        file: "",
+      })
+    );
+  };
 
   return (
     <Wrapper>

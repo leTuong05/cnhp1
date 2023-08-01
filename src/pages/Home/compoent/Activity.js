@@ -1,46 +1,58 @@
 import React from "react";
 import { Col, Row } from "antd";
 import { Typography } from "antd";
+import moment from "moment";
+
 const { Title } = Typography;
 
 const Activity = (props) => {
-  const {selectedTabKey} = props
-  console.log(selectedTabKey);
+  const { selectedTabKey, dataPost } = props;
+  const dataListTwo = dataPost ? Object.values(dataPost)[1] : null;
+
+  const formattedDate = moment(dataListTwo?.PublicationTime).format(
+    "DD/MM/YYYY"
+  );
   return (
     <>
-      <Row gutter={16} style={{ width: "100%" }}>
-        <Col span={8}>
-          <img src={null}></img>
-        </Col>
-        <Col span={16}>
-          <Row>
+      {dataListTwo ? (
+        <Row
+          key={dataListTwo.PostID}
+          gutter={16}
+          style={{ width: "100%", marginBottom: "20px" }}
+        >
+          <Col span={8}>
+            {dataListTwo?.Image && (
+              <img src={dataListTwo?.Image} alt={dataListTwo?.Title} />
+            )}
+          </Col>
+          <Col span={16}>
+            <Row>
+              <Title
+                level={3}
+                style={{ color: "rgb(21, 67, 152)", fontWeight: 600 }}
+              >
+                {dataListTwo?.Title}
+              </Title>
+            </Row>
             <Title
-              level={3}
-              style={{ color: "rgb(21, 67, 152)", fontWeight: 600 }}
+              level={5}
+              style={{
+                color: "rgb(131, 131, 131)",
+                fontSize: "12px",
+              }}
             >
-              Cấp nước Hải Phòng tham gia Hội nghị kết nối cung – cầu sản phẩm,
-              dịch vụ của các doanh nghiệp trong khối năm 2022
+              {formattedDate}
             </Title>
-          </Row>
-          <Title
-            level={5}
-            style={{
-              color: "rgb(131, 131, 131)",
-              fontSize: "12px",
-            }}
-          >
-            09:02:46 26/11/2022
-          </Title>
-          <Row
-            style={{
-              color: "rgb(131, 131, 131)",
-            }}
-          >
-            Cấp nước Hải Phòng tham gia Hội nghị kết nối cung – cầu sản phẩm,
-            dịch vụ của các doanh nghiệp trong khối năm 2022
-          </Row>
-        </Col>
-      </Row>
+            <Row
+              style={{
+                color: "rgb(131, 131, 131)",
+              }}
+            >
+              {dataListTwo?.Summary}
+            </Row>
+          </Col>
+        </Row>
+      ) : null}
     </>
   );
 };
