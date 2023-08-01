@@ -83,6 +83,7 @@ import EditInfoService from '../pages/Administrator/Services/EditInfoService';
 import SearchInfoService from '../pages/Administrator/Services/SearchInfoService';
 import GuestDirectory from '../pages/Administrator/ManageSystem/GuestDirectory';
 import WaterConfig from "../pages/Administrator/WaterConfig";
+import PhonebookGuest from "../pages/Administrator/ManageSystem/PhonebookGuest";
 
 export const routeAdmin = [
   { path: "/tong-quan", component: TongQuan, layout: true },
@@ -116,8 +117,8 @@ export const routeAdmin = [
     { path: '/phong-ban-chuc-vu', component: Department, layout: true },
     { path: '/danh-ba-nguoi-dung', component: UserDirectory, layout: true },
     { path: '/phan-quyen', component: ListUser, layout: true },
-    { path: '/danh-ba-doanh-nghiep', component: EnterPrise, layout: true },
-    { path: '/danh-ba-khach-hang', component: GuestDirectory, layout: true },
+    { path: '/danh-ba-khach-hang', component: PhonebookGuest, layout: true },
+    { path: '/danh-ba-doanh-nghiep', component: GuestDirectory, layout: true },
 
   { path: "/to-quan-ly", component: ToQuanLy, layout: true },
   { path: "/danh-muc-the", component: DanhMucThe, layout: true },

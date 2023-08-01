@@ -4,7 +4,7 @@ import { Sort, Wrapper } from './styles'
 import { Col, Row, Select } from 'antd'
 import ProductItem from './components/ProductItem'
 import { useNavigate } from 'react-router-dom'
-import { getAllProduct } from '../../../services/apis/Products'
+import { getAllProduct1 } from '../../../services/apis/products'
 
 const Product = () => {
     const [productList, setProductList] = useState([]);
@@ -16,7 +16,7 @@ const Product = () => {
     }
     useEffect(() => {
         const getListProduct = async () => {
-            const res = await getAllProduct(50, 1, typeOfSort);
+            const res = await getAllProduct1(50, 1, typeOfSort);
             setProductList(res.Object.listProduct);
             console.log(typeof (res.Object.listProduct));
         };

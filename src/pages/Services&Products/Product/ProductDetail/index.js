@@ -9,7 +9,8 @@ import RateComponent from '../components/RateComponent';
 import ProductBestSaler from '../components/ProductBestSaler';
 import { GetBestSellProduct } from '../../../../services/apis/bestSaleProduct';
 import { useParams } from 'react-router-dom';
-import { getProductBestSell, getProductDetail } from '../../../../services/apis/Products';
+import { getProductBestSell, getProductDetail } from '../../../../services/apis/products';
+
 
 const listImage = [
     require('../../../../common/images/sanpham-1.png'),
