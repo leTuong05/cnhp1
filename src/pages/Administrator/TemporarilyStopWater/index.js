@@ -1,17 +1,34 @@
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Col, DatePicker, Form, Row, Select, Tooltip } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Modal,
+  Row,
+  Select,
+  Tooltip,
+} from "antd";
 import { useEffect, useState } from "react";
 import CustomTable from "../../../components/Table";
 import TitleComponent from "../../../components/TitleComponent";
-import { getTemporarilyStopWater } from "../../../services/apis/TemporarilyStopWater";
+import {
+  DeleteTemporarilyStopWater,
+  getTemporarilyStopWater,
+} from "../../../services/apis/TemporarilyStopWater";
+import { DeleteOutlined } from "@ant-design/icons";
+
 import {
   getRegion,
   getRegionAll,
   getRegionByRegionID,
 } from "../../../services/apis/managementTeam";
 import { TemporarilyStopWaterStyle, WrapperButton } from "./styles";
+import moment from "moment";
+import EditModal from "./components/EditModal";
 const { RangePicker } = DatePicker;
+const { confirm } = Modal;
 
 const TemporarilyStopWater = () => {
   const [form] = Form.useForm();
@@ -19,13 +36,18 @@ const TemporarilyStopWater = () => {
   const [data, setData] = useState();
   const [listProvince, setListProvince] = useState();
   const [listDistrict, setListDistrict] = useState();
+  const [isEdit, setIsEdit] = useState();
+  const [modalData, setModalData] = useState();
+  const [openEdit, setOpenEdit] = useState();
   const [listCommune, setListCommune] = useState();
   const [loading, setLoading] = useState();
   const [textSeach, setTextSeach] = useState({
+    FromCreateDate: "",
+    ToCreateDate: "",
     ProvinceID: 0,
     DistrictID: 0,
     WardID: 0,
-    Status: 0,
+    CalendarStatus: 0,
   });
 
   const getProvince = () => {
@@ -60,9 +82,9 @@ const TemporarilyStopWater = () => {
       .finally(() => setLoading(false));
   };
 
-  const getData = () => {
+  const getData = (body) => {
     setLoading(true);
-    getTemporarilyStopWater(textSeach)
+    getTemporarilyStopWater(body)
       .then((res) => {
         if (res?.isError) return;
         setData(res?.Object);
@@ -70,14 +92,52 @@ const TemporarilyStopWater = () => {
       .finally(() => setLoading(false));
   };
 
-  const seach = () => {
+  const seach = (date) => {
     setLoading(true);
     form
       .validateFields()
       .then((res) => {
-        setTextSeach(res);
+        setTextSeach({
+          ...res,
+          FromCreateDate: !!date ? date[0] : "",
+          ToCreateDate: !!date ? date[1] : "",
+        });
       })
       .finally(() => setLoading(false));
+  };
+
+  // DeleteTemporarilyStopWater
+  const handleDelete = (id) => {
+    setLoading(true);
+    DeleteTemporarilyStopWater(id)
+      .then((res) => {
+        if (res?.isError) return;
+      })
+      .finally(() => {
+        setLoading(false);
+        getData(textSeach);
+      });
+  };
+
+  const showDeleteConfirm = (record) => {
+    confirm({
+      title: "Xóa",
+      icon: <DeleteOutlined />,
+      content: (
+        <div>
+          <span>Bạn có chắc chắn muốn xoá lịch cấp nước này không?</span>
+        </div>
+      ),
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk() {
+        handleDelete(record?.TemporarilyStopWaterID);
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
   };
 
   const columns = [
@@ -93,10 +153,26 @@ const TemporarilyStopWater = () => {
       key: "WaterCompany",
     },
     {
-      title: "THỜI GIAN",
-      dataIndex: "WaterPriceTitle",
-      key: "WaterPriceTitle",
+      title: "NGÀY TẠO",
+      dataIndex: "CreateDate",
+      key: "CreateDate",
+      render: (text, record, index) => (
+        <span> {moment(text).format("DD/MM/YYYY")}</span>
+      ),
     },
+    {
+      title: "THỜI GIAN",
+      dataIndex: "",
+      key: "",
+      render: (_, record) => (
+        <div>
+          <span> Từ {moment(record.FromDate).format("hh:mm")}</span>
+          <br />
+          <span> Đến {moment(record.ToDate).format("hh:mm")}</span>
+        </div>
+      ),
+    },
+
     {
       title: "KHU VỰC",
       dataIndex: "RegionName",
@@ -117,29 +193,38 @@ const TemporarilyStopWater = () => {
             <div className="icon-button-box">
               <div>
                 <Tooltip title="sửa" className="ml">
-                  <Button shape="circle" onClick={() => {}}>
+                  <Button
+                    shape="circle"
+                    onClick={() => {
+                      setModalData(record);
+                      setIsEdit(true);
+                      setOpenEdit(true);
+                      console.log(record);
+                    }}
+                  >
                     <FontAwesomeIcon icon={faPen} />
                   </Button>
                 </Tooltip>
                 <Tooltip title="xóa" className="ml">
-                  <Button shape="circle" onClick={() => {}}>
+                  <Button
+                    shape="circle"
+                    onClick={() => {
+                      showDeleteConfirm(record);
+                    }}
+                  >
                     <FontAwesomeIcon icon={faTrash} />
                   </Button>
                 </Tooltip>
               </div>
             </div>
+          ) : text === 1 ? (
+            <span>Mới tạo</span>
+          ) : text === 2 ? (
+            <span>Chờ duyệt</span>
+          ) : text === 3 ? (
+            <span>Đã duyệt</span>
           ) : (
-            () => {
-              text === 1 ? (
-                <span className="calendar-status-text">Mới tạo</span>
-              ) : text === 2 ? (
-                <span className="calendar-status-text">Chờ duyệt</span>
-              ) : text === 3 ? (
-                <span className="calendar-status-text">Đã duyệt</span>
-              ) : (
-                <span className="calendar-status-text">Đã hủy</span>
-              );
-            }
+            <span>Đã hủy</span>
           )}
         </div>
       ),
@@ -151,7 +236,7 @@ const TemporarilyStopWater = () => {
   }, []);
 
   useEffect(() => {
-    getData();
+    getData(textSeach);
   }, [textSeach]);
 
   return (
@@ -159,13 +244,19 @@ const TemporarilyStopWater = () => {
       <Form form={form} layout="horizontal">
         <Row gutter={[16, 16]}>
           <Col span={8}>
-            <Form.Item label="Giá bán theo">
-              <RangePicker style={{ width: "100%" }} />
+            <Form.Item>
+              <RangePicker
+                format="DD/MM/YYYY"
+                style={{ width: "100%" }}
+                onChange={(date) => {
+                  seach(date);
+                }}
+              />
             </Form.Item>
           </Col>
 
           <Col span={4}>
-            <Form.Item name="Status" defaultValue={0}>
+            <Form.Item name="CalendarStatus" defaultValue={0}>
               <Select
                 defaultValue={0}
                 style={{ width: "100%" }}
@@ -184,16 +275,14 @@ const TemporarilyStopWater = () => {
 
           {/* tỉnh */}
           <Col span={4}>
-            <Form.Item name="Province" defaultValue={0}>
+            <Form.Item name="ProvinceID" defaultValue={0}>
               <Select
                 defaultValue={0}
                 style={{ width: "100%" }}
                 onChange={(value) => {
                   !!value ? getDistrict(value) : setListDistrict([]);
-                  console.log(value);
-                  console.log(listDistrict);
-                  form.setFieldValue("District", 0);
-                  form.setFieldValue("Commune", 0);
+                  form.setFieldValue("DistrictID", 0);
+                  form.setFieldValue("WardID", 0);
                   seach();
                 }}
               >
@@ -209,13 +298,13 @@ const TemporarilyStopWater = () => {
 
           {/* huyện */}
           <Col span={4}>
-            <Form.Item name="District" defaultValue={0}>
+            <Form.Item name="DistrictID" defaultValue={0}>
               <Select
                 defaultValue={0}
                 style={{ width: "100%" }}
                 onChange={(value) => {
                   !!value ? getCommune(value) : setListCommune([]);
-                  form.setFieldValue("Commune", 0);
+                  form.setFieldValue("WardID", 0);
                   seach();
                 }}
               >
@@ -231,12 +320,11 @@ const TemporarilyStopWater = () => {
 
           {/* Xã */}
           <Col span={4}>
-            <Form.Item name="Commune" defaultValue={0}>
+            <Form.Item name="WardID" defaultValue={0}>
               <Select
                 defaultValue={0}
                 style={{ width: "100%" }}
                 onChange={(value) => {
-                  console.log(value);
                   seach();
                 }}
               >
@@ -255,7 +343,8 @@ const TemporarilyStopWater = () => {
         <WrapperButton>
           <Button
             onClick={() => {
-              seach();
+              setIsEdit(true);
+              setOpenEdit(true);
             }}
           >
             Thêm
@@ -278,6 +367,17 @@ const TemporarilyStopWater = () => {
           };
         }}
       ></CustomTable>
+      {!!openEdit && (
+        <EditModal
+          isEdit={isEdit}
+          open={openEdit}
+          data={modalData}
+          onCancel={() => {
+            setOpenEdit(false);
+            getData(textSeach);
+          }}
+        />
+      )}
     </TemporarilyStopWaterStyle>
   );
 };

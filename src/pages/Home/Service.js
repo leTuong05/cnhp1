@@ -30,7 +30,7 @@ const Service = () => {
   return (
     <>
       <Wapper>
-        <Glider draggable hasArrows  slidesToShow={6} slidesToScroll={1}>
+        <Glider draggable hasArrows slidesToShow={6} slidesToScroll={1}>
           <Card
             style={{
               height: 218,
