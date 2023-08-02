@@ -7,23 +7,40 @@ import FooterContent from "./FooterContent";
 import ContentFullWidth from "./ContentFullWidth";
 import { LayoutStyled } from "./styled";
 import { HomeFilled } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { getAllCategoryPost } from "../services/apis/postsCategoryy";
+import TitleComponent from "../components/TitleComponent";
 
 const { Header, Content, Footer } = Layout;
 
 function MainLayout() {
     const navigate = useNavigate();
     const location = useLocation();
+    const [newsCategories, setNewsCategories] = useState([])
+
+    useEffect(() => {
+        const getAll = async () => {
+            const res = await getAllCategoryPost()
+
+            await res.Object.map(item => {
+                if (item.CategoryPostName === "Tin tức") {
+                    setNewsCategories(item)
+                }
+            })
+        }
+        getAll()
+    }, [])
 
     return (
         <LayoutStyled>
             <Layout
                 style={{
                     background: "white",
-                    
+
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
-                    
+
                 }}
             >
                 <TopBar />
@@ -264,27 +281,16 @@ function MainLayout() {
                                     </Menu.Item>
                                 </Menu.SubMenu>
                                 <Menu.SubMenu title="Tin tức">
-                                    <Menu.Item
-                                        onClick={() => {
-                                            navigate("tin-tuc/hoat-dong-san-xuat-kinh-doanh");
-                                        }}
-                                    >
-                                        Hoạt động sản xuất kinh doanh
-                                    </Menu.Item>
-                                    <Menu.Item
-                                        onClick={() => {
-                                            navigate("tin-tuc/dang-va-doan-the");
-                                        }}
-                                    >
-                                        Đảng và đoàn thể
-                                    </Menu.Item>
-                                    <Menu.Item
-                                        onClick={() => {
-                                            navigate("tin-tuc/tin-tuc-lien-quan");
-                                        }}
-                                    >
-                                        Tin tức liên quan
-                                    </Menu.Item>
+                                    {newsCategories?.GetList?.map((item, index) => (
+                                        <Menu.Item
+                                            onClick={() => {
+                                                navigate(`tin-tuc/postCategory=${item.CategoryPostID}`, { state: {categoryPostName: item.CategoryPostName } });
+                                            }}
+                                        >
+                                            {item.CategoryPostName}
+                                        </Menu.Item>
+                                    ))}
+
                                 </Menu.SubMenu>
                                 <Menu.SubMenu
                                     title="Chất lượng nước"

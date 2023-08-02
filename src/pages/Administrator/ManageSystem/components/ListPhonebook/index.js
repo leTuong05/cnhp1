@@ -1,25 +1,32 @@
 import React, { useState } from 'react';
 import { ModalStyled, TableStyled, Wrapper, WrapperAction, WrapperBodyModal } from './styles';
-import { Modal, Tooltip } from 'antd';
+import { Modal, Tooltip, message } from 'antd';
 
 import { ReactComponent as ActionEdit } from '../../../../../common/images/button-edit.svg'
 import { ReactComponent as ActionDelete } from '../../../../../common/images/button-delete1.svg'
 import { ReactComponent as IconDelete } from '../../../../../common/images/icon-delete.svg'
-import { DeleteGuest } from '../../../../../services/apis/User';
+import { DeleteGuest } from '../../../../../services/apis/user';
 import ModalInsertGuest from '../ModalInsertGuest';
 
-const ListPhonebook = ({ listPhonebookGuest,onDelete }) => {
+const ListPhonebook = ({ listPhonebookGuest, onDelete, onUpdateGuest }) => {
     const [showModalEdit, setShowModalEdit] = useState(false)
     const [showModalDelete, setShowModalDelete] = useState(false)
     const [recordSelected, setRecordSelected] = useState({})
+    const [messageApi, contextHolder] = message.useMessage();
 
     const handleOkDelete = () => {
         setShowModalDelete(false);
-        const deleteG = async () => {
-            await DeleteGuest(recordSelected.UserID)
+        try {
+            const deleteG = async () => {
+                await DeleteGuest(recordSelected.UserID)
+            }
+            deleteG();
+            messageApi.success("Xoá thành công")
+            onDelete(true)
+        } catch (error) {
+            messageApi.error(error.Object)
         }
-        deleteG();
-        onDelete(true)
+
     };
 
     const handleCancelDelete = () => {
@@ -110,7 +117,13 @@ const ListPhonebook = ({ listPhonebookGuest,onDelete }) => {
                             </span>
                         </Tooltip>
                     </div>
-                    <span>Tư nhân</span>
+                    {record.GuestType === 0 ? <span>Tư nhân</span>
+                        : record.GuestType === 1 ? <span>Cơ quan</span>
+                            : record.GuestType === 2 ? <span>Đại lý cấp 1</span>
+                                : record.GuestType === 3 ? <span>Đại lý cấp 2</span>
+                                    : <></>
+                    }
+
                 </WrapperAction>
             )
         },
@@ -118,6 +131,7 @@ const ListPhonebook = ({ listPhonebookGuest,onDelete }) => {
 
     return (
         <Wrapper>
+            {contextHolder}
             <TableStyled
                 columns={columns}
                 dataSource={listPhonebookGuest}
@@ -133,17 +147,15 @@ const ListPhonebook = ({ listPhonebookGuest,onDelete }) => {
                     cancelText="Đóng"
                     okText="Đồng ý"
                 >
-
                     <div className='icon'>
                         <IconDelete />
                     </div>
                     <p className='text-confirm'>Bạn có chắc chắn muốn xoá {recordSelected.FullName} </p>
 
-
                 </ModalStyled>
             )}
             {showModalEdit && (
-                <ModalInsertGuest isModalOpen={showModalEdit} onCancel={handleCancelEdit} recordSelected={recordSelected} />
+                <ModalInsertGuest isModalOpen={showModalEdit} onCancel={handleCancelEdit} onUpdateGuest={onUpdateGuest} recordSelected={recordSelected} />
             )}
         </Wrapper>
     );

@@ -18,8 +18,8 @@ const News = ({ title, listNews, listTags, listPostCategory }) => {
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
-      };
-    
+    };
+
     return (
         <Wrapper>
             <TitleStyled level={2}>
@@ -38,7 +38,7 @@ const News = ({ title, listNews, listTags, listPostCategory }) => {
 
                     </Col>
                     <Col span={8}>
-                        <PostCategory listTags={listTags} listPostCategory={listPostCategory}/>
+                        <PostCategory listTags={listTags} listPostCategory={listPostCategory} />
                     </Col>
                 </Row>
             </WrapperContent>

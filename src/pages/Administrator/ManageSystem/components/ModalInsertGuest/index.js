@@ -1,52 +1,73 @@
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from 'antd'
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import TitleComponent from '../../../../../components/TitleComponent'
 import { ModalStyled } from './styles'
 import { useForm } from 'antd/es/form/Form';
 import moment from 'moment';
 import 'moment/locale/vi';
-import { InserAgent, InsertGuest, UpdateGuest } from '../../../../../services/apis/User';
+import { InserAgent, InsertGuest, UpdateGuest } from '../../../../../services/apis/user';
+import { GetRegionByParentId } from '../../../../../services/apis/Region';
 
 const { TextArea } = Input;
-const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected }) => {
+const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected, onUpdateGuest }) => {
+    const [messageApi, contextHolder] = message.useMessage();
     const [form] = useForm();
-    console.log(recordSelected);
+    const [listDistrict, setListDistrict] = useState([])
+    const [listWard, setListWard] = useState([])
+    const [parentID, setParentID] = useState()
 
-    const handleInputChange = (event) => {
-        // const { name, value } = event.target;
-        // setFormData((prevFormData) => ({
-        //     ...prevFormData,
-        //     [name]: value,
-        // }));
-    };
+    useEffect(() => {
+        const getRegion = async () => {
+            const res = await GetRegionByParentId(4050)
+            setListDistrict(res.Object)
+        }
+        getRegion()
+    }, [])
+
+    const handleSelectRegion = (value) => {
+        setParentID(value)
+    }
+
+    useEffect(() => {
+        const getRegion = async () => {
+            const res = await GetRegionByParentId(parentID)
+            setListWard(res.Object)
+        }
+        getRegion()
+    }, [parentID])
+
     const handleFormSubmit = async () => {
-
         form.validateFields().then((values) => {
             if (values.IdentificationDateRange) {
                 values.IdentificationDateRange = moment.utc(values.IdentificationDateRange).format();
             }
-
-            console.log(values);
-
             const insert = async () => {
-                await InsertGuest({
-                    AccountType: values.AccountType,
-                    Address: values.Address,
-                    Email: values.Email,
-                    FullName: values.FullName,
-                    Identification: values.Identification,
-                    IdentificationDateRange: values.IdentificationDateRange,
-                    IdentificationIssuedBy: values.IdentificationIssuedBy,
-                    Password: values.Password,
-                    PhoneNumber: values.PhoneNumber,
-                    RePassword: values.RePassword,
-                    UserCode: values.UserCode,
-                    UserName: values.UserName
-                });
-                onInsertGuest(true)
-                onCancel()
-            }
+                try {
+                    await InsertGuest({
+                        AccountType: values.AccountType,
+                        Address: values.Address,
+                        Email: values.Email,
+                        FullName: values.FullName,
+                        Identification: values.Identification,
+                        IdentificationDateRange: values.IdentificationDateRange,
+                        IdentificationIssuedBy: values.IdentificationIssuedBy,
+                        Password: values.Password,
+                        PhoneNumber: values.PhoneNumber,
+                        RePassword: values.RePassword,
+                        UserCode: values.UserCode,
+                        UserName: values.UserName,
+                        ProvinceID: values.ProvinceID,
+                        DistrictID: values.DistrictID,
+                        WardID: values.WardID
+                    });
 
+                    onInsertGuest(true);
+                    messageApi.success("Thêm thành công");
+                    onCancel();
+                } catch (error) {
+                    messageApi.error(error.Object);
+                }
+            };
             insert()
         }).catch((error) => {
             console.log('Form không hợp lệ');
@@ -59,25 +80,28 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                 values.IdentificationDateRange = moment.utc(values.IdentificationDateRange).format();
             }
 
-            console.log(values);
-
             const update = async () => {
-                await UpdateGuest({
-                    UserID: recordSelected.UserID,
-                    
-                    FullName: values.FullName,
-                    PhoneNumber: values.PhoneNumber,
-                    Email: values.Email,
-                    Address: values.Address,
-                    Identification: values.Identification,
-                    IdentificationDateRange: values.IdentificationDateRange,
-                    IdentificationIssuedBy: values.IdentificationIssuedBy,
-
-                });
-                onInsertGuest(true)
-                onCancel()
+                try{
+                    await UpdateGuest({
+                        UserID: recordSelected.UserID,
+    
+                        FullName: values.FullName,
+                        PhoneNumber: values.PhoneNumber,
+                        Email: values.Email,
+                        Address: values.Address,
+                        Identification: values.Identification,
+                        IdentificationDateRange: values.IdentificationDateRange,
+                        IdentificationIssuedBy: values.IdentificationIssuedBy,
+    
+                    });
+                    onUpdateGuest(true)
+                    onCancel()
+                    messageApi.success("Cập nhật thành công")
+                }catch(error){
+                    messageApi.error(error.Object)
+                }
+                
             }
-
             update()
         }).catch((error) => {
             console.log('Form không hợp lệ');
@@ -86,7 +110,6 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
     const handleModalClose = () => {
         form.resetFields();
         onCancel();
-        console.log(1);
     };
 
     useEffect(() => {
@@ -124,7 +147,6 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
         PhoneNumber: recordSelected?.PhoneNumber,
         AccountType: recordSelected?.GuestType,
         Address: recordSelected?.Address,
-        //...
     };
     return (
         <ModalStyled
@@ -136,6 +158,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
             cancelText={"Đóng"}
             footer={renderFooterButtons()}
         >
+            {contextHolder}
             <Form id="modalForm" initialValues={initialValues} form={form} layout="vertical">
                 <Row gutter={[20, 20]}>
                     <Col span={12}>
@@ -149,7 +172,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                 },
                             ]}
                         >
-                            <Input onChange={handleInputChange} placeholder='Mã khách hàng' />
+                            <Input placeholder='Mã khách hàng' />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -164,7 +187,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                 },
                             ]}
                         >
-                            <Input  onChange={handleInputChange} placeholder="Tên khách hàng" />
+                            <Input placeholder="Tên khách hàng" />
                         </Form.Item>
 
                     </Col>
@@ -179,7 +202,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                 },
                             ]}
                         >
-                            <Input  onChange={handleInputChange} placeholder="Email" />
+                            <Input placeholder="Email" />
                         </Form.Item>
 
                     </Col>
@@ -194,7 +217,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                 },
                             ]}
                         >
-                            <Input  onChange={handleInputChange} placeholder="Số điện thoại" />
+                            <Input placeholder="Số điện thoại" />
                         </Form.Item>
 
                     </Col>
@@ -209,7 +232,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                 },
                             ]}
                         >
-                            <Input onChange={handleInputChange} placeholder="CMND/CCCD/Hộ chiếu" />
+                            <Input placeholder="CMND/CCCD/Hộ chiếu" />
                         </Form.Item>
 
                     </Col>
@@ -225,7 +248,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                             ]}
                         >
                             <DatePicker
-                                onChange={handleInputChange}
+
                                 placeholder='Ngày cấp'
                                 style={{
                                     width: "100%",
@@ -245,7 +268,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                 },
                             ]}
                         >
-                            <Input onChange={handleInputChange} placeholder="Nơi cấp" />
+                            <Input placeholder="Nơi cấp" />
                         </Form.Item>
 
                     </Col>
@@ -265,8 +288,6 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                 style={{
                                     width: "100%",
                                 }}
-                                
-                                onChange={handleInputChange}
                                 options={[
                                     {
                                         value: 0,
@@ -296,7 +317,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                             label="Tỉnh/Thành phố"
                             rules={[
                                 {
-                                    required: false,
+                                    required: true,
                                     message: 'Thông tin không được để trống',
                                 },
                             ]}
@@ -310,22 +331,10 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
 
                                 options={[
                                     {
-                                        value: 'jack',
-                                        label: 'Jack',
+                                        value: 4050,
+                                        label: 'Hải Phòng',
                                     },
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                    {
-                                        value: 'Yiminghe',
-                                        label: 'yiminghe',
-                                    },
-                                    {
-                                        value: 'disabled',
-                                        label: 'Disabled',
-                                        disabled: true,
-                                    },
+
                                 ]}
                             />
                         </Form.Item>
@@ -337,38 +346,24 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                             name="DistrictID"
                             rules={[
                                 {
-                                    required: false,
+                                    required: true,
                                     message: 'Thông tin không được để trống',
                                 },
                             ]}
                         >
                             <Select
-                                placeholder={'Quận/Huyện'}
-
                                 style={{
                                     width: "100%",
                                 }}
-
-                                options={[
-                                    {
-                                        value: 'jack',
-                                        label: 'Jack',
-                                    },
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                    {
-                                        value: 'Yiminghe',
-                                        label: 'yiminghe',
-                                    },
-                                    {
-                                        value: 'disabled',
-                                        label: 'Disabled',
-                                        disabled: true,
-                                    },
-                                ]}
-                            />
+                                placeholder={'Quận/Huyện'}
+                                onSelect={handleSelectRegion}
+                            >
+                                {listDistrict.map((district) => (
+                                    <Select.Option key={district.RegionID} value={district.RegionID}>
+                                        {district.RegionName}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                     </Col>
@@ -376,39 +371,27 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                         <Form.Item
                             name="WardID"
                             label="Xã/Phường"
+
                             rules={[
                                 {
-                                    required: false,
+                                    required: true,
                                     message: 'Thông tin không được để trống',
                                 },
                             ]}
                         >
                             <Select
+                                disabled={parentID ? false : true}
                                 placeholder={'Xã/Phường'}
                                 style={{
                                     width: "100%",
-                                }}
+                                }}>
 
-                                options={[
-                                    {
-                                        value: 'jack',
-                                        label: 'Jack',
-                                    },
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                    {
-                                        value: 'Yiminghe',
-                                        label: 'yiminghe',
-                                    },
-                                    {
-                                        value: 'disabled',
-                                        label: 'Disabled',
-                                        disabled: true,
-                                    },
-                                ]}
-                            />
+                                {listWard.map((ward) => (
+                                    <Select.Option key={ward.RegionID} value={ward.RegionID}>
+                                        {ward.RegionName}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                     </Col>
@@ -425,7 +408,6 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                             ]}
                         >
                             <TextArea
-                                
                                 placeholder='Địa chỉ dùng nước'
                                 rows={4} />
                         </Form.Item>
@@ -445,7 +427,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                             },
                                         ]}
                                     >
-                                        <Input onChange={handleInputChange} placeholder="Tài khoản" />
+                                        <Input placeholder="Tài khoản" />
                                     </Form.Item>
 
                                 </Col>
@@ -461,7 +443,6 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                         ]}
                                     >
                                         <Input.Password
-                                            onChange={handleInputChange}
                                             placeholder="Mật khẩu"
                                         />
                                     </Form.Item>
@@ -477,7 +458,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                                             },
                                         ]}
                                     >
-                                        <Input.Password onChange={handleInputChange} placeholder="Nhập lại mật khẩu" />
+                                        <Input.Password placeholder="Nhập lại mật khẩu" />
                                     </Form.Item>
                                 </Col>
 
@@ -486,8 +467,6 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
                     )}
                 </Row>
             </Form>
-
-
         </ModalStyled>
     )
 }

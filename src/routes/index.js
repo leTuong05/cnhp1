@@ -189,9 +189,8 @@ export function Router() {
                     </Route>{' '}
                     <Route path="tin-tuc" element={<ContentLayout />}>
                         <Route path="chi-tiet/:title" element={<DetailNews />} />
-                        <Route path="hoat-dong-san-xuat-kinh-doanh" element={<ProductionActivity />} />
-                        <Route path="dang-va-doan-the" element={<Union />} />
-                        <Route path="tin-tuc-lien-quan" element={<RelatedNews />} />
+                        <Route path=":postCategory" element={<ProductionActivity />} />
+                        
                     </Route>
                     <Route path="chat-luong-nuoc" element={<ContentLayout />}>
                         <Route path="" element={<Quality />} />

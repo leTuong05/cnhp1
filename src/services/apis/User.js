@@ -1,4 +1,6 @@
-import axiosInstance from "../axios";
+import axiosInstance from '../axios';
+
+export const getListStaff = () => axiosInstance.get('User/GetListStaff');
 
 export const getListPhonebookAgent = (body) => {
     return axiosInstance.post('User/GetAgent', body)
@@ -18,6 +20,6 @@ export const DeleteGuest = (UserID) => {
     return axiosInstance.patch(`User/DeleteGuest?UserID=${UserID}`)
 }
 
-export const UpdateGuest=(body)=>{
-    return axiosInstance.put('User/UpdateGuest',body)
+export const UpdateGuest = (body) => {
+    return axiosInstance.put('User/UpdateGuest', body)
 }

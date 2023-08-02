@@ -16,7 +16,7 @@ function buildTree(data) {
         const newNode = {
             key: RegionID,
             title: RegionName,
-            RegionLevel,
+            RegionLevel: RegionLevel,
             Order,
             children: [],
         };
@@ -48,22 +48,22 @@ function renderTreeNodes(nodes) {
     return nodes.map(node => {
         if (node.children && node.children.length > 0) {
             return (
-                <TreeNode key={node.key} title={node.title}>
+                <TreeNode key={node.key} title={node.title} RegionLevel={node.RegionLevel} >
                     {renderTreeNodes(node.children)}
                 </TreeNode>
             );
         } else {
-            return <TreeNode key={node.key} title={node.title} />;
+            return <TreeNode key={node.key} title={node.title} RegionLevel={node.RegionLevel} />;
         }
     });
 }
 
-function ListAdress({ onSelectRegion }) {
+function ListAdress({ handleProvinceID, handleDistrictID, handleWardID }) {
     const [treeData, setTreeData] = useState([{
         "RegionID": 4050,
         "ParentID": null,
         "RegionName": "Hải Phòng",
-        "RegionLevel": 3,
+        "RegionLevel": 2,
         "Order": 6
     }])
     let treeDataWithChildren;
@@ -80,14 +80,28 @@ function ListAdress({ onSelectRegion }) {
 
     treeDataWithChildren = buildTree(treeData);
 
-    const handleSelect = (selectedKeys) => {
-        if (selectedKeys.length > 0) {
-            const selectedNodeId = selectedKeys[0]; // Lấy RegionID của node đã được chọn (chỉ lấy phần tử đầu tiên nếu có nhiều node được chọn)
-            // console.log("Selected RegionID:", selectedNodeId);
-            // Thực hiện các thao tác khác dựa trên RegionID này
+    const handleSelect = (selectedKeys, info) => {
+        // if (selectedKeys.length > 0) {
+        //     const selectedNodeId = selectedKeys[0]; // Lấy RegionID của node đã được chọn (chỉ lấy phần tử đầu tiên nếu có nhiều node được chọn)
+        //     // console.log("Selected RegionID:", selectedNodeId);
+        //     // Thực hiện các thao tác khác dựa trên RegionID này
 
-            onSelectRegion(selectedNodeId);
+        //     onSelectRegion(selectedNodeId);
+        //     console.log(selectedKeys);
+        // }
+        // console.log(selectedKeys[0]);
+        const level = info.node.RegionLevel;
+        // console.log(selectedNode.RegionLevel);
+        // // if (selectedNode) {
+        // //     const selectedNodeLevel = selectedNode.RegionLevel;
+        // //     console.log("Selected Node Level:", selectedNodeLevel);
+        // // }
+        if(level===2){
+            handleProvinceID(selectedKeys[0])
+        }else if(level ===3){
+            handleDistrictID(selectedKeys[0])
         }
+        
     };
     return (
         <Wrapper>

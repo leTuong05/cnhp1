@@ -12,11 +12,11 @@ const NewItem = ({listNew, index}) => {
                 <ImgStyled key={listNew.id}  src={listNew.image} />
             </Link>
             <WrapperNewInfo>
-                <Link to={`/tin-tuc/chi-tiet/${listNew.title}`}>
-                    <TitleStyled color={themeStyles.mainColor} level={3}>{listNew.title}</TitleStyled>
+                <Link to={`/tin-tuc/chi-tiet/${listNew.Title}`}>
+                    <TitleStyled color={themeStyles.mainColor} level={3}>{listNew.Title}</TitleStyled>
                 </Link>
-                <p>{listNew.datetime}</p>
-                <p>{listNew.summary}</p>
+                <p>{listNew.PublicationTime}</p>
+                <p>{listNew.Summary}</p>
             </WrapperNewInfo>
         </Wrapper>
     )
