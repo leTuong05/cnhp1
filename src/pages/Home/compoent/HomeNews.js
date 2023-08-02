@@ -14,6 +14,8 @@ const HomeNews = (props) => {
     "DD/MM/YYYY"
   );
 
+  console.log("dataListOne?>>>", dataListOne);
+
   return (
     <>
       {dataListOne ? (

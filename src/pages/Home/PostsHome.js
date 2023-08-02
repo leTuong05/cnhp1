@@ -18,18 +18,20 @@ const PostsHome = () => {
   const [dataPost, setDataPost] = useState("");
   const [dataPostRight, setDataPostRight] = useState("");
 
+  console.log("dataPostRight>>>", dataPostRight);
+
   useEffect(() => {
     const getListPost = async () => {
       const res = await getPostHome();
-      setDataPost(res.Object.ListPostHomeLeft);
+      setDataPost(res.Object);
     };
     getListPost();
   }, []);
 
   useEffect(() => {
     const getListPost = async () => {
-      const res = await getPostHome();
-      setDataPostRight(res.Object.ListPostHomeRight);
+      const res = await getPostHome(0);
+      setDataPostRight(res.Object);
     };
     getListPost();
   }, []);
@@ -95,9 +97,7 @@ const PostsHome = () => {
                     <Title level={4} style={{ color: "rgb(21, 67, 152)" }}>
                       {item.Title}
                     </Title>
-                    <h5 style={{ textAlign: "left" }}>
-                      {formattedDate}
-                    </h5>
+                    <h5 style={{ textAlign: "left" }}>{formattedDate}</h5>
                     <Divider />
                   </div>
                 );

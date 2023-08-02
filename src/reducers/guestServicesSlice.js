@@ -5,183 +5,124 @@ import {
 } from "@reduxjs/toolkit";
 import { message } from "antd";
 import {
-  contractInstallForAgent,
-  contractInstallForIndividual,
-  contractMoveForAgent,
-  contractMoveForIndividual,
+  getWaterConfig,
+  lapDatCoQuan,
+  lapDatTuNhan,
 } from "../services/apis/guestServies";
 
 //1.tạo hợp đồng lắp đặt cho tư nhân
-// const contractInstallForIndividualSlice = createSlice({
-//   name: "create",
-//   initialState: {
-//     createContractInstallForIndividual: null,
-//     status: "idle",
-//     error: null,
-//   },
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchContractInstallForIndividual.pending, (state) => {
-//         state.status = "loading";
-//       })
-//       .addCase(fetchContractInstallForIndividual.fulfilled, (state, action) => {
-//         state.status = "succeeded";
-//         state.create = action.payload;
-//         message.success("Gửi yêu cầu thành công");
-//       })
-//       .addCase(fetchContractInstallForIndividual.rejected, (state, action) => {
-//         state.status = "failed";
-//         state.error = action.error.message;
-//         message.error("Gửi thất bại ! Vui lòng thử lại");
-//       });
-//   },
-// });
-
-//2.tạo hợp đồng lắp đặt cho cơ quan
-const contractInstallForAgentSlice = createSlice({
-  name: "createContractInstallForAgent",
+const contractInstallForIndividualSlice = createSlice({
+  name: "createInsatllForIndividual",
   initialState: {
-    createContractInstallForAgent: null,
+    createInsatllForIndividual: null,
     status: "idle",
     error: null,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchContractInstallForAgent.pending, (state) => {
+      .addCase(fetchLapDatTuNhan.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchContractInstallForAgent.fulfilled, (state, action) => {
+      .addCase(fetchLapDatTuNhan.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.createContractInstallForAgent = action.payload;
-        message.success("Gửi thành công");
+        state.createInsatllForIndividual = action.payload;
+        message.success("Gửi yêu cầu thành công");
       })
-      .addCase(fetchContractInstallForAgent.rejected, (state, action) => {
+      .addCase(fetchLapDatTuNhan.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
         message.error("Gửi thất bại ! Vui lòng thử lại");
       });
   },
 });
-
-//3.tạo hợp đồng di chuyển nc cho tư nhân
-// const contractMoveForIndividualSlice = createSlice({
-//   name: "createContractMoveForIndividual",
-//   initialState: {
-//     createContractMoveForIndividual: null,
-//     status: "idle",
-//     error: null,
-//   },
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchContractMoveForIndividual.pending, (state) => {
-//         state.status = "loading";
-//       })
-//       .addCase(fetchContractMoveForIndividual.fulfilled, (state, action) => {
-//         state.status = "succeeded";
-//         state.createContractMoveForIndividual = action.payload;
-//         message.success("Gửi thành công");
-//       })
-//       .addCase(fetchContractMoveForIndividual.rejected, (state, action) => {
-//         state.status = "failed";
-//         state.error = action.error.message;
-//         message.error("Gửi thất bại ! Vui lòng thử lại");
-//       });
-//   },
-// });
-
-//4.tạo hợp đồng di chuyển nc cho cơ quan
-// const contractMoveForAgentSlice = createSlice({
-//   name: "createContractMoveForAgent",
-//   initialState: {
-//     createContractMoveForAgent: null,
-//     status: "idle",
-//     error: null,
-//   },
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchContractMoveForAgent.pending, (state) => {
-//         state.status = "loading";
-//       })
-//       .addCase(fetchContractMoveForAgent.fulfilled, (state, action) => {
-//         state.status = "succeeded";
-//         state.createContractMoveForAgent = action.payload;
-//         message.success("Gửi thành công");
-//       })
-//       .addCase(fetchContractMoveForAgent.rejected, (state, action) => {
-//         state.status = "failed";
-//         state.error = action.error.message;
-//         message.error("Gửi thất bại ! Vui lòng thử lại");
-//       });
-//   },
-// });
-
-// =========================== //
-
-////1.tạo hợp đồng lắp đặt cho tư  nhân
-// export const fetchContractInstallForIndividual = createAsyncThunk(
-//   "createContractInstallForIndividual/fetchContractInstallForIndividual",
-//   async (body, { rejectWithValue }) => {
-//     try {
-//       const response = await contractInstallForIndividual(body);
-//       debugger;
-//       return response;
-//     } catch (error) {
-//       debugger;
-//       return rejectWithValue(error);
-//     }
-//   }
-// );
-
-//2.tạo hợp đồng lắp đặt cho cơ qan
-export const fetchContractInstallForAgent = createAsyncThunk(
-  "createContractInstallForAgent/fetchContractInstallForAgent",
+export const fetchLapDatTuNhan = createAsyncThunk(
+  "createInsatllForIndividual/fetchLapDatTuNhan",
   async (body, { rejectWithValue }) => {
     try {
-      const response = await contractInstallForAgent(body);
-      debugger;
+      const response = await lapDatTuNhan(body);
       return response;
     } catch (error) {
-      debugger;
       return rejectWithValue(error);
     }
   }
 );
 
-//3.tạo hợp đồng di chuyển nc cho tư nhân
-// export const fetchContractMoveForIndividual = createAsyncThunk(
-//   "createContractMoveForIndividual/fetchContractMoveForIndividual",
-//   async (body, { rejectWithValue }) => {
-//     try {
-//       const response = await contractMoveForIndividual(body);
-//       debugger;
-//       return response;
-//     } catch (error) {
-//       debugger;
-//       return rejectWithValue(error);
-//     }
-//   }
-// );
+//2. tạo hợp đồng lắp đặt cho cơ quan
+const contractInstallForAgentlSlice = createSlice({
+  name: "createInsatllForAgent",
+  initialState: {
+    createInsatllForAgent: null,
+    status: "idle",
+    error: null,
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchLapDatCoQuan.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchLapDatCoQuan.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.createInsatllForAgent = action.payload;
+        message.success("Gửi yêu cầu thành công");
+      })
+      .addCase(fetchLapDatCoQuan.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        message.error("Gửi thất bại ! Vui lòng thử lại");
+      });
+  },
+});
+export const fetchLapDatCoQuan = createAsyncThunk(
+  "createInsatllForAgent/fetchLapDatCoQuan",
+  async (body, { rejectWithValue }) => {
+    try {
+      const response = await lapDatCoQuan(body);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
-//4.tạo hợp đồng di chuyển nc cho cơ quan
-// export const fetchContractMoveForAgent = createAsyncThunk(
-//   "createContractMoveForAgent/fetchContractMoveForAgent",
-//   async (body, { rejectWithValue }) => {
-//     try {
-//       const response = await contractMoveForAgent(body);
-//       debugger;
-//       return response;
-//     } catch (error) {
-//       debugger;
-//       return rejectWithValue(error);
-//     }
-//   }
-// );
+//List Water Config
+const listWaterConfigSlice = createSlice({
+  name: "listWaterConfig",
+  initialState: {
+    listWaterConfig: null,
+    status: "idle",
+    error: null,
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetGetListWaterConfig.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetGetListWaterConfig.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.listWaterConfig = action.payload;
+      })
+      .addCase(fetGetListWaterConfig.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+  },
+});
+export const fetGetListWaterConfig = createAsyncThunk(
+  "listWaterConfig/fetGetListWaterConfig",
+  async (id) => {
+    try {
+      const response = await getWaterConfig(id);
+      return response;
+    } catch (error) {
+      // return error
+    }
+  }
+);
 
 const guestServiceReducer = combineReducers({
-  // createContractInstallForIndividual: contractInstallForIndividualSlice.reducer,
-  createContractInstallForAgent: contractInstallForAgentSlice.reducer,
-  // createContractMoveForIndividual: contractMoveForIndividualSlice.reducer,
-  // createContractMoveForAgent: contractMoveForAgentSlice.reducer,
+  createContractInstallForIndividual: contractInstallForIndividualSlice.reducer,
+  createContractInstallForAgent: contractInstallForAgentlSlice.reducer,
+  listWaterConfig: listWaterConfigSlice.reducer,
 });
 
 export default guestServiceReducer;

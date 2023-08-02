@@ -3,7 +3,11 @@ import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
 import { FileImageOutlined, UploadOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
 import { Wrapper } from "./style";
-import { fetchContractInstallForIndividual } from "../../../reducers/guestServicesSlice";
+import {
+  fetGetListWaterConfig,
+  fetchContractInstallForIndividual,
+  fetchLapDatTuNhan,
+} from "../../../reducers/guestServicesSlice";
 import {
   fetchGetRegion,
   fetchGetRegionAll,
@@ -12,8 +16,13 @@ import {
 } from "../../../reducers/managementTeamSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { DownOutlined } from "@ant-design/icons";
+import { Dropdown, Space } from "antd";
 
 const { TextArea } = Input;
+
+const optionsPorpuse = [];
+
 const Private = () => {
   const dispatch = useDispatch();
   const navigave = useNavigate();
@@ -31,6 +40,28 @@ const Private = () => {
   const [valueFileIDCard, setValueFileIDCard] = useState("");
   const [valueFileQSD, setValueFileQSD] = useState("");
   const [valueFile, setValueFile] = useState("");
+
+  const listWaterConfig = useSelector(
+    (state) => state?.guestSerives?.listWaterConfig?.listWaterConfig?.Object
+  );
+
+  const optionsPorpuse = [];
+  if (listWaterConfig) {
+    listWaterConfig?.map((item) => {
+      optionsPorpuse.push({
+        value: item.WaterPriceID,
+        label: item.WaterPriceTitle,
+      });
+    });
+  }
+
+  const handleChange = (value) => {
+    setValuePurpose(value);
+  };
+
+  useEffect(() => {
+    dispatch(fetGetListWaterConfig(1));
+  }, []);
 
   // ================ CALL select tinh/huyen xa
   const [valueTinh, setValueTinh] = useState("");
@@ -141,19 +172,19 @@ const Private = () => {
 
   // END Call select tinh/huyen/xa =====================
 
-  const propsIDCard = {
-    beforeUpload: (file) => {
-      const isPNG = file.type === "image/png";
-      if (!isPNG) {
-        message.error(`${file.name} is not a png file`);
-      }
-      return isPNG || Upload.LIST_IGNORE;
-    },
-    onChange: (info) => {
-      const fileID = info ? Object?.values(info?.fileList[0]) : null;
-      setValueFileIDCard(fileID);
-    },
-  };
+  // const propsIDCard = {
+  //   beforeUpload: (file) => {
+  //     const isPNG = file.type === "image/png";
+  //     if (!isPNG) {
+  //       message.error(`${file.name} is not a png file`);
+  //     }
+  //     return isPNG || Upload.LIST_IGNORE;
+  //   },
+  //   onChange: (info) => {
+  //     const fileID = info ? Object?.values(info?.fileList[0]) : null;
+  //     setValueFileIDCard(fileID);
+  //   },
+  // };
 
   const propsUsingLand = {
     beforeUpload: (file) => {
@@ -202,27 +233,27 @@ const Private = () => {
     setValueContent(e.target.value);
   };
 
-  // const onFinish = () => {
-  //   dispatch(
-  //     fetchContractInstallForIndividual({
-  //       CustomerName: nameClient,
-  //       RequestType: 1,
-  //       PhoneNumber: valuePhone,
-  //       Email: valueEmail,
-  //       ProvinceID: valueTinh,
-  //       DistrictID: valueHuyen,
-  //       WardID: valueXa,
-  //       AddressUseWater: valueAdress,
-  //       PurposeUseType: valuePurpose,
-  //       Content: valueContent,
-  //       file_CCCD: fileIDCard,
-  //       file_QSD: "",
-  //       file: "",
-  //     })
-  //   );
-  // };
+  const onFinish = () => {
+    dispatch(
+      fetchLapDatTuNhan({
+        CustomerName: nameClient,
+        RequestType: 1,
+        PhoneNumber: valuePhone,
+        Email: valueEmail,
+        ProvinceID: valueTinh,
+        DistrictID: valueHuyen,
+        WardID: valueXa,
+        AddressUseWater: valueAdress,
+        PurposeUseType: valuePurpose,
+        Content: valueContent,
+        file_CCCD: fileIDCard,
+        file_QSD: fileUsing,
+        file: "",
+      })
+    );
+  };
 
-  const onFinish = () => {};
+  // const onFinish = () => {};
 
   const handleOnclickBtn = () => {
     if (nameClient == null) {
@@ -231,6 +262,7 @@ const Private = () => {
   };
 
   const fileIDCard = valueFileIDCard ? Object.values(valueFileIDCard)[0] : null;
+  const fileUsing = valueFileIDCard ? Object.values(valueFileQSD)[0] : null;
 
   return (
     <Wrapper>
@@ -256,6 +288,7 @@ const Private = () => {
                 onChange={handleName}
                 placeholder="Nhập tên"
                 disabled
+                style={{ backgroundColor: "#ffe7ba" }}
               ></Input>
             </Form.Item>
           </Col>
@@ -398,7 +431,14 @@ const Private = () => {
                 },
               ]}
             >
-              <Input onChange={handlePurpose} placeholder="Mục đích" />
+              <Select
+                defaultValue="--Chọn--"
+                style={{
+                  width: "100%",
+                }}
+                onChange={handleChange}
+                options={optionsPorpuse}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -471,6 +511,7 @@ const Private = () => {
             >
               <Button icon={<FileImageOutlined />}>Chọn ảnh</Button>
             </Upload>
+            {fileIDCard?.name}
           </Form.Item>
         </Row>
 
@@ -478,15 +519,49 @@ const Private = () => {
           <Form.Item
             label="Giấy chứng nhận Quyền sở hữu/sử dụng nhà đất"
             name="sohudat"
-            // rules={[
-            //   {
-            //     required: true,
-            //   },
-            // ]}
+            valuePropName="fileListUsing"
+            getValueFromEvent={(event) => {
+              return event?.fileList;
+            }}
+            rules={[
+              {
+                required: true,
+              },
+              {
+                validator(_, fileList) {
+                  return new Promise((resolve, reject) => {
+                    if (fileList && fileList[0].size > 90000000) {
+                      reject("File size exceeded");
+                    } else {
+                      resolve("Success");
+                    }
+                  });
+                },
+              },
+            ]}
           >
-            <Upload {...propsUsingLand}>
+            <Upload
+              // {...propsUsingLand}
+              maxCount={1}
+              beforeUpload={(file) => {
+                return new Promise((resolve, reject) => {
+                  if (file.size > 9000000) {
+                    reject("File size exceeded");
+                    // message.error("File size exceeded");
+                  } else {
+                    resolve("Success");
+                  }
+                });
+              }}
+              customRequest={(info) => {
+                setValueFileQSD([info.file]);
+              }}
+              showUploadList={false}
+              defaultValue={fileUsing || null}
+            >
               <Button icon={<FileImageOutlined />}>Chọn ảnh</Button>
             </Upload>
+            {fileUsing?.name}
           </Form.Item>
         </Row>
 
@@ -505,6 +580,11 @@ const Private = () => {
             </Upload>
           </Form.Item>
         </Row>
+        <span style={{ color: "rgb(0, 123, 255)", fontWeight: 600 }}>
+          Khi bấm Gửi thông tin Tôi cam kết các thông tin kê khai là đầy đủ,
+          chính xác và đồng ý với Quy định cung cấp dịch vụ nước của Cấp nước
+          Hải Phòng.
+        </span>
 
         <Divider />
 

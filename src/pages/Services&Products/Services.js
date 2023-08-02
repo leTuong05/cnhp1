@@ -16,6 +16,8 @@ import lapdatdichuyenmay from "../../common/images/imageHome_page/lapdatdichuyen
 import sangtenhopdong from "../../common/images/imageHome_page/sangten.png";
 import caplaihopdong from "../../common/images/imageHome_page/caplaihopdong.png";
 import thanhtoantructuyen from "../../common/images/imageHome_page/thanhtoantructuyen.png";
+import { Line } from "../../components/TitleComponent/styles";
+import TitleComponent from "../../components/TitleComponent";
 
 const style = {
   background: "#fff",
@@ -24,7 +26,7 @@ const style = {
 };
 
 const styleCart = {
-  height: "100%",
+  height: "200px",
   width: "100%",
   cursor: "pointer",
   border: "none",
@@ -36,7 +38,11 @@ const Services = (props) => {
   return (
     <Wrapper>
       <Card
-        title="Các dịch vụ chính"
+        title={
+          <>
+            <TitleComponent title={"Các dịch vụ chính"} />
+          </>
+        }
         bordered={false}
         style={{
           marginTop: 30,

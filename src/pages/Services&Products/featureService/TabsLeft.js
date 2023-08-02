@@ -6,7 +6,7 @@ import { Wrapper } from "./style";
 import { Checkbox } from 'antd';
 
 const onChange = (key) => {
-  console.log(key);
+  console.log("Tu nhan/co quan", key);
 };
 const items = [
   {
@@ -14,7 +14,7 @@ const items = [
     label: `Tư nhân`,
     children: (
       <>
-        <Private />
+        <Private onChange={onChange}/>
       </>
     ),
   },
