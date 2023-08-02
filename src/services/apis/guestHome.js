@@ -1,3 +1,3 @@
 import axiosInstance from "../axios";
 
-export const getPostHome = () => axiosInstance.get("Guest/GetPostHome");
+export const getPostHome = (id) => axiosInstance.get(`Guest/GetPostHome?TypeTab=${id}`);

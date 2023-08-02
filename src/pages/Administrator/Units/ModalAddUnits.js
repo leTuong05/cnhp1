@@ -25,6 +25,7 @@ import {
   fetchgetListAll,
 } from "../../../reducers/managementTeamSlice";
 import { TreeSelect } from "antd";
+import { notification } from "antd";
 
 const ModalAddUnits = (props) => {
   const dispatch = useDispatch();
@@ -175,6 +176,10 @@ const ModalAddUnits = (props) => {
   );
   const listRegionHP = useSelector(
     (state) => state?.manage?.regionListHP?.regionHP?.Object
+  );
+
+  const errorMess = useSelector(
+    (state) => state?.updateManageTeam?.error?.Object
   );
   // console.log("listRegionHP>>>>>",listRegionHP);
 
@@ -424,6 +429,15 @@ const ModalAddUnits = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (errorMess) {
+      notification.error({
+        message: "Thông báo !",
+        description: errorMess,
+      });
+    }
+  }, [errorMess]);
+
   // const [managementTeamName, setManagementTeamName] = useState('');
 
   // useEffect(() => {
@@ -464,7 +478,9 @@ const ModalAddUnits = (props) => {
               >
                 <div>
                   <Input
-                    defaultValue={ mode === 'edit' ? valueSelected?.ManagementTeamName : null}
+                    defaultValue={
+                      mode === "edit" ? valueSelected?.ManagementTeamName : null
+                    }
                     onChange={
                       mode === "edit" ? handleChangeNameEdit : handleChangeName
                     }
