@@ -40,12 +40,12 @@ const TabsRight = () => {
         <span style={{ color: "orange" }}>1. </span>
         Thông tin khách hàng
       </h1>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", position: "relative" }}>
         <div style={{ width: "100%" }}>
           <h2>Khách hàng yêu cầu</h2>
           <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
         </div>
-        <div>
+        <div style={{ position: "absolute", right: "80px" }}>
           <h2>Hình thức yêu cầu</h2>
           <Radio.Group onChange={onChangeCheck} value={value}>
             <Radio value={1}>Nhanh</Radio>

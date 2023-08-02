@@ -12,6 +12,11 @@ import {
   fetchGetRegionByRegionID,
   fetchgetList,
 } from "../../../reducers/managementTeamSlice";
+import {
+  fetGetListWaterConfig,
+  fetchContractInstallForAgent,
+  fetchLapDatCoQuan,
+} from "../../../reducers/guestServicesSlice";
 
 const { TextArea } = Input;
 
@@ -33,6 +38,28 @@ const Common = () => {
   const [valueFileIDCard, setValueFileIDCard] = useState("");
   const [valueFileQSD, setValueFileQSD] = useState("");
   const [valueFileSigin, setValueFileSigin] = useState("");
+
+  const listWaterConfig = useSelector(
+    (state) => state?.guestSerives?.listWaterConfig?.listWaterConfig?.Object
+  );
+
+  const optionsPorpuse = [];
+  if (listWaterConfig) {
+    listWaterConfig?.map((item) => {
+      optionsPorpuse.push({
+        value: item.WaterPriceID,
+        label: item.WaterPriceTitle,
+      });
+    });
+  }
+
+  const handleChange = (value) => {
+    setValuePurpose(value);
+  };
+
+  useEffect(() => {
+    dispatch(fetGetListWaterConfig(2));
+  }, []);
 
   // ================ CALL select tinh/huyen xa
   const [valueTinh, setValueTinh] = useState("");
@@ -226,8 +253,31 @@ const Common = () => {
     }
   };
 
-  const onFinish = () => {};
-
+  const onFinish = () => {
+    dispatch(
+      fetchLapDatCoQuan({
+        BussinessCode: "0",
+        AgentName: nameClient,
+        CustomerName: valueName,
+        RequestType: 1,
+        PhoneNumber: valuePhone,
+        Email: valueEmail,
+        ProvinceID: valueTinh,
+        DistrictID: valueHuyen,
+        WardID: valueXa,
+        AddressUseWater: valueAdress,
+        PurposeUseType: valuePurpose,
+        Content: valueContent,
+        file_CCCD: fileIDCard,
+        file_QSD: fileUsing,
+        file_DKKD: fileDKKD,
+        file: "",
+      })
+    );
+  };
+  const fileIDCard = valueFileIDCard ? Object.values(valueFileIDCard)[0] : null;
+  const fileUsing = valueFileQSD ? Object.values(valueFileQSD)[0] : null;
+  const fileDKKD = valueFileSigin ? Object.values(valueFileSigin)[0] : null;
   return (
     <Wrapper>
       <Form
@@ -265,7 +315,7 @@ const Common = () => {
               name="tenkKH"
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
             >
@@ -273,6 +323,7 @@ const Common = () => {
                 defaultValue={nameClient}
                 disabled
                 placeholder="Nhập tên"
+                style={{ backgroundColor: "#ffe7ba" }}
               ></Input>
             </Form.Item>
           </Col>
@@ -403,8 +454,23 @@ const Common = () => {
         </Row>
         <Row>
           <Col span={24}>
-            <Form.Item label="Mục đích sử dụng:">
-              <Input onChange={handlePurpose} placeholder="Mục đích" />
+            <Form.Item
+              label="Mục đích sử dụng:"
+              name="mucdich"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Select
+                defaultValue="--Chọn--"
+                style={{
+                  width: "100%",
+                }}
+                onChange={handleChange}
+                options={optionsPorpuse}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -435,15 +501,49 @@ const Common = () => {
           <Form.Item
             label="Giấy chứng minh thư nhân dân/Căn cước công dân"
             name="cccd"
+            valuePropName="fileList"
+            getValueFromEvent={(event) => {
+              return event?.fileList;
+            }}
             rules={[
               {
                 required: true,
               },
+              {
+                validator(_, fileList) {
+                  return new Promise((resolve, reject) => {
+                    if (fileList && fileList[0].size > 90000000) {
+                      reject("File size exceeded");
+                    } else {
+                      resolve("Success");
+                    }
+                  });
+                },
+              },
             ]}
           >
-            <Upload {...propsIDCard}>
+            <Upload
+              // {...propsIDCard}
+              maxCount={1}
+              beforeUpload={(file) => {
+                return new Promise((resolve, reject) => {
+                  if (file.size > 9000000) {
+                    reject("File size exceeded");
+                    // message.error("File size exceeded");
+                  } else {
+                    resolve("Success");
+                  }
+                });
+              }}
+              customRequest={(info) => {
+                setValueFileIDCard([info.file]);
+              }}
+              showUploadList={false}
+              defaultValue={fileIDCard || null}
+            >
               <Button icon={<FileImageOutlined />}>Chọn ảnh</Button>
             </Upload>
+            {fileIDCard?.name}
           </Form.Item>
         </Row>
 
@@ -451,15 +551,49 @@ const Common = () => {
           <Form.Item
             label="Giấy chứng nhận Quyền sở hữu/sử dụng nhà đất"
             name="sohudat"
+            valuePropName="fileListUsing"
+            getValueFromEvent={(event) => {
+              return event?.fileList;
+            }}
             rules={[
               {
                 required: true,
               },
+              {
+                validator(_, fileList) {
+                  return new Promise((resolve, reject) => {
+                    if (fileList && fileList[0].size > 90000000) {
+                      reject("File size exceeded");
+                    } else {
+                      resolve("Success");
+                    }
+                  });
+                },
+              },
             ]}
           >
-            <Upload {...propsUsingLand}>
+            <Upload
+              // {...propsUsingLand}
+              maxCount={1}
+              beforeUpload={(file) => {
+                return new Promise((resolve, reject) => {
+                  if (file.size > 9000000) {
+                    reject("File size exceeded");
+                    // message.error("File size exceeded");
+                  } else {
+                    resolve("Success");
+                  }
+                });
+              }}
+              customRequest={(info) => {
+                setValueFileQSD([info.file]);
+              }}
+              showUploadList={false}
+              defaultValue={fileUsing || null}
+            >
               <Button icon={<FileImageOutlined />}>Chọn ảnh</Button>
             </Upload>
+            {fileUsing?.name}
           </Form.Item>
         </Row>
 
@@ -467,15 +601,49 @@ const Common = () => {
           <Form.Item
             label="Giấy đăng ký kinh doanh (Pháp nhân/Cá nhân kinh doanh)"
             name="sohudat"
+            valuePropName="fileSignKD"
+            getValueFromEvent={(event) => {
+              return event?.fileList;
+            }}
             rules={[
               {
                 required: true,
               },
+              {
+                validator(_, fileList) {
+                  return new Promise((resolve, reject) => {
+                    if (fileList && fileList[0].size > 90000000) {
+                      reject("File size exceeded");
+                    } else {
+                      resolve("Success");
+                    }
+                  });
+                },
+              },
             ]}
           >
-            <Upload {...propsUsingSigin}>
+            <Upload
+              // {...propsUsingSigin}
+              maxCount={1}
+              beforeUpload={(file) => {
+                return new Promise((resolve, reject) => {
+                  if (file.size > 9000000) {
+                    reject("File size exceeded");
+                    // message.error("File size exceeded");
+                  } else {
+                    resolve("Success");
+                  }
+                });
+              }}
+              customRequest={(info) => {
+                setValueFileSigin([info.file]);
+              }}
+              showUploadList={false}
+              defaultValue={fileUsing || null}
+            >
               <Button icon={<FileImageOutlined />}>Chọn ảnh</Button>
             </Upload>
+            {fileDKKD?.name}
           </Form.Item>
         </Row>
 
@@ -485,7 +653,7 @@ const Common = () => {
             name="khac"
             rules={[
               {
-                required: true,
+                required: false,
               },
             ]}
           >
@@ -498,7 +666,13 @@ const Common = () => {
         <Divider />
         <Row>
           <Form.Item>
-            <Button className="btnSubmit">Gửi thông tin</Button>
+            <Button
+              onClick={handleOnclickBtn}
+              htmlType="submit"
+              className="btnSubmit"
+            >
+              Gửi thông tin
+            </Button>
           </Form.Item>
         </Row>
       </Form>

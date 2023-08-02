@@ -34,6 +34,7 @@ import iconEdit from "../../../common/images/imageHome_page/edit.png";
 import cacel from "../../../common/images/imageHome_page/cacel.png";
 import xoa from "../../../common/images/imageHome_page/delete.png";
 import danglai from "../../../common/images/imageHome_page/repost.png";
+import TitleComponent from "../../../components/TitleComponent";
 
 // GET dữ liệu dạng TreeData
 // const getTreeData = (data) => {
@@ -454,7 +455,14 @@ const ManagePosts = () => {
     <WrapperManagePost>
       <Row gutter={16}>
         <Col span={4}>
-          <Card title="Danh sách danh mục" bordered={false}>
+          <Card
+            title={
+              <>
+                <TitleComponent title={"Danh sách danh mục"} />
+              </>
+            }
+            bordered={false}
+          >
             <Tree
               multiple={false}
               defaultExpandAll
@@ -465,7 +473,13 @@ const ManagePosts = () => {
         </Col>
 
         <Col span={20}>
-          <Card title="Danh sách bài viết">
+          <Card
+            title={
+              <>
+                <TitleComponent title={"Danh sách bài viết"} />
+              </>
+            }
+          >
             <Row gutter={16}>
               <Col span={16}>
                 <Space direction="vertical">

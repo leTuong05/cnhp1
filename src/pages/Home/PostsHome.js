@@ -5,6 +5,7 @@ import { Typography } from "antd";
 import HomeNews from "./compoent/HomeNews";
 import Activity from "./compoent/Activity";
 import { getPostHome } from "../../services/apis/guestHome";
+import moment from "moment";
 
 const { Title } = Typography;
 
@@ -15,12 +16,22 @@ const PostsHome = () => {
     setSelectedTabKey(key);
   };
   const [dataPost, setDataPost] = useState("");
+  const [dataPostRight, setDataPostRight] = useState("");
+
+  console.log("dataPostRight>>>", dataPostRight);
 
   useEffect(() => {
     const getListPost = async () => {
       const res = await getPostHome();
-      // console.log(res.Object.ListPostHomeLeft);
-      setDataPost(res.Object.ListPostHomeLeft);
+      setDataPost(res.Object);
+    };
+    getListPost();
+  }, []);
+
+  useEffect(() => {
+    const getListPost = async () => {
+      const res = await getPostHome(0);
+      setDataPostRight(res.Object);
     };
     getListPost();
   }, []);
@@ -52,7 +63,7 @@ const PostsHome = () => {
       ),
       children: (
         <>
-          <Activity selectedTabKey={selectedTabKey} />
+          <Activity selectedTabKey={selectedTabKey} dataPost={dataPost} />
         </>
       ),
     },
@@ -67,40 +78,31 @@ const PostsHome = () => {
         </Col>
 
         <Col className="gutter-row" span={8}>
-          <div>
-            <h1 style={{ fontSize: "16px", color: "red", fontWeight: 600 }}>
-              Hoạt động sản xuất kinh doanh
-            </h1>
-            <Title level={4} style={{ color: "rgb(21, 67, 152)" }}>
-              Cấp nước Hải Phòng - đồng hành cùng tiến trình chuyển đổi số của
-              thành phố
-            </Title>
-            <h5 style={{ textAlign: "left" }}>2022-11-23 19:50:36</h5>
-            <Divider />
-          </div>
-          <div>
-            <h1 style={{ fontSize: "16px", color: "red", fontWeight: 600 }}>
-              Hoạt động sản xuất kinh doanh
-            </h1>
-            <Title level={4} style={{ color: "rgb(21, 67, 152)" }}>
-              Cấp nước Hải Phòng - đồng hành cùng tiến trình chuyển đổi số của
-              thành phố
-            </Title>
-            <h5 style={{ textAlign: "left" }}>2022-11-23 19:50:36</h5>
-            <Divider />
-          </div>
-
-          <div>
-            <h1 style={{ fontSize: "16px", color: "red", fontWeight: 600 }}>
-              Hoạt động sản xuất kinh doanh
-            </h1>
-            <Title level={4} style={{ color: "rgb(21, 67, 152)" }}>
-              Cấp nước Hải Phòng - đồng hành cùng tiến trình chuyển đổi số của
-              thành phố
-            </Title>
-            <h5 style={{ textAlign: "left" }}>2022-11-23 19:50:36</h5>
-            <Divider />
-          </div>
+          {dataPostRight
+            ? dataPostRight?.map((item) => {
+                const formattedDate = moment(item.PublicationTime).format(
+                  "DD/MM/YYYY"
+                );
+                return (
+                  <div key={item?.PostID}>
+                    <h1
+                      style={{
+                        fontSize: "16px",
+                        color: "red",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {item?.CategoryPostName}
+                    </h1>
+                    <Title level={4} style={{ color: "rgb(21, 67, 152)" }}>
+                      {item.Title}
+                    </Title>
+                    <h5 style={{ textAlign: "left" }}>{formattedDate}</h5>
+                    <Divider />
+                  </div>
+                );
+              })
+            : null}
         </Col>
       </Row>
     </Wapper>

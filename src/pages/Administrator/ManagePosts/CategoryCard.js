@@ -37,6 +37,7 @@ import {
   selectTagsList,
   selectTagsLists,
 } from "../../../reducers/tagsSlice";
+import TitleComponent from "../../../components/TitleComponent";
 // import { addListener } from '@reduxjs/toolkit';
 
 const { Title } = Typography;
@@ -92,7 +93,6 @@ const CategoryCard = () => {
 
   // const [title, setTitle] = useState("")
 
-  
   const title = selectedRow ? "Sửa thẻ" : "Thêm thẻ";
 
   const dispatch = useDispatch();
@@ -185,7 +185,6 @@ const CategoryCard = () => {
         })
       );
     });
-
   };
 
   // const onFinish = () => {
@@ -240,7 +239,7 @@ const CategoryCard = () => {
 
   const handleADD = () => {
     setSelectedRow(null);
-  }
+  };
 
   return (
     <Wapper>
@@ -264,7 +263,11 @@ const CategoryCard = () => {
           />
           <div style={style("#fff")}>
             <Card
-              title="Danh sách thẻ"
+              title={
+                <>
+                  <TitleComponent title={"Danh sách thẻ"} />
+                </>
+              }
               bordered={false}
               style={{
                 width: "100%",
@@ -321,9 +324,7 @@ const CategoryCard = () => {
                         fontSize: "16px",
                         marginTop: "8px",
                       }}
-                      onClick={() => 
-                        handleADD()
-                      }
+                      onClick={() => handleADD()}
                     />
                   ) : (
                     ""
