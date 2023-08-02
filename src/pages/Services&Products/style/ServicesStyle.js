@@ -8,4 +8,5 @@ export const Wrapper = styled.div`
     .text {
         text-align: center;
     }
+
 `

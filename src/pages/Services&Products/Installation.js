@@ -3,6 +3,7 @@ import { Card, Tabs } from "antd";
 import TabsLeft from "./featureService/TabsLeft";
 import TabsRight from "./featureService/TabsRight";
 import { WapperInstall } from "./styles";
+import TitleComponent from '../../components/TitleComponent'
 
 const Installation = () => {
   const onChange = (key) => {
@@ -37,9 +38,14 @@ const Installation = () => {
   return (
     <WapperInstall>
       <Card
-        title="Lắp đặt/ di chuyển máy nước"
+        title={
+          <>
+            <TitleComponent title={"Lắp đặt/ di chuyển máy nước"} />
+          </>
+        }
         bordered={false}
         style={{
+          marginTop: 40,
           width: "100%",
         }}
       >

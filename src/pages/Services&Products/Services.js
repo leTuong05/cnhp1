@@ -16,6 +16,8 @@ import lapdatdichuyenmay from "../../common/images/imageHome_page/lapdatdichuyen
 import sangtenhopdong from "../../common/images/imageHome_page/sangten.png";
 import caplaihopdong from "../../common/images/imageHome_page/caplaihopdong.png";
 import thanhtoantructuyen from "../../common/images/imageHome_page/thanhtoantructuyen.png";
+import { Line } from "../../components/TitleComponent/styles";
+import TitleComponent from "../../components/TitleComponent";
 
 const style = {
   background: "#fff",
@@ -24,7 +26,7 @@ const style = {
 };
 
 const styleCart = {
-  height: "100%",
+  height: "200px",
   width: "100%",
   cursor: "pointer",
   border: "none",
@@ -36,7 +38,11 @@ const Services = (props) => {
   return (
     <Wrapper>
       <Card
-        title="Các dịch vụ chính"
+        title={
+          <>
+            <TitleComponent title={"Các dịch vụ chính"} />
+          </>
+        }
         bordered={false}
         style={{
           marginTop: 30,
@@ -75,7 +81,9 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate(
+                    "/san-pham-va-dich-vu/dich-vu/sang-ten-hop-dong-dvcn"
+                  )
                 }
               >
                 <Row className="row">
@@ -102,7 +110,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/cap-lai-hop-dong-dvcn")
                 }
               >
                 <Row className="row">
@@ -129,7 +137,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
                 }
               >
                 <Row className="row">
@@ -156,7 +164,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/sua-chua")
                 }
               >
                 <Row className="row">
@@ -183,7 +191,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/dang-ky-thay-doi-TTKH")
                 }
               >
                 <Row className="row">
@@ -237,7 +245,7 @@ const Services = (props) => {
               <Card
                 style={styleCart}
                 onClick={() =>
-                  navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+                  navigate("/san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
                 }
               >
                 <Row className="row">

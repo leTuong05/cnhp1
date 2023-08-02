@@ -58,7 +58,7 @@ const Service = () => {
               cursor: "pointer",
             }}
             onClick={() =>
-              navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+              navigate("san-pham-va-dich-vu/dich-vu/dang-ky-thay-doi-TTKH")
             }
           >
             <Row>
@@ -77,9 +77,7 @@ const Service = () => {
               width: 244,
               cursor: "pointer",
             }}
-            onClick={() =>
-              navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
-            }
+            onClick={() => navigate("san-pham-va-dich-vu/dich-vu/lap-dat-moi")}
           >
             <Row>
               <Image preview={false} src={lapdatdichuyenmay} />
@@ -98,7 +96,7 @@ const Service = () => {
               cursor: "pointer",
             }}
             onClick={() =>
-              navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+              navigate("san-pham-va-dich-vu/dich-vu/sang-ten-hop-dong-dvcn")
             }
           >
             <Row>
@@ -117,9 +115,7 @@ const Service = () => {
               width: 244,
               cursor: "pointer",
             }}
-            onClick={() =>
-              navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
-            }
+            onClick={() => navigate("san-pham-va-dich-vu/dich-vu/lap-dat-moi")}
           >
             <Row>
               <Image preview={false} src={lapdatmoi} />
@@ -135,9 +131,7 @@ const Service = () => {
               width: 244,
               cursor: "pointer",
             }}
-            onClick={() =>
-              navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
-            }
+            onClick={() => navigate("san-pham-va-dich-vu/dich-vu/sua-chua")}
           >
             <Row>
               <Image preview={false} src={suachua} />
@@ -154,7 +148,7 @@ const Service = () => {
               cursor: "pointer",
             }}
             onClick={() =>
-              navigate("san-pham-va-dich-vu/dich-vu/hoa-don-dien-tu")
+              navigate("san-pham-va-dich-vu/dich-vu/cap-lai-hop-dong-dvcn")
             }
           >
             <Row>

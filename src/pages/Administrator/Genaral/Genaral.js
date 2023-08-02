@@ -25,6 +25,7 @@ import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import TitleComponent from "../../../components/TitleComponent";
 dayjs.extend(customParseFormat);
 
 const { RangePicker } = DatePicker;
@@ -61,25 +62,6 @@ const style = (borderColor) => {
     borderTop: `6px solid ${borderColor}`,
   };
 };
-
-const items = [
-  {
-    key: "1",
-    label: <a>Hôm nay</a>,
-  },
-  // {
-  //     key: '2',
-  //     label: <a>Hôm qua</a>
-  // },
-  // {
-  //     key: '3',
-  //     label: <a>Trong 7 ngày qua</a>
-  // },
-  // {
-  //     key: '3',
-  //     label: <a>Trong 30 ngày qua</a>
-  // }
-];
 
 //data y/c số khach hang
 const data1 = [];
@@ -152,7 +134,9 @@ const Genaral = () => {
     (state) => state?.overView?.overViewDetail?.overviewDetails?.Object
   );
 
-  const overViewDetail = dataArrayViewDetail ? Object.values(dataArrayViewDetail)[0] : null;
+  const overViewDetail = dataArrayViewDetail
+    ? Object.values(dataArrayViewDetail)[0]
+    : null;
 
   const columns1 = [
     {
@@ -186,13 +170,12 @@ const Genaral = () => {
   const [fromDate, setFromDate] = useState(lastMonth);
   const [toDate, setToDate] = useState(today);
 
-
   //get View
   const getView = () => {
     dispatch(
       fetchOverView({
-        "FromDate": fromDate,
-        "ToDate": toDate
+        FromDate: fromDate,
+        ToDate: toDate,
       })
     );
   };
@@ -222,7 +205,7 @@ const Genaral = () => {
         CurrentPage: 1,
         Type: selectedItemId,
         FromDate: fromDate,
-        ToDate: toDate
+        ToDate: toDate,
       })
     );
   };
@@ -284,7 +267,7 @@ const Genaral = () => {
         CurrentPage: 1,
         Type: selectedItemId,
         FromDate: fromDate,
-        ToDate: toDate
+        ToDate: toDate,
       })
     );
   };
@@ -294,7 +277,10 @@ const Genaral = () => {
       <div style={{ display: "flex", fontWeight: 500, fontSize: "16px" }}>
         <span style={{ marginRight: "10px" }}>Khung thời gian: </span>
         <RangePicker
-          defaultValue={[dayjs(fromDate, dateFormat), dayjs(toDate, dateFormat)]}
+          defaultValue={[
+            dayjs(fromDate, dateFormat),
+            dayjs(toDate, dateFormat),
+          ]}
           format={dateFormat}
           onChange={handleOnchange}
           bordered
@@ -304,12 +290,17 @@ const Genaral = () => {
       <Divider />
 
       <Card
-        title="Thông báo"
+        title={
+          <>
+            <TitleComponent title={"Thông báo"} />
+          </>
+        }
         bordered={false}
         style={{
           width: "100%",
           justifyContent: "left",
         }}
+        
       >
         <>
           <Row
