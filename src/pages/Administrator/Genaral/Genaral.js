@@ -300,7 +300,6 @@ const Genaral = () => {
           width: "100%",
           justifyContent: "left",
         }}
-        
       >
         <>
           <Row
