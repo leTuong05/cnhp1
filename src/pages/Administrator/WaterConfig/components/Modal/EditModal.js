@@ -1,15 +1,12 @@
 import { Button, Form, Input, Modal, Select } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   InsertWaterConfig,
   UpdateWaterConfig,
-  getWaterConfigByID,
 } from "../../../../../services/apis/WaterConfig";
 
 const EditModal = ({ open, onCancel, isEdit }) => {
-  const [buttonShow, SetButtonShow] = useState(null);
   const [loading, setLoading] = useState();
-  const [openDelete, setOpenDelete] = useState();
   const [isModalOpen, setIsModalOpen] = useState(open);
   const [type, setType] = useState(1);
   const [form] = Form.useForm();
@@ -73,7 +70,9 @@ const EditModal = ({ open, onCancel, isEdit }) => {
             <Select
               name="WaterPriceType"
               defaultValue={open?.WaterPriceType || type}
-              onChange={(value) => {}}
+              onChange={(value) => {
+                setType(value);
+              }}
               options={[
                 {
                   value: 1,
