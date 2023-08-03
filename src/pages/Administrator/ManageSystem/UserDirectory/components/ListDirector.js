@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { fetchUser } from '../../../../../reducers/UserSlice';
+import { fetchDeleteUser, fetchUser } from '../../../../../reducers/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import ModalAdd from './ModalAdd';
 
 const { confirm } = Modal;
 function ListDirector() {
@@ -70,7 +71,12 @@ function ListDirector() {
                             <Row gutter={8} className="edit">
                                 <Col span={12}>
                                     <CustomButton className={'icon-edit icon'}>
-                                        <FontAwesomeIcon icon={faPen} />
+                                        <FontAwesomeIcon
+                                            icon={faPen}
+                                            onClick={() => {
+                                                setIsModalOpen(true);
+                                            }}
+                                        />
                                     </CustomButton>
                                 </Col>
                                 <Col span={12}>
@@ -85,7 +91,7 @@ function ListDirector() {
                                                 okType: 'danger',
                                                 cancelText: 'No',
                                                 onOk() {
-                                                    console.log('OK');
+                                                    dispatch(fetchDeleteUser({ UserID: '3468a55e-19b6-48ce-97ab-784933feaee0' }));
                                                 },
                                                 onCancel() {
                                                     console.log('Cancel');
@@ -120,6 +126,7 @@ function ListDirector() {
                 }}
                 bordered
             />
+            <ModalAdd open={isModalOpen} />
         </div>
     );
 }

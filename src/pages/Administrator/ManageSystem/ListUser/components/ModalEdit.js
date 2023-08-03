@@ -4,41 +4,24 @@ import { fetchRoleId } from '../../../../../reducers/roleSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategory, fetchFuncByCategory, fetchFunction } from '../../../../../reducers/functionSlice';
 
-function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo }) {
+function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo, dataRoldID }) {
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
     };
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [checked, setChecked] = useState(true);
     const dispatch = useDispatch();
-    const getRoleId = () => {
+
+    console.log('dataInfo>>>', dataInfo);
+
+    // role ID
+    const getRoleId = () => {};
+    useEffect(() => {
+        // getRoleId();
         dispatch(fetchRoleId(dataInfo?.RoleID));
-    };
-    useEffect(() => {
-        getRoleId();
-    }, []);
+    }, [dataInfo]);
 
-    // category
-    const getCategory = () => {
-        dispatch(fetchCategory());
-    };
-    useEffect(() => {
-        getCategory();
-    }, []);
-
-    const dataCategory = useSelector((state) => state?.category?.category?.getCategory?.Object?.Data);
-
-    //----//
-
-    // funcByCate
-
-    const getFuncByCategory = () => {
-        dispatch(fetchFuncByCategory(6));
-    };
-    useEffect(() => {
-        getFuncByCategory();
-    }, []);
-
-    const dataFuncByCategory = useSelector((state) => state?.category?.category?.getCategory?.Object);
+    console.log('dataRoldID', dataRoldID);
 
     //---------//
 
@@ -54,27 +37,29 @@ function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo }) {
     // const dataFunc = useSelector((state) => state?.category?.category?.getCategory?.Object);
 
     //---------//
-    const dataRoleId = useSelector((state) => state?.role?.roleId?.getRoleId?.Object);
+    // const dataRoleId = useSelector((state) => state?.role?.roleId?.getRoleId?.Object);
     const [fields, setFields] = useState([]);
-    const [valueRadio, setValueRadio] = useState(null);
+    const [valueRadio, setValueRadio] = useState(dataInfo.Type);
+    console.log('valueRadio', valueRadio);
     const onChange = (e) => {
         console.log('radio checked', e.target.value);
         setValueRadio(e.target.value);
     };
+    const onChangeChecked = (e) => {
+        console.log(`checked = ${e.target.value}`);
+    };
     useEffect(() => {
         // Kiểm tra nếu dataInfo có giá trị, thì cập nhật fields
-        if (dataRoleId) {
+        if (dataInfo) {
             setFields([
                 {
                     name: ['RoleName'],
-                    value: dataRoleId.RoleName
+                    value: dataInfo.RoleName
                 }
             ]);
-            setValueRadio(dataRoleId.Type);
-            console.log('dataRoleId', dataRoleId);
+            console.log(dataInfo);
         }
-    }, [dataRoleId]);
-    console.log('dataCategory', dataCategory);
+    }, [dataInfo]);
     return (
         <Modal title="Basic Modal" footer={null} open={open} onOk={onOk} onCancel={onCancel} width={1200}>
             <Form layout="vertical" fields={fields} onFinish={onFinish}>
@@ -82,30 +67,30 @@ function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo }) {
                     <Input placeholder="Nhập tên" />
                 </Form.Item>
                 <Form.Item name="radio-group" label="Radio">
-                    <Radio.Group value={valueRadio} onChange={onChange}>
+                    <Radio.Group defaultValue={valueRadio} onChange={onChange}>
                         <Radio value={9}> System admin </Radio>
                         <Radio value={1}> Nhân viên </Radio>
                         <Radio value={2}> Khách hàng </Radio>
                     </Radio.Group>
                 </Form.Item>
-                {dataCategory?.map((item) => (
-                    <Form.Item name="checkbox-group" label={item.Description}>
-                        <Checkbox.Group style={{ width: '100%' }}>
-                            <Row>
-                                {item.ltFunctionID?.map((childItem) => {
-                                    <Col>
-                                        <Checkbox
-                                            value={childItem.FunctionID}
-                                            style={{
-                                                lineHeight: '32px'
-                                            }}
-                                        >
-                                            {childItem.FunctionDescription}
-                                        </Checkbox>
-                                    </Col>;
-                                })}
-                            </Row>
-                        </Checkbox.Group>
+                {dataRoldID?.CategoryRole.map((item) => (
+                    <Form.Item name="checkbox-group" label={item.category.Description}>
+                        <Row gutter={30}>
+                            {item.getInfors.map((child) => (
+                                <Col>
+                                    <Checkbox
+                                        value={child.FunctionID}
+                                        style={{
+                                            lineHeight: '32px'
+                                        }}
+                                        onChange={onChangeChecked}
+                                        checked={child.Status}
+                                    >
+                                        {child.Description}
+                                    </Checkbox>
+                                </Col>
+                            ))}
+                        </Row>
                     </Form.Item>
                 ))}
 

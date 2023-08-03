@@ -21,16 +21,20 @@ function CustomModal({ open, onOk, onCancel, onClick }) {
 
     const props = {
         beforeUpload: (file) => {
-            const isPNG = file.type === 'image/png';
-            if (!isPNG) {
-                message.error(`${file.name} is not a png file`);
-            }
-            return isPNG || Upload.LIST_IGNORE;
+            return new Promise((resolve, reject) => {
+                if (file.size > 9000000) {
+                    reject('File size exceeded');
+                    // message.error("File size exceeded");
+                } else {
+                    resolve('Success');
+                }
+            });
         },
-        onChange: (info) => {
-            setImgProduct(info.fileList);
+        customRequest: (info) => {
+            setImgProduct([info.file]);
         }
     };
+
     const onFinish = (values) => {
         console.log('Success:', values);
         dispatch(
@@ -58,8 +62,33 @@ function CustomModal({ open, onOk, onCancel, onClick }) {
     return (
         <ModalStyled title="Thêm sản phẩm" open={open} onOk={onOk} onCancel={onCancel} width={1024} footer={null}>
             <Form layout="vertical" onFinish={onFinish}>
-                <Form.Item label="Hình ảnh sản phẩm" name="Image" valuePropName="fileList" required className="upload-form">
-                    <CustomUpload {...props}>
+                <Form.Item
+                    label="Hình ảnh sản phẩm"
+                    name="Image"
+                    valuePropName="fileList"
+                    required
+                    className="upload-form"
+                    getValueFromEvent={(event) => {
+                        return event?.fileList;
+                    }}
+                    rules={[
+                        {
+                            required: true
+                        },
+                        {
+                            validator(_, fileList) {
+                                return new Promise((resolve, reject) => {
+                                    if (fileList && fileList[0].size > 90000000) {
+                                        reject('File size exceeded');
+                                    } else {
+                                        resolve('Success');
+                                    }
+                                });
+                            }
+                        }
+                    ]}
+                >
+                    <CustomUpload {...props} showUploadList={false}>
                         <div className="upload-items">
                             <FileImageOutlined />
                             <div style={{ color: colors.primary, fontSize: 12, fontWeight: 600 }}>Chọn ảnh</div>

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { adminAddProduct } from '../services/apis/products';
+import { adminAddProduct, adminDeleteProduct } from '../services/apis/products';
 
 const addproductSlice = createSlice({
     name: 'addProduct',
@@ -28,6 +28,17 @@ const addproductSlice = createSlice({
 export const fetchAddProduct = createAsyncThunk('addPosition/fetchAddProduct', async (requestBody, { rejectWithValue }) => {
     try {
         const response = await adminAddProduct(requestBody);
+        debugger;
+        return response;
+    } catch (error) {
+        debugger;
+        return rejectWithValue(error);
+    }
+});
+
+export const fetchDeleteProduct = createAsyncThunk('deletePosition/fetchDeleteProduct', async (requestBody, { rejectWithValue }) => {
+    try {
+        const response = await adminDeleteProduct(requestBody);
         debugger;
         return response;
     } catch (error) {

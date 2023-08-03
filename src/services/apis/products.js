@@ -10,6 +10,9 @@ export const adminAddProduct = (body) =>
             'content-type': 'mutipart/form-data'
         }
     });
+
+export const adminDeleteProduct = (body) => axiosInstance.patch('Product/Manage/Delete', body);
+
 export const getAllProduct1 = (PageSize, CurrentPage, SortType) => axiosInstance.get(`Product?PageSize=${PageSize}&CurrentPage=${CurrentPage}&SortType=${SortType}`);
 
 export const getProductDetail = (id) => axiosInstance.get(`Product/GetByID?id=${id}`);

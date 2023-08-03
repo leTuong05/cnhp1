@@ -1,6 +1,6 @@
 import { combineReducers, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { GetList, GetListRoleId } from '../services/apis/role';
+import { CreatOrUpdateListRoleId, DeleteListRoleId, GetList, GetListRoleId } from '../services/apis/role';
 
 const roleSlice = createSlice({
     name: 'role',
@@ -64,6 +64,28 @@ export const fetchRoleId = createAsyncThunk('roleId/fetchRoleId', async (RoleID,
         const response = await GetListRoleId(RoleID);
         return response;
     } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
+export const fetchDeleteRole = createAsyncThunk('deleteRole/fetchDeleteRole', async (RoleID, { rejectWithValue }) => {
+    try {
+        const response = await DeleteListRoleId(RoleID);
+        // debugger;
+        return response;
+    } catch (error) {
+        // debugger;
+        return rejectWithValue(error);
+    }
+});
+
+export const fetchCreateorUpdateRole = createAsyncThunk('upCreRold/fetchCreateorUpdateRole', async (body, { rejectWithValue }) => {
+    try {
+        const response = await CreatOrUpdateListRoleId(body);
+        // debugger;
+        return response;
+    } catch (error) {
+        // debugger;
         return rejectWithValue(error);
     }
 });

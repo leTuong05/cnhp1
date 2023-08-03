@@ -1,6 +1,6 @@
 import { combineReducers, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { getListUser, getUserDirectory } from '../services/apis/userDirectory';
+import { deleteUser, getListUser, getUserDirectory } from '../services/apis/userDirectory';
 
 const userDirectSlice = createSlice({
     name: 'userDirect',
@@ -33,6 +33,17 @@ export const fetchUser = createAsyncThunk('userDirect/fetchUser', async (body, {
         const response = await getListUser(body);
         return response;
     } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
+export const fetchDeleteUser = createAsyncThunk('deleteUserDirect/fetchDeleteUser', async (UserID, { rejectWithValue }) => {
+    try {
+        const response = await deleteUser(UserID);
+        debugger;
+        return response;
+    } catch (error) {
+        debugger;
         return rejectWithValue(error);
     }
 });
