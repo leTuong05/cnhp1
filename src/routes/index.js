@@ -139,128 +139,73 @@ export const routeAdmin = [
 //   // { path: '/upload', component: Upload, layout: HeaderOnly },
 // ]
 export function Router() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="dang-nhap" element={<ContentFullWidth />}>
-            <Route path="" element={<Login />} />
-          </Route>
-          <Route element={<Protected />}></Route>
-          <Route path="" element={<ContentFullWidth />}>
-            <Route path="" element={<Home />} />
-          </Route>
-          <Route path="gioi-thieu" element={<ContentFullWidth />}>
-            <Route
-              path="ve-cap-nuoc-hai-phong/thu-ngo"
-              element={<OpenLetter />}
-            />
-            <Route
-              path="ve-cap-nuoc-hai-phong/lich-su-phat-trien"
-              element={<History />}
-            />
-            <Route
-              path="ve-cap-nuoc-hai-phong/cac-linh-vuc-kinh-doanh"
-              element={<Fields />}
-            />
-            <Route
-              path="thong-diep-lanh-dao/gia-tri-cot-loi"
-              element={<CoreValue />}
-            />
-            <Route
-              path="thong-diep-lanh-dao/chuan-muc-dao-duc"
-              element={<Moral />}
-            />
-            <Route
-              path="thong-diep-lanh-dao/thuc-thi-van-hoa"
-              element={<Culture />}
-            />
-            <Route path="so-do-to-chuc" element={<Structure />} />
-          </Route>
-          <Route path="san-pham-va-dich-vu" element={<ContentLayout />}>
-            <Route path="san-pham" element={<Product />} />
-            <Route path="san-pham/:id" element={<ProductDettail />} />
-            <Route path="dich-vu" element={<Services />} />
-            <Route path="dich-vu/lap-dat-moi" element={<Installation />} />
-            <Route
-              path="dich-vu/sang-ten-hop-dong-dvcn"
-              element={<ChangeNameContract />}
-            />
-            <Route
-              path="dich-vu/cap-lai-hop-dong-dvcn"
-              element={<RenewContract />}
-            />
-            <Route
-              path="dich-vu/thanh-toan-truc-tuyen"
-              element={<OnlinePayment />}
-            />
-            <Route path="dich-vu/sua-chua" element={<Repair />} />
-            <Route
-              path="dich-vu/dang-ky-thay-doi-TTKH"
-              element={<ChangeInfo />}
-            />
-            <Route
-              path="dich-vu/tra-cuu-su-dung-nuoc"
-              element={<WaterUsageSearch />}
-            />
-            <Route path="dich-vu/hoa-don-dien-tu" element={<Bill />} />
-          </Route>
-          <Route path="cham-soc-khach-hang" element={<ContentLayout />}>
-            <Route
-              path="cac-thu-tuc-khach-hang-can-biet"
-              element={<Procedure />}
-            />
-            <Route
-              path="tra-cuu-thong-tin/lich-tam-ngung-cap-nuoc"
-              element={<SuspendSchedule />}
-            />
-            <Route
-              path="tra-cuu-thong-tin/lich-ghi-chi-so-cong-to"
-              element={<MeterSchedule />}
-            />
-            <Route
-              path="tra-cuu-thong-tin/tra-cuu-chi-so-cong-to"
-              element={<MeterSearch />}
-            />
-            <Route
-              path="tra-cuu-thong-tin/luong-nuoc-tieu-thu"
-              element={<Consumption />}
-            />
-            <Route path="cong-cu-tinh-hoa-don" element={<InvoiceTool />} />
-            <Route path="gia-nuoc-dinh-muc" element={<WaterPrice />} />
-            <Route path="chinh-sach-chung" element={<GeneralPolicy />} />
-            <Route path="chinh-sach-bao-mat" element={<SecurityPolicy />} />
-          </Route>
-          <Route path="co-dong" element={<ContentLayout />}>
-            <Route path="bao-cao-tai-chinh" element={<FinancialReport />} />
-            <Route path="bao-cao-thuong-nien" element={<AnnualReport />} />
-            <Route path="bao-cao-quan-tri" element={<ManagementReport />} />
-            <Route path="thong-tin-co-dong" element={<ShareholderInfo />} />
-            <Route
-              path="dai-hoi-co-dong-thuong-nien"
-              element={<AnnualMeeting />}
-            />
-          </Route>{" "}
-          <Route path="tin-tuc" element={<ContentLayout />}>
-            <Route path="chi-tiet/:title" element={<DetailNews />} />
-            <Route
-              path="hoat-dong-san-xuat-kinh-doanh"
-              element={<ProductionActivity />}
-            />
-            <Route path="dang-va-doan-the" element={<Union />} />
-            <Route path="tin-tuc-lien-quan" element={<RelatedNews />} />
-          </Route>
-          <Route path="chat-luong-nuoc" element={<ContentLayout />}>
-            <Route path="" element={<Quality />} />
-          </Route>
-          <Route path="lien-he" element={<ContentLayout />}>
-            <Route path="" element={<Contact />} />
-          </Route>
-          <Route path="tim-kiem" element={<ContentLayout />}>
-            <Route path="" element={<Search />} />
-          </Route>
-          <Route path="*" element={<div>Trang khong ton tai</div>} />
-        </Route>
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route element={<MainLayout />}>
+                    <Route path="dang-nhap" element={<ContentFullWidth />}>
+                        <Route path="" element={<Login />} />
+                    </Route>
+                    <Route element={<Protected />}></Route>
+                    <Route path="" element={<ContentFullWidth />}>
+                        <Route path="" element={<Home />} />
+                    </Route>
+                    <Route path="gioi-thieu" element={<ContentFullWidth />}>
+                        <Route path="ve-cap-nuoc-hai-phong/thu-ngo" element={<OpenLetter />} />
+                        <Route path="ve-cap-nuoc-hai-phong/lich-su-phat-trien" element={<History />} />
+                        <Route path="ve-cap-nuoc-hai-phong/cac-linh-vuc-kinh-doanh" element={<Fields />} />
+                        <Route path="thong-diep-lanh-dao/gia-tri-cot-loi" element={<CoreValue />} />
+                        <Route path="thong-diep-lanh-dao/chuan-muc-dao-duc" element={<Moral />} />
+                        <Route path="thong-diep-lanh-dao/thuc-thi-van-hoa" element={<Culture />} />
+                        <Route path="so-do-to-chuc" element={<Structure />} />
+                    </Route>
+                    <Route path="san-pham-va-dich-vu" element={<ContentLayout />}>
+                        <Route path="san-pham" element={<Product />} />
+                        <Route path="san-pham/:id" element={<ProductDettail />} />
+                        <Route path="dich-vu" element={<Services />} />
+                        <Route path="dich-vu/lap-dat-moi" element={<Installation />} />
+                        <Route path="dich-vu/sang-ten-hop-dong-dvcn" element={<ChangeNameContract />} />
+                        <Route path="dich-vu/cap-lai-hop-dong-dvcn" element={<RenewContract />} />
+                        <Route path="dich-vu/thanh-toan-truc-tuyen" element={<OnlinePayment />} />
+                        <Route path="dich-vu/sua-chua" element={<Repair />} />
+                        <Route path="dich-vu/dang-ky-thay-doi-TTKH" element={<ChangeInfo />} />
+                        <Route path="dich-vu/tra-cuu-su-dung-nuoc" element={<WaterUsageSearch />} />
+                        <Route path="dich-vu/hoa-don-dien-tu" element={<Bill />} />
+                    </Route>
+                    <Route path="cham-soc-khach-hang" element={<ContentLayout />}>
+                        <Route path="cac-thu-tuc-khach-hang-can-biet" element={<Procedure />} />
+                        <Route path="tra-cuu-thong-tin/lich-tam-ngung-cap-nuoc" element={<SuspendSchedule />} />
+                        <Route path="tra-cuu-thong-tin/lich-ghi-chi-so-cong-to" element={<MeterSchedule />} />
+                        <Route path="tra-cuu-thong-tin/tra-cuu-chi-so-cong-to" element={<MeterSearch />} />
+                        <Route path="tra-cuu-thong-tin/luong-nuoc-tieu-thu" element={<Consumption />} />
+                        <Route path="cong-cu-tinh-hoa-don" element={<InvoiceTool />} />
+                        <Route path="gia-nuoc-dinh-muc" element={<WaterPrice />} />
+                        <Route path="chinh-sach-chung" element={<GeneralPolicy />} />
+                        <Route path="chinh-sach-bao-mat" element={<SecurityPolicy />} />
+                    </Route>
+                    <Route path="co-dong" element={<ContentLayout />}>
+                        <Route path="bao-cao-tai-chinh" element={<FinancialReport />} />
+                        <Route path="bao-cao-thuong-nien" element={<AnnualReport />} />
+                        <Route path="bao-cao-quan-tri" element={<ManagementReport />} />
+                        <Route path="thong-tin-co-dong" element={<ShareholderInfo />} />
+                        <Route path="dai-hoi-co-dong-thuong-nien" element={<AnnualMeeting />} />
+                    </Route>{' '}
+                    <Route path="tin-tuc" element={<ContentLayout />}>
+                        <Route path="chi-tiet/:title" element={<DetailNews />} />
+                        <Route path=":postCategory" element={<ProductionActivity />} />
+                        
+                    </Route>
+                    <Route path="chat-luong-nuoc" element={<ContentLayout />}>
+                        <Route path="" element={<Quality />} />
+                    </Route>
+                    <Route path="lien-he" element={<ContentLayout />}>
+                        <Route path="" element={<Contact />} />
+                    </Route>
+                    <Route path="tim-kiem" element={<ContentLayout />}>
+                        <Route path="" element={<Search />} />
+                    </Route>
+                    <Route path="*" element={<div>Trang khong ton tai</div>} />
+                </Route>
         {routeAdmin.map((route) => {
           const Page = route.component;
           let Layout;

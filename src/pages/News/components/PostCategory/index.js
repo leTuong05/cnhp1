@@ -5,7 +5,7 @@ import { TitleStyled, themeStyles } from '../GlobalStyles'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { getCategoryTabPosts} from '../../../../services/apis/categoryTabPost'
+// import { getCategoryTabPosts} from '../../../../services/apis/categoryTabPost'
 
 const { Title } = Typography
 
@@ -15,13 +15,7 @@ const listTagPost = [
     'Tiết kiệm',
     'Tin tức liên quan'
 ]
-// const listTagQuality = [
-//     'Các thủ tục khách hàng cần biết',
-//     'Giá nước - Định mức',
-//     'Thông tin khách hàng cần biết',
-//     'Chính sách chung',
-//     'Chính sách bảo mật'
-// ]
+
 const listTagShareholder= [
     'Báo cáo tài chính',
     'Báo cáo thường niên',
@@ -30,20 +24,6 @@ const listTagShareholder= [
     'Đại hội cổ đông thường niên'
 ]
 
-// const listPostQuality = [
-//     {
-//         title: 'Quy định về di chuyển máy nước / Nâng hạ cỡ đồng hồ nước',
-//         datetime: '10/10/2022 08:08:08'
-//     },
-//     {
-//         title: 'Danh ba tổ quản lý và kinh doanh nước máy',
-//         datetime: '10/10/2022 08:08:08'
-//     },
-//     {
-//         title: 'Thông báo cấp nước không ổn định khu vực phường Bàng La - quận Đồ Sơn',
-//         datetime: '10/10/2022 08:08:08'
-//     },
-// ]
 
 const listPostNews = [
     {
@@ -75,30 +55,30 @@ const PostCategory = () => {
 
     const location = useLocation();
 
-    useEffect(() => {
-        const getListTabPost = async () => {
-            const res = await getCategoryTabPosts()
-            setListPostCategory(res.Object.ListMostInterested)
-            setListTag(res.Object.ListPopularTags)
-        }
-        getListTabPost();
-    },[])
+    // useEffect(() => {
+    //     const getListTabPost = async () => {
+    //         const res = await getCategoryTabPosts()
+    //         setListPostCategory(res.Object.ListMostInterested)
+    //         setListTag(res.Object.ListPopularTags)
+    //     }
+    //     getListTabPost();
+    // },[])
 
     console.log("ktra>>>: ", listPostCategory);
 
-    useEffect(() => {
-        if (location.pathname.includes('tin-tuc')) {
-            setListTag(listTagPost)
-            setListPostCategory(listPostNews)
-        }
-        else if (location.pathname.includes('chat-luong-nuoc')) {
-            setListTag(listTag)
-            setListPostCategory(listPostCategory)
-        }else if(location.pathname.includes('co-dong')){
-            setListTag(listTagShareholder)
-            setListPostCategory(listPostShareholder)
-        }
-    })
+    // useEffect(() => {
+    //     if (location.pathname.includes('tin-tuc')) {
+    //         setListTag(listTagPost)
+    //         setListPostCategory(listPostNews)
+    //     }
+    //     else if (location.pathname.includes('chat-luong-nuoc')) {
+    //         setListTag(listTag)
+    //         setListPostCategory(listPostCategory)
+    //     }else if(location.pathname.includes('co-dong')){
+    //         setListTag(listTagShareholder)
+    //         setListPostCategory(listPostShareholder)
+    //     }
+    // })
 
     return (
         <Wrapper>
