@@ -36,10 +36,10 @@ const TemporarilyStopWater = () => {
   const [data, setData] = useState();
   const [listProvince, setListProvince] = useState();
   const [listDistrict, setListDistrict] = useState();
+  const [listCommune, setListCommune] = useState();
   const [isEdit, setIsEdit] = useState();
   const [modalData, setModalData] = useState();
   const [openEdit, setOpenEdit] = useState();
-  const [listCommune, setListCommune] = useState();
   const [loading, setLoading] = useState();
   const [textSeach, setTextSeach] = useState({
     FromCreateDate: "",
@@ -343,7 +343,7 @@ const TemporarilyStopWater = () => {
         <WrapperButton>
           <Button
             onClick={() => {
-              setIsEdit(true);
+              setIsEdit(false);
               setOpenEdit(true);
             }}
           >
@@ -369,6 +369,7 @@ const TemporarilyStopWater = () => {
       ></CustomTable>
       {!!openEdit && (
         <EditModal
+          listProvince={listProvince}
           isEdit={isEdit}
           open={openEdit}
           data={modalData}

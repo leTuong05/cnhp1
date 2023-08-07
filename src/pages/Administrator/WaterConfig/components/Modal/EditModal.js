@@ -46,7 +46,9 @@ const EditModal = ({ open, onCancel, isEdit }) => {
         onCancel();
       });
   };
-
+  form.setFieldsValue({
+    ...open,
+  });
   return (
     <>
       <Modal

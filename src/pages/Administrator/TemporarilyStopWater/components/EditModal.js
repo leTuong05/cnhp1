@@ -1,6 +1,8 @@
+import { CloudUploadOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
+  DatePicker,
   Form,
   Input,
   Modal,
@@ -15,24 +17,57 @@ import {
   InsertTemporarilyStopWater,
   UpdateTemporarilyStopWater,
 } from "../../../../services/apis/TemporarilyStopWater";
-import { CloudUploadOutlined, InboxOutlined } from "@ant-design/icons";
+import {
+  getRegion,
+  getRegionByRegionID,
+} from "../../../../services/apis/managementTeam";
 import { StopWaterModalStyle } from "./styles";
 const { Dragger } = Upload;
-
-const EditModal = ({ open, onCancel, data, isEdit }) => {
+const { RangePicker } = DatePicker;
+const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
+  const [listDistrict, setListDistrict] = useState();
+  const [listCommune, setListCommune] = useState();
   const [loading, setLoading] = useState();
   const [isModalOpen, setIsModalOpen] = useState(open);
   const [type, setType] = useState(1);
   const [form] = Form.useForm();
+  const currentTime = new Date();
+
+  console.log(open);
+  console.log(data);
 
   const title = !!isEdit
-    ? "Cập nhật đối tượng sử dụng/mức sử dụng"
-    : "Thêm đối tượng sử dụng/mức sử dụng";
+    ? "Cập nhật lịch tạm ngừng cấp nước"
+    : "Thêm lịch tạm ngừng cấp nước";
 
-  const treeData = [];
+  //   get District by Province id
+
+  const getDistrict = (id) => {
+    setLoading(true);
+    getRegion(id)
+      .then((res) => {
+        if (res?.isError) return;
+        setListDistrict(res?.Object);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  //   get Commune by District id
+
+  const getCommune = (id) => {
+    setLoading(true);
+    getRegionByRegionID(id)
+      .then((res) => {
+        if (res?.isError) return;
+        setListCommune(res?.Object);
+      })
+      .finally(() => setLoading(false));
+  };
+
   const footer = [
     <Button
       onClick={() => {
+        console.log(form.validateFields());
         handleSubmit();
       }}
     >
@@ -54,13 +89,24 @@ const EditModal = ({ open, onCancel, data, isEdit }) => {
       .then((values) => {
         !!isEdit
           ? UpdateTemporarilyStopWater({
-              ...values,
-              WaterPriceID: data?.WaterPriceID,
-              WaterPriceType: type,
+              TemporarilyStopWaterID: data?.TemporarilyStopWaterID,
+              WaterCompany: values?.WaterCompany,
+              ProvinceID: values?.ProvinceID,
+              DistrictID: values?.DistrictID,
+              WardID: values?.WardID,
+              FromDate: values?.time[0],
+              ToDate: values?.time[1],
+              File: values?.file,
             })
           : InsertTemporarilyStopWater({
-              ...values,
-              WaterPriceType: type,
+              WaterCompany: values?.WaterCompany,
+              ProvinceID: values?.ProvinceID,
+              DistrictID: values?.DistrictID,
+              WardID: values?.WardID,
+              CreateDate: currentTime,
+              FromDate: values?.time[0],
+              ToDate: values?.time[1],
+              File: values?.file,
             });
       })
       .finally(() => {
@@ -70,22 +116,8 @@ const EditModal = ({ open, onCancel, data, isEdit }) => {
   };
 
   const props = {
-    name: "file",
-    multiple: true,
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
+    onChange: (info) => {
+      console.log(info.fileList);
     },
   };
 
@@ -100,9 +132,10 @@ const EditModal = ({ open, onCancel, data, isEdit }) => {
       >
         <Form form={form} layout="vertical">
           <Row gutter={[16, 16]}>
-            <Col>
+            <Col span={16}>
               <Form.Item
-                label="Giá bán theo"
+                label="Tên công ty"
+                name="company"
                 defaultValue={open?.WaterPriceType || type}
                 rules={[
                   {
@@ -111,31 +144,16 @@ const EditModal = ({ open, onCancel, data, isEdit }) => {
                   },
                 ]}
               >
-                <Select
-                  name="WaterPriceType"
-                  defaultValue={open?.WaterPriceType || type}
-                  onChange={(value) => {
-                    setType(value);
-                  }}
-                  options={[
-                    {
-                      value: 1,
-                      label:
-                        "Giá bán nước sạch cho đối tượng là hộ gia đình sử dụng vào mục đích sinh hoạt",
-                    },
-                    {
-                      value: 2,
-                      label:
-                        "Giá bán nước sạch cho đối tượng là các cơ quan hành chính,đơn vị sự nghiệp,doanh nghiệp,tổ chức,cá nhân hoạt động sản xuất kinh doanh,dịch vụ trên dịa bàn thành phố Hà Nội",
-                    },
-                  ]}
+                <Input
+                  placeholder={`Nhập tên công ty`}
+                  defaultValue={open?.WaterPrice}
                 />
               </Form.Item>
             </Col>
-            <Col>
+            <Col span={8}>
               <Form.Item
                 label="Chọn thời gian"
-                defaultValue={open?.WaterPriceType || type}
+                name="time"
                 rules={[
                   {
                     required: true,
@@ -143,47 +161,87 @@ const EditModal = ({ open, onCancel, data, isEdit }) => {
                   },
                 ]}
               >
-                <TimePicker.RangePicker />
+                <RangePicker
+                  showTime={{ format: "HH:mm" }}
+                  format="YYYY-MM-DD HH:mm"
+                />
               </Form.Item>
             </Col>
           </Row>
 
-          <Form.Item
-            name="WaterPriceTitle"
-            defaultValue={open?.WaterPriceTitle}
-            label={
-              type == 1
-                ? "MỨC SỬ DỤNG NƯỚC SINH HOẠT CỦA HỘ DÂN CƯ (M3/THÁNG/HỘ)"
-                : "Tên mục đích sử dụng"
-            }
-            rules={[
-              {
-                required: true,
-                message: "Thông tin không được để trống",
-              },
-            ]}
-          >
-            <Input
-              placeholder={
-                type == 1
-                  ? "nhập MỨC SỬ DỤNG NƯỚC SINH HOẠT CỦA HỘ DÂN CƯ"
-                  : "nhập tên mục đích sử dụng"
-              }
-              defaultValue={open?.WaterPriceTitle}
-            />
-          </Form.Item>
+          <Row gutter={[16, 16]}>
+            {/* tỉnh */}
+            <Col span={8}>
+              <Form.Item
+                name="ProvinceID"
+                defaultValue={0}
+                label="Chọn tỉnh/thành phố"
+              >
+                <Select
+                  defaultValue={0}
+                  style={{ width: "100%" }}
+                  onChange={(value) => {
+                    !!value ? getDistrict(value) : setListDistrict([]);
+                    form.setFieldValue("DistrictID", 0);
+                    form.setFieldValue("WardID", 0);
+                  }}
+                >
+                  <Select.Option value={0}>Tất cả</Select.Option>
+                  {listProvince?.map((item, idx) => (
+                    <Select.Option value={item?.RegionID}>
+                      {item?.RegionName}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
 
-          <Form.Item
-            name="WaterPrice"
-            label="Đơn giá"
-            rules={[
-              {
-                required: true,
-                message: "Thông tin không được để trống",
-              },
-            ]}
-          >
-            <Dragger {...props}>
+            {/* huyện */}
+            <Col span={8}>
+              <Form.Item
+                name="DistrictID"
+                defaultValue={0}
+                label="Chọn quận/huyện"
+              >
+                <Select
+                  defaultValue={0}
+                  style={{ width: "100%" }}
+                  onChange={(value) => {
+                    !!value ? getCommune(value) : setListCommune([]);
+                    form.setFieldValue("WardID", 0);
+                  }}
+                >
+                  <Select.Option value={0}>Tất cả</Select.Option>
+                  {listDistrict?.map((item, idx) => (
+                    <Select.Option value={item?.RegionID}>
+                      {item?.RegionName}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            {/* Xã */}
+            <Col span={8}>
+              <Form.Item name="WardID" defaultValue={0} label="Chọn xã/phường">
+                <Select
+                  defaultValue={0}
+                  style={{ width: "100%" }}
+                  onChange={(value) => {}}
+                >
+                  <Select.Option value={0}>Tất cả</Select.Option>
+                  {listCommune?.map((item, idx) => (
+                    <Select.Option value={item?.RegionID}>
+                      {item?.RegionName}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item name="file" label="file đính kèm">
+            <Dragger {...props} multiple={false}>
               <div className="upload-div">
                 <p className="ant-upload-drag-icon">
                   <CloudUploadOutlined />
