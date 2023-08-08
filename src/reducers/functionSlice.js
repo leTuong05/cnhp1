@@ -1,5 +1,5 @@
 import { combineReducers, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { GetCategory, GetFunc, GetFuncByCategory } from '../services/apis/function';
+import { CreOrUp, GetCategory, GetFunc, GetFuncByCategory } from '../services/apis/function';
 import { message } from 'antd';
 const categorySlice = createSlice({
     name: 'category',
@@ -105,6 +105,16 @@ export const fetchFuncByCategory = createAsyncThunk('funcByCategory/fetchFuncByC
 export const fetchFunction = createAsyncThunk('function/fetchFunction', async (requestBody, { rejectWithValue }) => {
     try {
         const response = await GetFunc(requestBody);
+        return response;
+    } catch (error) {
+        debugger;
+        return rejectWithValue(error);
+    }
+});
+
+export const fetchCreOrUp = createAsyncThunk('creOrUpdate/fetchCreOrUp', async (requestBody, { rejectWithValue }) => {
+    try {
+        const response = await CreOrUp(requestBody);
         return response;
     } catch (error) {
         debugger;

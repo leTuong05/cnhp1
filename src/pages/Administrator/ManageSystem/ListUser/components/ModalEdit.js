@@ -12,7 +12,7 @@ function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo, dataRoldID }) {
     const [checked, setChecked] = useState(true);
     const dispatch = useDispatch();
 
-    console.log('dataInfo>>>', dataInfo);
+    // console.log('dataInfo>>>', dataInfo);
 
     // role ID
     const getRoleId = () => {};
@@ -42,11 +42,11 @@ function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo, dataRoldID }) {
     const [valueRadio, setValueRadio] = useState(dataInfo.Type);
     console.log('valueRadio', valueRadio);
     const onChange = (e) => {
-        console.log('radio checked', e.target.value);
+        // console.log('radio checked', e.target.value);
         setValueRadio(e.target.value);
     };
     const onChangeChecked = (e) => {
-        console.log(`checked = ${e.target.value}`);
+        // console.log(`checked = ${e.target.value}`);
     };
     useEffect(() => {
         // Kiểm tra nếu dataInfo có giá trị, thì cập nhật fields
@@ -57,7 +57,7 @@ function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo, dataRoldID }) {
                     value: dataInfo.RoleName
                 }
             ]);
-            console.log(dataInfo);
+            // console.log(dataInfo);
         }
     }, [dataInfo]);
     return (
@@ -73,7 +73,7 @@ function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo, dataRoldID }) {
                         <Radio value={2}> Khách hàng </Radio>
                     </Radio.Group>
                 </Form.Item>
-                {dataRoldID?.CategoryRole.map((item) => (
+                {dataRoldID?.CategoryRole?.map((item) => (
                     <Form.Item name="checkbox-group" label={item.category.Description}>
                         <Row gutter={30}>
                             {item.getInfors.map((child) => (
@@ -84,7 +84,7 @@ function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo, dataRoldID }) {
                                             lineHeight: '32px'
                                         }}
                                         onChange={onChangeChecked}
-                                        checked={child.Status}
+                                        defaultChecked={child.Status}
                                     >
                                         {child.Description}
                                     </Checkbox>
@@ -93,6 +93,22 @@ function ModalEdit({ open, onOk, onCancel, closeModal, dataInfo, dataRoldID }) {
                         </Row>
                     </Form.Item>
                 ))}
+                <Checkbox
+                    style={{
+                        lineHeight: '32px'
+                    }}
+                    onChange={onChangeChecked}
+                >
+                    a
+                </Checkbox>
+                <Checkbox
+                    style={{
+                        lineHeight: '32px'
+                    }}
+                    onChange={onChangeChecked}
+                >
+                    b
+                </Checkbox>
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit" onClick={closeModal}>

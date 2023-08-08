@@ -11,3 +11,7 @@ export const GetFuncByCategory = (CategoryID) => {
 export const GetFunc = () => {
     return axiosInstance.get('Function/GetAllFunction');
 };
+
+export const CreOrUp = (body) => {
+    return axiosInstance.post('Role/CreateOrUpdateRole', body);
+};
