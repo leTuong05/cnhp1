@@ -76,14 +76,6 @@ const EditModal = ({ open, onCancel, isEdit, data, getList }) => {
         footer={footer}
         width={1000}
       >
-        <Button
-          onClick={() => {
-            console.log(data);
-            console.log(form.validateFields());
-          }}
-        >
-          test
-        </Button>
         <Form form={form} layout="vertical">
           <Form.Item
             name="WaterPriceType"
