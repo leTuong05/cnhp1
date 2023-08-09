@@ -205,7 +205,9 @@ const PrivateChangeName = () => {
     }
   };
 
-  const onFinish = () => {};
+  const onFinish = (values) => {
+    console.log("values>>>", values);
+  };
   return (
     <Wrapper>
       <Form
@@ -236,10 +238,7 @@ const PrivateChangeName = () => {
               label="Tên chủ hợp đồng cũ"
               name="tenOld"
             >
-              <Input
-                onChange={handleName}
-                placeholder="Nhập tên"
-              ></Input>
+              <Input onChange={handleName} placeholder="Nhập tên"></Input>
             </Form.Item>
           </Col>
 
@@ -253,10 +252,7 @@ const PrivateChangeName = () => {
               label="Tên chủ hợp đồng mới"
               name="tenNew"
             >
-              <Input
-                onChange={handleName}
-                placeholder="Nhập tên"
-              ></Input>
+              <Input onChange={handleName} placeholder="Nhập tên"></Input>
             </Form.Item>
           </Col>
         </Row>

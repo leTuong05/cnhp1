@@ -35,7 +35,7 @@ const TableCommon = (props) => {
   const { title } = props;
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRow, setSelectedRow] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -88,7 +88,14 @@ const TableCommon = (props) => {
       dataIndex: "ManagementTeamStatus",
       render: (text, record) => (
         <Space>
-          <div onClick={() => handleEdit(record)}>
+          <div
+            onClick={(event) => {
+              event.stopPropagation();
+              setIsVisiable(true);
+              setMode("edit");
+              setSelectedRow(record);
+            }}
+          >
             <img src={edit}></img>
           </div>
           <div onClick={() => handleDelete(record)}>
@@ -105,9 +112,9 @@ const TableCommon = (props) => {
     setSelectedRow(record);
   };
 
-  useEffect(() => {
-    setSelectedRow(valueRecord);
-  }, [valueRecord]);
+  // useEffect(() => {
+  //   setSelectedRow(valueRecord);
+  // }, [valueRecord]);
 
   const getList = () => {
     dispatch(
@@ -193,7 +200,7 @@ const TableCommon = (props) => {
         WardID: "",
       })
     );
-  }
+  };
 
   //Loc Trang thai
   const onChangeStatus = (value) => {
@@ -209,18 +216,19 @@ const TableCommon = (props) => {
         WardID: "",
       })
     );
-  }
+  };
 
   const pagination = {
     current: currentPage,
     pageSize: 10,
-    showSizeChanger: true,
-    pageSizeOptions: ['10', '20', '50', '100'],
+    onChange: (page) => {
+      setCurrentPage(page);
+    },
   };
-
+  console.log(selectedRow);
   return (
     <>
-      <SearchStatus onSearch={onSearch} onChangeStatus={onChangeStatus}/>
+      <SearchStatus onSearch={onSearch} onChangeStatus={onChangeStatus} />
       <Wapper>
         <Card
           title={title}
@@ -258,13 +266,16 @@ const TableCommon = (props) => {
           Thêm tổ quản lý
         </ButtonAddUnits>
 
-        <ModalAddUnits
-          title={mode == "add" ? "Thêm tổ quản lý" : "Sửa tổ quản lý"}
-          handlehideModal={handleHideModal}
-          isModalVisiable={isVisible}
-          selectedRow={selectedRow}
-          mode={mode}
-        />
+        {/* CHÚ Ý: Có Modal thì phải có điều kiện isVisible */}
+        {isVisible && (
+          <ModalAddUnits
+            title={mode == "add" ? "Thêm tổ quản lý" : "Sửa tổ quản lý"}
+            handlehideModal={handleHideModal}
+            isModalVisiable={isVisible}
+            selectedRow={selectedRow}
+            mode={mode}
+          />
+        )}
       </Wapper>
     </>
   );
