@@ -96,13 +96,6 @@ const options = [
   },
 ];
 
-// for (let i = 10; i < 36; i++) {
-//   options.push({
-//     value: i.toString(36) + i,
-//     label: i.toString(36) + i,
-//   });
-// }
-
 const { Search } = Input;
 
 const ManagePosts = () => {
@@ -405,7 +398,7 @@ const ManagePosts = () => {
   //cập nhât table data
   useEffect(() => {
     setTableData(postList);
-  });
+  },[]);
 
   //xóa thành công
   const confirm = () => {
