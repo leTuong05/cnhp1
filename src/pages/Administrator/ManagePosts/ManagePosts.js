@@ -398,7 +398,7 @@ const ManagePosts = () => {
   //cập nhât table data
   useEffect(() => {
     setTableData(postList);
-  },[]);
+  });
 
   //xóa thành công
   const confirm = () => {
