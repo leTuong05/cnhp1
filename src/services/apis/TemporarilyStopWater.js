@@ -10,7 +10,11 @@ export const DeleteTemporarilyStopWater = (id) =>
   axiosInstance.patch(`TemporarilyStopWater/DeleteTSWByAdmin?TSWID=${id}`);
 
 export const InsertTemporarilyStopWater = (body) =>
-  axiosInstance.post("TemporarilyStopWater/InsertByAdmin", body);
+  axiosInstance.post("TemporarilyStopWater/InsertByAdmin", body, {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
+  });
 
 export const UpdateTemporarilyStopWater = (body) =>
   axiosInstance.put("TemporarilyStopWater/UpdateByAdmin", body);

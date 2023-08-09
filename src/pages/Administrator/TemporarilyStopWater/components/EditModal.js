@@ -22,6 +22,7 @@ import {
   getRegionByRegionID,
 } from "../../../../services/apis/managementTeam";
 import { StopWaterModalStyle } from "./styles";
+import moment from "moment";
 const { Dragger } = Upload;
 const { RangePicker } = DatePicker;
 const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
@@ -32,9 +33,6 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
   const [type, setType] = useState(1);
   const [form] = Form.useForm();
   const currentTime = new Date();
-
-  console.log(open);
-  console.log(data);
 
   const title = !!isEdit
     ? "Cập nhật lịch tạm ngừng cấp nước"
@@ -67,7 +65,6 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
   const footer = [
     <Button
       onClick={() => {
-        console.log(form.validateFields());
         handleSubmit();
       }}
     >
@@ -103,7 +100,7 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
               ProvinceID: values?.ProvinceID,
               DistrictID: values?.DistrictID,
               WardID: values?.WardID,
-              CreateDate: currentTime,
+              CreateDate: moment(currentTime).format("yyyy-MM-dd HH:mm:ss"),
               FromDate: values?.time[0],
               ToDate: values?.time[1],
               File: values?.file,
@@ -120,6 +117,9 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
       console.log(info.fileList);
     },
   };
+  form.setFieldsValue({
+    ...data,
+  });
 
   return (
     <StopWaterModalStyle>
@@ -136,7 +136,6 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
               <Form.Item
                 label="Tên công ty"
                 name="company"
-                defaultValue={open?.WaterPriceType || type}
                 rules={[
                   {
                     required: true,
@@ -146,7 +145,7 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
               >
                 <Input
                   placeholder={`Nhập tên công ty`}
-                  defaultValue={open?.WaterPrice}
+                  defaultValue={data?.WaterCompany}
                 />
               </Form.Item>
             </Col>
@@ -164,6 +163,7 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
                 <RangePicker
                   showTime={{ format: "HH:mm" }}
                   format="YYYY-MM-DD HH:mm"
+                  defaultValue={[data?.FromDate, data?.ToDate]}
                 />
               </Form.Item>
             </Col>

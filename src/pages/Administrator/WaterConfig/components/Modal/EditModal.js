@@ -1,11 +1,11 @@
 import { Button, Form, Input, Modal, Select } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   InsertWaterConfig,
   UpdateWaterConfig,
 } from "../../../../../services/apis/WaterConfig";
 
-const EditModal = ({ open, onCancel, isEdit }) => {
+const EditModal = ({ open, onCancel, isEdit, data, getList }) => {
   const [loading, setLoading] = useState();
   const [isModalOpen, setIsModalOpen] = useState(open);
   const [type, setType] = useState(1);
@@ -18,37 +18,55 @@ const EditModal = ({ open, onCancel, isEdit }) => {
   const footer = [
     <Button
       onClick={() => {
-        handleSubmit();
+        isEdit ? handleEdit() : handleSubmit();
       }}
     >
       {!!isEdit ? "Cập nhật" : "thêm"}
     </Button>,
   ];
 
+  const handleEdit = () => {
+    setLoading(true);
+    form
+      .validateFields()
+      .then((values) => {
+        if (form?.errors) return;
+
+        UpdateWaterConfig({
+          ...values,
+          WaterPriceID: open?.WaterPriceID,
+        });
+      })
+      .finally(() => {
+        getList();
+        setLoading(false);
+        onCancel();
+      });
+  };
+
   const handleSubmit = () => {
     setLoading(true);
     form
       .validateFields()
       .then((values) => {
-        !!isEdit
-          ? UpdateWaterConfig({
-              ...values,
-              WaterPriceID: open?.WaterPriceID,
-              WaterPriceType: type,
-            })
-          : InsertWaterConfig({
-              ...values,
-              WaterPriceType: type,
-            });
+        if (form?.errors) return;
+        InsertWaterConfig({
+          ...values,
+        });
       })
       .finally(() => {
+        getList();
         setLoading(false);
         onCancel();
       });
   };
-  form.setFieldsValue({
-    ...open,
-  });
+
+  useEffect(() => {
+    form.setFieldsValue({
+      ...data,
+    });
+  }, [data]);
+
   return (
     <>
       <Modal
@@ -58,8 +76,17 @@ const EditModal = ({ open, onCancel, isEdit }) => {
         footer={footer}
         width={1000}
       >
+        <Button
+          onClick={() => {
+            console.log(data);
+            console.log(form.validateFields());
+          }}
+        >
+          test
+        </Button>
         <Form form={form} layout="vertical">
           <Form.Item
+            name="WaterPriceType"
             label="Giá bán theo"
             defaultValue={open?.WaterPriceType || type}
             rules={[

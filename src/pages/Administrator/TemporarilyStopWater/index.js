@@ -92,15 +92,18 @@ const TemporarilyStopWater = () => {
       .finally(() => setLoading(false));
   };
 
-  const seach = (date) => {
+  const seach = () => {
     setLoading(true);
     form
       .validateFields()
       .then((res) => {
         setTextSeach({
-          ...res,
-          FromCreateDate: !!date ? date[0] : "",
-          ToCreateDate: !!date ? date[1] : "",
+          ProvinceID: res?.ProvinceID,
+          DistrictID: res?.DistrictID,
+          WardID: res?.WardID,
+          CalendarStatus: res?.CalendarStatus,
+          FromCreateDate: res?.date ? res?.date[0] : "",
+          ToCreateDate: res?.date ? res?.date[1] : "",
         });
       })
       .finally(() => setLoading(false));
@@ -244,12 +247,12 @@ const TemporarilyStopWater = () => {
       <Form form={form} layout="horizontal">
         <Row gutter={[16, 16]}>
           <Col span={8}>
-            <Form.Item>
+            <Form.Item name="date">
               <RangePicker
                 format="DD/MM/YYYY"
                 style={{ width: "100%" }}
-                onChange={(date) => {
-                  seach(date);
+                onChange={() => {
+                  seach();
                 }}
               />
             </Form.Item>
@@ -324,7 +327,7 @@ const TemporarilyStopWater = () => {
               <Select
                 defaultValue={0}
                 style={{ width: "100%" }}
-                onChange={(value) => {
+                onChange={() => {
                   seach();
                 }}
               >

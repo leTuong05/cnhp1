@@ -12,26 +12,18 @@ import EditModal from "./Modal/EditModal";
 
 import { DeleteOutlined } from "@ant-design/icons";
 const { confirm } = Modal;
-const WaterConfigTable = ({ type }) => {
+
+const WaterConfigTable = ({
+  type,
+  handleDelete,
+  data,
+  setIsEdit,
+  setOpenEdit,
+}) => {
   const [id, setId] = useState("");
-  const [data, setData] = useState();
   const [buttonShow, SetButtonShow] = useState(null);
   const [loading, setLoading] = useState();
-  const [isEdit, setIsEdit] = useState();
-  const [openEdit, setOpenEdit] = useState();
   const [openDelete, setOpenDelete] = useState();
-
-  const handleDelete = (id) => {
-    setLoading(true);
-    DeleteWaterConfig(id)
-      .then((values) => {
-        console.log(values);
-      })
-      .finally(() => {
-        setLoading(false);
-        getList();
-      });
-  };
 
   const showDeleteConfirm = (record) => {
     confirm({
@@ -92,7 +84,7 @@ const WaterConfigTable = ({ type }) => {
                   <Button
                     shape="circle"
                     onClick={() => {
-                      setIsEdit(true);
+                      setIsEdit();
                       setOpenEdit(record);
                     }}
                   >
@@ -116,21 +108,7 @@ const WaterConfigTable = ({ type }) => {
       ),
     },
   ];
-  const getList = () => {
-    setLoading(true);
-    getWaterConfig(type)
-      .then((res) => {
-        if (res?.isError) return;
-        setData(res?.Object);
-      })
-      .finally(() => setLoading(false));
-  };
 
-  useEffect(() => {
-    getList();
-  }, []);
-
-  console.log(data);
   return (
     <WaterConfigTableStyle>
       <CustomTable
@@ -148,17 +126,6 @@ const WaterConfigTable = ({ type }) => {
           };
         }}
       ></CustomTable>
-
-      {!!openEdit && (
-        <EditModal
-          isEdit={isEdit}
-          open={openEdit}
-          onCancel={() => {
-            setOpenEdit(false);
-            getList();
-          }}
-        />
-      )}
     </WaterConfigTableStyle>
   );
 };
