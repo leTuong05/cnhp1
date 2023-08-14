@@ -103,10 +103,15 @@ const TableContent = ({ type, searchData, searchDate, searchStatus, selected, se
                 TicketStatus: searchStatus === 0 ? "" : searchStatus,
                 TicketType: type || 0
             })
-            setListTicket(response.Object)
+            if (response) {
+                setListTicket(response?.Object)
+            }else{
+                setListTicket([])
+            }
+
         }
         getListTicket();
-    }, [type, searchData, searchDate,searchStatus])
+    }, [type, searchData, searchDate, searchStatus])
     return (
         <>
             <TableStyled

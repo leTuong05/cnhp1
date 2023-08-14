@@ -70,7 +70,8 @@ const deteleTagsSlice = createAsyncThunk({
         })
         .addCase(fetDeleteTagsList.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.deleteTagsList = state.deleteTagsList.filter((tag) =>  tag.TagsID !== action.payload.TagsID);
+            // state.deleteTagsList = state.deleteTagsList.filter((tag) =>  tag.TagsID !== action.payload.TagsID);
+            state.deleteTagsList = action.payload
         })
         .addCase(fetDeleteTagsList.rejected, (state, action) => {
             state.status = 'failed';
@@ -97,12 +98,12 @@ const updateTagSlice = createSlice({
         .addCase(fetUpdateTagsList.fulfilled, (state, action) => {
             state.isLoading = false;
             state.updateTagsList = action.payload;
-            message.error("Cập nhật thẻ thành công!");
+            message.success("Cập nhật thẻ thành công!");
         })
         .addCase(fetUpdateTagsList.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error.message;
-            message.error("Cập nhật thẻ thất bại!");
+            // message.error("Cập nhật thẻ thất bại!");
         });
     }
 })
@@ -156,6 +157,7 @@ export const fetTagsList = createAsyncThunk(
             const response = await getListsTag(body);
             return response;
         } catch (error) {
+            debugger;
             return rejectWithValue(error);
         }
 })
@@ -186,6 +188,7 @@ export const fetAddTags = createAsyncThunk(
     "addTagsList/fetAddTags",
     async (requestBody) => {
       const response = await addNewTags(requestBody);
+      debugger;
       return response;
 })
 

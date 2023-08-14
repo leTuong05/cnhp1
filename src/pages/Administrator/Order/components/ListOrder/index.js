@@ -41,26 +41,7 @@ const ListOrder = ({ textSearch, requestFromDate, requestToDate, deliveryFromDat
         setOrderID(record.OrderID)
         console.log("record", record.OrderID);
     };
-    const fetchData = async () => {
-        try {
-            const response = await GetListOrder(
-                "",
-                1,
-                50,
-                "",
-                "",
-                "",
-                "",
-                0
-            );
-            setListOrders(response.Object.data);
-        } catch (error) {
-            console.error('Error fetching orders:', error);
-        }
 
-
-
-    };
     const columns = [
         {
             title: 'STT',
@@ -182,7 +163,6 @@ const ListOrder = ({ textSearch, requestFromDate, requestToDate, deliveryFromDat
                                             setShowModalDelete(true)
                                             setOrderID(record.OrderID)
                                         }
-
                                         } />
                                     </span>
                                 </Tooltip>

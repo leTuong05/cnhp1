@@ -1,14 +1,19 @@
-import React from 'react'
-import TableCommon from '../../../components/Admin/TableCommon'
+import React from "react";
+import TableCommon from "../../../components/Admin/TableCommon";
+import TitleComponent from "../../../components/TitleComponent";
 
 const Units = () => {
   return (
     <>
-      <TableCommon 
-          title={"Danh sách tổ quản lý"}
+      <TableCommon
+        title={
+          <>
+            <TitleComponent title={"Danh sách tổ quản lý"} />
+          </>
+        }
       />
     </>
-  )
-}
+  );
+};
 
-export default Units
+export default Units;

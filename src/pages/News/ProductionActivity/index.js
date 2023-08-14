@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Pagination, Row, Typography } from 'antd';
 
 import anh1 from './../../../common/images/Rectangle-31.jpg'
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import NewItem from "../components/NewItem";
 import PostCategory from "../components/PostCategory";
 import News from "../components/News";
+import { GetAllPost } from "../../../services/apis/Post";
 
 
 
@@ -37,12 +38,30 @@ const listNews = [
 
 
 const ProductionActivity = () => {
+    const [listNews, setListNews] = useState([])
+    const { postCategory } = useParams();
+    const CategoryPostID = postCategory.split("=")[1]
+    const location = useLocation();
+    const { categoryPostName } = location.state || {};
+    useEffect(() => {
+        const getPost = async () => {
+            const res = await GetAllPost({
+                PageSize: 20,
+                CurrentPage: 1,
+                TextSearch: "",
+                CategoryPostID: CategoryPostID
+            })
+
+            setListNews(res.Object)
+        }
+        getPost()
+    }, [CategoryPostID])
     return (
         <News
-            title={'Hoạt động sản xuất kinh doanh'}
+            title={categoryPostName}
             listNews={listNews}
-        
-            
+
+
         />
     )
 

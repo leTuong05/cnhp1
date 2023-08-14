@@ -15,8 +15,9 @@ export const adminDeleteProduct = (body) => axiosInstance.patch('Product/Manage/
 
 export const getAllProduct1 = (PageSize, CurrentPage, SortType) => axiosInstance.get(`Product?PageSize=${PageSize}&CurrentPage=${CurrentPage}&SortType=${SortType}`);
 
+
 export const getProductDetail = (id) => axiosInstance.get(`Product/GetByID?id=${id}`);
 
 export const getProductBestSell = () => {
-    return axiosInstance.get('Product/ProductBestSell');
-};
+  return axiosInstance.get('Product/ProductBestSell')
+}

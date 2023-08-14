@@ -1,19 +1,58 @@
 import { useEffect, useState } from "react";
 import CustomTable from "../../../../components/Table";
-import { Button, Tooltip } from "antd";
-import { getWaterConfig } from "../../../../services/apis/WaterConfig";
+import { Button, Modal, Tooltip } from "antd";
+import {
+  DeleteWaterConfig,
+  getWaterConfig,
+} from "../../../../services/apis/WaterConfig";
 import { WaterConfigTableStyle } from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import EditModal from "./Modal/EditModal";
 
-const WaterConfigTable = ({ type }) => {
-  const [data, setData] = useState();
+import { DeleteOutlined } from "@ant-design/icons";
+const { confirm } = Modal;
+
+const WaterConfigTable = ({
+  type,
+  handleDelete,
+  data,
+  setIsEdit,
+  setOpenEdit,
+}) => {
+  const [id, setId] = useState("");
   const [buttonShow, SetButtonShow] = useState(null);
   const [loading, setLoading] = useState();
-  const [isEdit, setIsEdit] = useState();
-  const [openEdit, setOpenEdit] = useState();
   const [openDelete, setOpenDelete] = useState();
+
+  const showDeleteConfirm = (record) => {
+    confirm({
+      title: "Xóa",
+      icon: <DeleteOutlined />,
+      content: (
+        <div>
+          <span>Bạn có chắc chắn muốn xoá </span>
+          <span
+            style={{
+              fontWeight: "700",
+            }}
+          >
+            {record?.WaterPriceTitle}
+          </span>
+          <span> không?</span>
+        </div>
+      ),
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk() {
+        handleDelete(record?.WaterPriceID);
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+  };
 
   const TableTitle =
     type === 1
@@ -45,8 +84,8 @@ const WaterConfigTable = ({ type }) => {
                   <Button
                     shape="circle"
                     onClick={() => {
-                      setIsEdit(true);
-                      setOpenEdit(record?.WaterPriceID);
+                      setIsEdit();
+                      setOpenEdit(record);
                     }}
                   >
                     <FontAwesomeIcon icon={faPen} />
@@ -56,7 +95,7 @@ const WaterConfigTable = ({ type }) => {
                   <Button
                     shape="circle"
                     onClick={() => {
-                      setOpenDelete(record?.WaterPriceID);
+                      showDeleteConfirm(record);
                     }}
                   >
                     <FontAwesomeIcon icon={faTrash} />
@@ -69,20 +108,6 @@ const WaterConfigTable = ({ type }) => {
       ),
     },
   ];
-  const getList = async () => {
-    try {
-      setLoading(true);
-      const res = await getWaterConfig(type);
-      if (res?.isError) return;
-      setData(res?.Object);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getList();
-  }, []);
 
   return (
     <WaterConfigTableStyle>
@@ -101,16 +126,6 @@ const WaterConfigTable = ({ type }) => {
           };
         }}
       ></CustomTable>
-
-      {!!openEdit && (
-        <EditModal
-          isEdit={isEdit}
-          open={openEdit}
-          onCancel={() => {
-            setOpenEdit(false);
-          }}
-        />
-      )}
     </WaterConfigTableStyle>
   );
 };

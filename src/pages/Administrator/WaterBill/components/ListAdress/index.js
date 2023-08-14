@@ -95,7 +95,6 @@ function ListAdress({ onSelectRegion }) {
                 onSelect={handleSelect}
                 defaultExpandAll>
                 {renderTreeNodes(treeDataWithChildren)}
-
             </StyledTree>
         </Wrapper>
     );

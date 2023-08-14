@@ -1,352 +1,384 @@
-import React, { useEffect, useState } from 'react'
-import { Card, Col, Form, Input, Menu, Row, Select, Space, Tree, TreeSelect } from "antd"
-import { UploadOutlined } from '@ant-design/icons';
-import { Button, message, Upload } from 'antd';
-import TinyEditor from '../../Products/components/TinyEditor';
-import { Wrapper } from './style';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategoryPost, fetchGetDetailByID, fetchInsertPostList, fetchPostList, fetchUpdatePostList } from '../../../../reducers/categoryPostsSlice';
-import { fetchTags } from '../../../../reducers/tagsSlice';
+import React, { useEffect, useState } from "react";
+import {
+  Card,
+  Col,
+  Form,
+  Input,
+  Menu,
+  Row,
+  Select,
+  Space,
+  Tree,
+  TreeSelect,
+  notification,
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, message, Upload } from "antd";
+import TinyEditor from "../../Products/components/TinyEditor";
+import { Wrapper } from "./style";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchCategoryPost,
+  fetchGetDetailByID,
+  fetchInsertPostList,
+  fetchPostList,
+  fetchUpdatePostList,
+} from "../../../../reducers/categoryPostsSlice";
+import { fetTagsList, fetchTags } from "../../../../reducers/tagsSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import { Editor } from "@tinymce/tinymce-react";
+import Icon from "@ant-design/icons/lib/components/Icon";
+import { updatePostList } from "../../../../services/apis/postsCategoryy";
 
 const { TextArea } = Input;
 
-// GET dữ liệu dạng TreeData
-const getTreeData = (data) => {
-  const treeData = [];
-  data?.forEach((category) => {
-    if (category.Level === 1) {
-      treeData.push({
-        title: category.CategoryPostName,
-        value: category.CategoryPostID,
-        children: [],
-      });
-    } else {
-      const parentId = category.ParentID;
-      treeData?.forEach((parent) => {
-        if (parent.value === parentId) {
-          parent.children.push({
-            title: category.CategoryPostName,
-            value: category.CategoryPostID,
-          });
-        }
-      });
-    }
-  });
-  return treeData;
-};
-
-const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-};
-
-// const handleChange = (value) => {
-//     console.log(`selected ${value}`);
-//   };
-
 const Posts = () => {
-    const [form] = Form.useForm();
-    const nameValue = Form.useWatch('name', form);
-    const [value, setValue] = useState();
-    const [valueTitle, setValueTitle] = useState("");
-    const [valueSummary, setValueSummary] = useState("");
-    const [valueContent, setValueContent] = useState("");
-    const [valueCategoryID, setValueCategoryID] = useState("");
-    const [textContent, setTextContent] = useState("");
-    const [valueTagsID, setValueTagsID] = useState("");
+  const [form] = Form.useForm();
+  // const [value, setValue] = useState();
 
+  const location = useLocation();
+  const [fileList, setFileList] = useState([]);
+  const [content, setContent] = useState("");
+  const [fileUpload, setFileUpload] = useState({});
 
-    const location = useLocation()
-    // const { type, record } = location.state || {} //lay Params qua navigate
-    // const type= location.state.type || {} //lay Params qua navigate
-    const {record} = location.state || {} //lay Params qua navigate
-    const params = new URLSearchParams(location.search);
-    const type = params.get("type");
+  // const { type, record } = location.state || {} //lay Params qua navigate
+  // const type= location.state.type || {} //lay Params qua navigate
+  const { record } = location.state || {}; //lay Params qua navigate
+  const params = new URLSearchParams(location.search);
+  const type = params.get("type");
 
-    const title = type === "add" ? "Thêm bài viết" : "Sửa bài viết";
-    const titleSubmit = type === "add" ? "Đăng bài" : "Sửa bài";
+  console.log("record>>>>:", record);
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch(); 
+  const title = type === "add" ? "Thêm bài viết" : "Sửa bài viết";
+  const titleSubmit = type === "add" ? "Đăng bài" : "Sửa bài";
 
-    // const [value, setValue] = useState(['0-0-0']);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const postCategoryList = useSelector((state) => state?.postCategory?.listsCategory?.listsCategory?.Object?.data)
-    // console.log("postCategoryList>>", postCategoryList);
-    const tagsList = useSelector((state) => state?.tags?.tags?.tags?.Object)
-    // console.log(tagsList);
-    const [titleInitial, setTitleInitial] = useState('');
-    const [defaultTitle, setDefaultTitle] = useState('');
+  const postCategoryList = useSelector(
+    (state) => state?.postCategory?.listsCategory?.listsCategory?.Object
+  );
+  const tagsList = useSelector(
+    (state) => state?.tags?.tagsList?.tagsList?.Object
+  );
 
-    const getPostDetail = useSelector((state) => state?.postCategory?.getPostDetail?.getPostDetailByID?.Object)
+  const getPostDetail = useSelector(
+    (state) => state?.postCategory?.getPostDetail?.getPostDetailByID?.Object
+  );
 
-    // console.log("getPostDetail: ", getPostDetail?.Title);
+  //get data detail by ID
+  useEffect(() => {
+    if (type === "edit") {
+      dispatch(fetchGetDetailByID(record?.PostID));
+    }
+  }, []);
 
-    // useEffect(()=> {
-    //   setTitleInitial(getPostDetail?.Title || '');
-    // }, [getPostDetail])
+  //get TAGS danh sách -> select Tags
+  useEffect(() => {
+    dispatch(
+      fetTagsList({
+        PageSize: 20,
+        CurrentPage: 1,
+        TextSearch: "",
+      })
+    );
+  }, []);
 
-    useEffect(() => {
-      if (getPostDetail) {
-        setTitleInitial(getPostDetail.Title);
-        setDefaultTitle(getPostDetail.Title);
-      }
-    }, [getPostDetail]);
+  const file = fileList ? Object.values(fileList)[0] : null;
+  console.log("fileList>>>>", file);
 
-    console.log("titleInitial", getPostDetail);
-
-    //get data detail by ID
-    useEffect(() => {
-      if(type === "edit") {
-        dispatch(fetchGetDetailByID(record?.PostID))
-      }
-    }, [])
-
-    //get list ALL
-    const getList = () => {
-      dispatch(fetchPostList({
+  //get list ALL
+  const getList = () => {
+    dispatch(
+      fetchPostList({
         PageSize: 20,
         CurrentPage: 1,
         TextSearch: "",
         CategoryPostID: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        Status: 0   
-      }))
-    }
-
-    const onFinish = () => {
-        if (type === "add") {
-          submitFormPost();
-          getList();
-          message.success('Thêm bài viết thành công!');
-          navigate('/danh-sach-bai-viet');
-        } else if (type === "edit") {
-          submitEditPost();
-          getList();
-          message.success('Sửa bài viết thành công!');
-          navigate('/danh-sach-bai-viet');
-        }
-    };
-
-    
-
-    //submit
-    const submitFormPost = () => {
-      dispatch(fetchInsertPostList({
-        Title: valueTitle,
-        Summary: valueSummary,
-        CategoryPostID: valueCategoryID,
-        Content: textContent,
-        // ListTagsID: [
-        //   valueTagsID
-        // ],
+        Status: 0,
       })
-      )
-    }
-    const valueCate = getPostDetail?.CategoryPostID || valueCategoryID ;
+    );
+  };
 
-    const submitEditPost = () => {
-      dispatch(fetchUpdatePostList({
+  const handleEditorChange = (content) => {
+    setContent(content);
+  };
+
+  const onFinish = (values) => {
+    if (type === "add") {
+      submitFormPost(values);
+      getList();
+      navigate("/danh-sach-bai-viet");
+    } else if (type === "edit") {
+      submitEditPost();
+    }
+  };
+
+  //CREATE
+  const submitFormPost = (values) => {
+    dispatch(
+      fetchInsertPostList({
+        Title: values.title,
+        file: fileUpload,
+        Summary: values.summary,
+        CategoryPostID: values.category,
+        Content: content,
+        listTag: values.taggss,
+      })
+    );
+  };
+
+  //EDIT
+  const submitEditPost = () => {
+    form.validateFields().then((values) => {
+      const body = {
         PostID: getPostDetail?.PostID,
-        Title: titleInitial,
-        Summary: valueSummary,
-        CategoryPostID: valueCate,
-        Content: textContent,
-        // ListTagsID: [
-        //   valueTagsID
-        // ],
-      })
-      )
-    }
+        Title: values.title,
+        fileOK: fileUpload,
+        Summary: values.summary,
+        CategoryPostID: values.category,
+        Content: content,
+        listTag: values.taggss,
+      };
+      updatePostList(body)
+        .then(() => {
+          notification.success({
+            message: "Cập nhật bài viết thành công",
+          });
+          navigate("/danh-sach-bai-viet");
+          getList();
+        })
+        .catch((error) => {
+          notification.error({
+            message: error.Object,
+          });
+        });
+    });
+  };
 
-    //data dropdown Tags 
-    const options = [];
-    tagsList?.forEach((item) => {
-      options.push({
-        value: item.TagsID,
-        label: item.TagsName,
-      })
-    })
-    // console.log("options", options);
+  //data dropdown Tags
+  const options = [];
+  tagsList?.forEach((item) => {
+    options.push({
+      value: item.TagsID,
+      label: item.TagsName,
+    });
+  });
 
-    //getCategory
-    useEffect(() =>{
-      dispatch(fetchCategoryPost());
-    }, []);
+  //getCategory
+  useEffect(() => {
+    dispatch(fetchCategoryPost());
+  }, []);
 
-    //get Tags list
-    useEffect(() => {
-      dispatch(fetchTags());
-    },[]);
-    
-    const onChange = (newValue) => {
-      console.log(newValue);
-      setValue(newValue);
+  //get Tags list
+  useEffect(() => {
+    dispatch(fetchTags());
+  }, []);
+
+  // get SELECT DANH MỤC
+  const treeDataPush = [];
+  postCategoryList?.forEach((item) => {
+    const parent = {
+      title: item.CategoryPostName,
+      value: item.CategoryPostID,
+      children: [],
     };
-
-    const handleChange = (value) => {
-      console.log(`Selected: ${value}`);
-    };
-
-    const treeDataPush = getTreeData(postCategoryList);
-    // console.log("treeDataPush", treeDataPush);
-
-    const handleChangeTitleInitial = (event) => {
-      console.log(event.target.value);
-      setTitleInitial(event.target.value);
-    };
-
-    const handleChangeTitle = (e) => {
-      console.log(e.target.value);
-      setValueTitle(e.target.value);
+    treeDataPush.push(parent);
+    if (item.GetList && item.GetList.length > 0) {
+      item.GetList.forEach((child) => {
+        const childNode = {
+          title: child.CategoryPostName,
+          value: child.CategoryPostID,
+        };
+        parent.children.push(childNode);
+      });
     }
-    const handleChangeSummary = (e) => {
-      setValueSummary(e.target.value);
-    }
-    const handleChangeContent = (e) => {
-      setValueContent(e.target.value);
-    }
-    const handleChangeCategoryID = (value) => {
-      console.log("Category:",value);
-      setValueCategoryID(value);
-    }
-    const handleChangeTagID = (value) => {
-      setValueTagsID(value);
-    }
+  });
 
-    // const handleEditorChange = (content, editor) => {
-    //     console.log("content", content);
-    //     setTextContent(editor.getContent({format: 'text'}));
-    // };
-    // console.log(textContent);
-    useEffect(() => {
-      setTextContent(value);
-    }, [])
+  //set Default Value
+  useEffect(() => {
+    if (type === "edit") {
+      form.setFieldsValue({
+        title: record?.Title,
+        file: record?.FileUrl,
+        summary: record?.Summary,
+        category: record?.CategoryPostID,
+        contentText: record?.Content,
+        taggss: record?.TagsIDList,
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [record]);
 
-    // const [nameValueInittial, setNameValueInitial] = useState('');
+  console.log(record?.FileUrl);
 
-    // const handleNameInitialChange = (event) => {
-    //   setNameValueInitial(event.target.value);
-    // }
+  const props = {
+    name: "file",
+    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
+    headers: {
+      authorization: "authorization-text",
+    },
+    accept: ".PNG, .JPEG",
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== "uploading") {
+        const fileList = info.file;
+        setFileUpload(fileList.originFileObj);
+      }
+    },
+  };
 
-    const defaultValueCategory = record ? getPostDetail?.CategoryPostName : null;
-  
-    return (
-        <Wrapper>
-            <Card
-                title = {title}
+  const fileUrl = record?.FileUrl;
+
+  return (
+    <Wrapper>
+      <Card title={title}>
+        <Form
+          form={form}
+          onFinish={onFinish}
+          layout="vertical"
+          autoComplete="off"
+        >
+          <Form.Item
+            name="title"
+            label="Tiêu đề"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input placeholder="Nhập tiêu đề" />
+          </Form.Item>
+          <Row
+            flexDirection="column"
+            flexWrap="wrap"
+            style={{ marginBottom: "10px" }}
+          >
+            <Col
+              span={24}
+              style={{
+                fontSize: "16px",
+                fontWeight: 600,
+                marginBottom: "10px",
+              }}
             >
-              <Form form={form} 
-                    onFinish={onFinish} 
-                    layout="vertical" 
-                    autoComplete="off">
+              Hình thu nhỏ
+            </Col>
+            <Col span={24} style={{ marginBottom: "10px" }}>
+              Dung lượng file tối đa 1MB, định dạng:... JPEG, .PNG
+            </Col>
+            <Form.Item name="fileOK" initialValue={fileUrl}>
+              <Upload {...props} listType="picture" maxCount={1}>
+                <Button icon={<UploadOutlined />}>Tải ảnh</Button>
+              </Upload>
+            </Form.Item>
+          </Row>
+          <Form.Item
+            name="summary"
+            label="Tóm tắt"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <TextArea rows={4} placeholder="Nhập nội dung" />
+          </Form.Item>
+          <Form.Item name="contentText" label="Nôi dung bài viết">
+            <Editor
+              apiKey="ekjbux3o3ibi4jxd9zz545cyj67o7g2ahlz4skafkt64r1iy"
+              onEditorChange={handleEditorChange}
+              value={content}
+              init={{
+                placeholder: "Nhập nội dung bài viết của bạn",
+              }}
+            />
+          </Form.Item>
 
-                <Form.Item  name="title" label="Tiêu đề"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                > 
-                {
-                    record 
-                    ?  
-                    (<Input defaultValue={getPostDetail?.Title} onChange={handleChangeTitleInitial} placeholder='Nhập tiêu đề' />) 
-                    : 
-                    (<Input onChange={handleChangeTitle} placeholder='Nhập tiêu đề'/>)
-                }
-                </Form.Item>
-                <Row flexDirection="column" flexWrap="wrap"  style={{marginBottom: '10px'}}>
-                    <Col span={24} style={{fontSize: '16px', fontWeight: 600, marginBottom: '10px'}}>Hình thu nhỏ</Col>
-                    <Col span={24} style={{marginBottom: '10px'}}>Dung lượng file tối đa 1MB, định dạng:... JPEG, .PNG</Col>
-                    <Upload {...props}>
-                      <Row/>
-                      <Button icon={<UploadOutlined />}>Thêm video</Button>
-                    </Upload>
-                </Row>
-                <Form.Item name="summary" label="Tóm tắt"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                {
-                  record ?
-                  (<TextArea onChange={handleChangeSummary} rows={4} defaultValue={getPostDetail?.Summary} placeholder="Nhập nội dung"/>)
-                  :
-                  (<TextArea onChange={handleChangeSummary} rows={4} placeholder="Nhập nội dung"/>)
-                }
-                    
-                </Form.Item>
-                <Form.Item name="content" label="Nôi dung bài viết"
-                  // rules={[
-                  //   {
-                  //     required: true,
-                  //   },
-                  // ]}
-                >
-                    <TinyEditor 
-                        // handleEditorChange={handleEditorChange}
-                        value={value}
-                    />
-                </Form.Item>
-                
-                <Form.Item name="category" label="Danh mục" 
-                    rules={[
-                    {
-                      required: !!record?.find ? true : false,
-                    },
-                  ]}
-                >
-                    <TreeSelect
-                        style={{
-                          width: '100%',
-                        }}
-                        dropdownStyle={{
-                          maxHeight: 400,
-                          overflow: 'auto',
-                        }}
-                        treeData={treeDataPush}
-                        placeholder="Chọn danh mục"
-                        onChange={handleChangeCategoryID}
-                        defaultValue={defaultValueCategory}
-                    />
-                </Form.Item>
+          <Form.Item
+            name="category"
+            label="Danh mục"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <TreeSelect
+              style={{
+                width: "100%",
+              }}
+              dropdownStyle={{
+                maxHeight: 400,
+                overflow: "auto",
+              }}
+              treeData={treeDataPush}
+              placeholder="Chọn danh mục"
+            />
+          </Form.Item>
 
-                <Form.Item name="tags" label="Thẻ (từ khóa)">
-                    <Select
-                      mode="tags"
-                      placeholder="Thêm thẻ"
-                      onChange={handleChangeTagID}
-                      style={{
-                        width: '100%',
-                      }}
-                      options={options}
-                    />
-                </Form.Item>
-                
-                <Form.Item>
-                    <Button htmlType="submit" style={{background: "var(--btn-primary-color)", color: "#FFF"}}>{titleSubmit}</Button>
-                </Form.Item>
+          <Form.Item
+            name="taggss"
+            label="Thẻ (từ khóa)"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Select
+              mode="tags"
+              placeholder="Thêm thẻ"
+              style={{
+                width: "100%",
+              }}
+              options={options}
+            />
+          </Form.Item>
 
-              </Form>
-            </Card>
-        </Wrapper>
-    )
-}
+          <Form.Item>
+            <Button
+              htmlType="submit"
+              style={{ background: "var(--btn-primary-color)", color: "#FFF" }}
+            >
+              {titleSubmit}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
+    </Wrapper>
+  );
+};
 
-export default Posts
+export default Posts;
+// GET dữ liệu dạng TreeData (cnhp.h2q)
+// const getTreeData = (data) => {
+//   const treeData = [];
+//   data?.forEach((category) => {
+//     if (category.Level === 1) {
+//       treeData.push({
+//         title: category.CategoryPostName,
+//         value: category.CategoryPostID,
+//         children: [],
+//       });
+//     } else {
+//       const parentId = category.ParentID;
+//       treeData?.forEach((parent) => {
+//         if (parent.value === parentId) {
+//           parent.children.push({
+//             title: category.CategoryPostName,
+//             value: category.CategoryPostID,
+//           });
+//         }
+//       });
+//     }
+//   });
+//   return treeData;
+// };
+
+// const handleChange = (value) => {
+//     console.log(`selected ${value}`);
+//   };

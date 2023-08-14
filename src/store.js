@@ -8,17 +8,20 @@ import tagsReducer from './reducers/tagsSlice.js';
 import postCategoryReducer from './reducers/categoryPostsSlice';
 import managementTeamReducer from './reducers/managementTeamSlice.js';
 import positionSlice from './reducers/positionSlice.js';
-import departmentReducer from './reducers/departmentSlice.js';
+import departmentReducer from "./reducers/departmentSlice.js";
+import guestServiceReducer from "./reducers/guestServicesSlice.js";
 import roleSlice from './reducers/roleSlice.js';
 import roleReducer from './reducers/roleSlice.js';
 import categoryReducer from './reducers/functionSlice.js';
 import userDirectSlice from './reducers/UserSlice.js';
+import agentDirectory from './reducers/agentDirectory.js';
 const authPersistConfig = {
     key: 'auth',
     storage
 };
 
 const rootReducer = combineReducers({
+
     auth: persistReducer(authPersistConfig, authReducer),
     overView: overViewReducer, //add OverviewSlice
     tags: tagsReducer,
@@ -29,6 +32,8 @@ const rootReducer = combineReducers({
     role: roleReducer,
     category: categoryReducer,
     user: userDirectSlice.reducer
+    guestSerives: guestServiceReducer,
+    agent: agentDirectory
 });
 
 const store = configureStore({

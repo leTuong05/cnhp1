@@ -5,4 +5,8 @@ export const Wrapper = styled.div`
         justify-content: center;
         margin-bottom: 12px;
     }
+    .text {
+        text-align: center;
+    }
+
 `

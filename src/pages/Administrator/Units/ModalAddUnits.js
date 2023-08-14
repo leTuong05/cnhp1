@@ -1,599 +1,512 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Dropdown, Form, Input, Modal, Row, Select, message } from 'antd';
-import Title from 'antd/es/skeleton/Title';
-import { WapperModal } from '../../../components/Style/style';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetGetListRegionHP, fetGetListStaff, fetchCreateManageTeam, fetchDeteleManageTeam, fetchGetRegion, fetchGetRegionAll, fetchGetRegionByRegionID, fetchUpdateManageTeam, fetchgetList, fetchgetListAll } from '../../../reducers/managementTeamSlice';
-import { TreeSelect } from 'antd';
+import React, { useEffect, useState } from "react";
+import { Button, Col, Form, Input, Modal, Row, Select, message } from "antd";
+import { WapperModal } from "../../../components/Style/style";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetGetListRegionHP,
+  fetGetListStaff,
+  fetchCreateManageTeam,
+  fetchDeteleManageTeam,
+  fetchGetRegion,
+  fetchGetRegionAll,
+  fetchGetRegionByRegionID,
+  fetchUpdateManageTeam,
+  fetchgetList,
+  fetchgetListAll,
+} from "../../../reducers/managementTeamSlice";
+import { TreeSelect } from "antd";
+import { notification } from "antd";
+
+const { SHOW_PARENT } = TreeSelect;
 
 const ModalAddUnits = (props) => {
-    const dispatch = useDispatch();
-    const {title, onOk, handlehideModal, isModalVisiable, selectedRow, mode} = props
-    const { SHOW_PARENT } = TreeSelect;
-    
-    const [form] = Form.useForm();
-    const nameValue = Form.useWatch('name', form);  
-    
-    const [valueTinh, setValueTinh] = useState('');
-    const [valueHuyen, setValueHuyen] = useState('')
-    const [valueXa, setValueXa] = useState('')
-    
-    const [nameManagement, setNameManagement] = useState('');
-    const [codeManagement, setCodeManagement] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [address, setAddress] = useState('');
-    const [employee, setEmployee] = useState('');
-    const [account, setAccount] = useState('');
-    const [password, setPassword] = useState('');
-    const [repasword, setRepasword] = useState('');
-    const [area, setArea] = useState('');
-    
-    const [valueSelected, setValueSelected] = useState('')
-    const [initialNameManagement, setInitialNameManagement] = useState('');
-    
-    // const [codeManagement, setCodeManagement] = useState('');
-    // const [phoneNumber, setPhoneNumber] = useState('');
-    // const [address, setAddress] = useState('');
-    // const [employee, setEmployee] = useState('');
-    // const [area, setArea] = useState('');
-    // const [account, setAccount] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [repasword, setRepasword] = useState('');
+  const { title, onOk, handlehideModal, isModalVisiable, selectedRow, mode } =
+    props;
 
-    const onSearch = (value) => {
-        console.log('search:', value);
-    };
+  const [form] = Form.useForm();
 
-    const onChange = (value) => {
-        setValueTinh(value)
+  const [valueTinh, setValueTinh] = useState("");
+  const [valueHuyen, setValueHuyen] = useState("");
+  const [valueXa, setValueXa] = useState("");
+
+  const dispatch = useDispatch();
+
+  const getRegionAll = () => {
+    dispatch(fetchGetRegionAll());
+  };
+  //region ALL
+  useEffect(() => {
+    getRegionAll();
+  }, []);
+
+  //region Huyen/Quan
+  const getRegion = () => {
+    dispatch(fetchGetRegion(valueTinh));
+  };
+
+  useEffect(() => {
+    getRegion();
+  }, [valueTinh]);
+
+  //region xa/phuong
+  const regionByID = () => {
+    dispatch(fetchGetRegionByRegionID(valueHuyen));
+  };
+  useEffect(() => {
+    regionByID();
+  }, [valueHuyen]);
+
+  const getListStaff = () => {
+    dispatch(fetGetListStaff());
+  };
+
+  useEffect(() => {
+    getListStaff();
+  }, []);
+
+  const getRegionHP = () => {
+    dispatch(fetGetListRegionHP());
+  };
+
+  useEffect(() => {
+    getRegionHP();
+  }, []);
+
+  const listRegionAll = useSelector(
+    (state) => state?.manage?.regionAll?.regionAll?.Object
+  );
+  const listRegion = useSelector(
+    (state) => state?.manage?.region?.region?.Object
+  );
+  const listRegionByID = useSelector(
+    (state) => state?.manage?.regionByRegionID?.regionByRegionID?.Object
+  );
+  const listStaff = useSelector(
+    (state) => state?.manage?.listStaff?.staffAll?.Object
+  );
+
+  const listRegionHP = useSelector(
+    (state) => state?.manage?.regionListHP?.regionHP?.Object
+  );
+
+  const errorMess = useSelector(
+    (state) => state?.updateManageTeam?.error?.Object
+  );
+
+  const treeData = [];
+  listRegionHP &&
+    listRegionHP?.forEach((item) => {
+      treeData?.push({
+        title: item.RegionName,
+        value: item.RegionID,
+        children: [],
+      });
+      if (item.RegionLevel === 3) {
+        item.list.forEach((child) => {
+          treeData[treeData.length - 1].children.push({
+            title: child.RegionName,
+            value: child.RegionID,
+          });
+        });
+      }
+    });
+
+  const optionsStaff = [];
+  {
+    listStaff &&
+      listStaff?.forEach((item) => {
+        optionsStaff.push({
+          value: item?.UserID,
+          label: item?.FullName,
+        });
+      });
+  }
+
+  const options = [];
+  {
+    listRegionAll &&
+      listRegionAll?.forEach((item) => {
+        options.push({
+          value: item.RegionID,
+          label: item.RegionName,
+        });
+      });
+  }
+
+  const optionsLevelOne = [];
+  {
+    listRegion &&
+      listRegion?.forEach((item) => {
+        optionsLevelOne.push({
+          value: item.RegionID,
+          label: item.RegionName,
+        });
+      });
+  }
+
+  const optionsLevelTwo = [];
+  {
+    listRegionByID &&
+      listRegionByID?.forEach((item) => {
+        optionsLevelTwo.push({
+          value: item.RegionID,
+          label: item.RegionName,
+        });
+      });
+  }
+
+  const getList = () => {
+    dispatch(
+      fetchgetList({
+        PageSize: 20,
+        CurrentPage: 1,
+      })
+    );
+  };
+
+  const createManagement = (values, callback) => {
+    const { name, code, phone, address, employee, account, pass, repass, kv } =
+      values;
+    dispatch(
+      fetchCreateManageTeam({
+        ManagementTeamName: name,
+        ManagementTeamCode: code,
+        PhoneNumber: phone,
+        Address: address,
+        Staff: employee,
+        UserName: account,
+        Password: pass,
+        RePassword: repass,
+        RegionID: kv.toString(),
+      })
+    ).then(() => {
+      callback();
+    });
+  };
+
+  const tProps = {
+    treeData,
+    treeCheckable: true,
+    placeholder: "Chọn nội dung",
+    showCheckedStrategy: SHOW_PARENT,
+    style: {
+      width: "100%",
+    },
+  };
+
+  const updateManagement = (values, callback) => {
+    const { name, code, phone, address, employee, pass, repass, kv } = values;
+    dispatch(
+      fetchUpdateManageTeam({
+        ManagementTeamID: selectedRow.ManagementTeamID,
+        ManagementTeamName: name,
+        ManagementTeamCode: code,
+        PhoneNumber: phone,
+        Address: address,
+        Staff: employee,
+        UserID: selectedRow.UserID,
+        Password: pass,
+        RePassword: repass,
+        RegionID: kv,
+      })
+    ).then(() => {
+      callback();
+    });
+  };
+
+  const onFinish = (values) => {
+    try {
+      if (selectedRow) {
+        updateManagement(values, () => {
+          handlehideModal();
+          getList();
+        });
+      } else {
+        createManagement(values, () => {
+          handlehideModal();
+          getList();
+        });
+      }
+    } catch (error) {}
+  };
+
+  const handleCancel = () => {
+    form.resetFields();
+    handlehideModal();
+  };
+
+  useEffect(() => {
+    if (errorMess) {
+      notification.error({
+        message: "Thông báo !",
+        description: errorMess,
+      });
     }
+  }, [errorMess]);
 
-    const onChangeLevelOne = (value) => {
-        setValueHuyen(value)
+  useEffect(() => {
+    if (mode === "edit") {
+      const employeeID = selectedRow?.Staff[0]?.UserID;
+      console.log(employeeID);
+      form.setFieldsValue({
+        name: selectedRow?.ManagementTeamName,
+        code: selectedRow?.ManagementTeamCode,
+        phone: selectedRow?.PhoneNumber,
+        address: selectedRow?.Address,
+        employee: selectedRow?.Staff,
+        account: selectedRow?.UserName,
+        pass: "",
+        repass: "",
+        kv: selectedRow?.WardID.split(",").map(Number),
+      });
+    } else {
+      form.resetFields();
     }
+  }, [isModalVisiable]);
 
-    const onSearchLeveTwo = (value) => {
-        setValueXa(value)
-    }
-    
-    const getRegionAll = () => {
-        dispatch(fetchGetRegionAll());
-    }
-    //region ALL
-    useEffect(() => {
-        getRegionAll();
-    }, [])
-
-    //region Huyen/Quan
-    const getRegion = () => {
-        dispatch(fetchGetRegion(valueTinh));
-    }
-
-    useEffect(() => {
-        getRegion();
-    }, [valueTinh])
-
-    //region xa/phuong
-    const regionByID = () => {
-        dispatch(fetchGetRegionByRegionID(valueHuyen))
-    }
-    useEffect(() => {
-        regionByID();
-    }, [valueHuyen])
-
-    const getListStaff = () => {
-        dispatch(fetGetListStaff())
-    }
-
-    useEffect(() => {
-        getListStaff();
-    }, [])
-    
-    //   useEffect(() => {
-    //     getList()
-    //   }, [])
-
-    const createManagement = () => {
-        dispatch(fetchCreateManageTeam(
-            {
-                "ManagementTeamName": nameManagement,
-                "ManagementTeamCode": codeManagement,
-                "PhoneNumber": phoneNumber,
-                "Address": address,
-                "Staff": [
+  return (
+    <>
+      <WapperModal
+        style={{ width: "900px" }}
+        title={title}
+        visible={isModalVisiable}
+        onOk={onOk}
+        onCancel={handleCancel}
+      >
+        <Form
+          autoComplete="off"
+          form={form}
+          onFinish={onFinish}
+          layout="vertical"
+        >
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                name="name"
+                label="Tên tổ quản lý"
+                rules={[
                   {
-                    "UserID": employee
-                  }
-                ],
-                "UserName": account,
-                "Password": password,
-                "RePassword": repasword,
-                "RegionID": area,
-              }
-        ))
-    }
+                    required: true,
+                    message: "Vui lòng nhập tên tổ quản lý",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="Nhập nội dụng"
+                  style={{ width: "100%", display: "block" }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-    const updateManagement = () => {
-        dispatch(fetchUpdateManageTeam(
-            {
-                "ManagementTeamID": valueSelected.ManagementTeamID,
-                "ManagementTeamName": valueSelected.ManagementTeamName,
-                "ManagementTeamCode": valueSelected.ManagementTeamCode,
-                "PhoneNumber": valueSelected.PhoneNumber,
-                "Address": valueSelected.Address,
-                "Staff": [
+          <Row>
+            <Col span={12}>
+              <Form.Item
+                name="code"
+                label="Mã tổ chức"
+                rules={[
                   {
-                    "UserID": employee,
+                    required: true,
+                    message: "Vui lòng nhập mã tổ chức",
+                  },
+                  {
+                    max: 30,
+                    message: "Mã tổ chức không được quá 30 ký tự!",
+                  },
+                ]}
+              >
+                <Input placeholder="Nhập nội dụng" />
+              </Form.Item>
+            </Col>
+            <Col span={1}></Col>
+            <Col span={11}>
+              <Form.Item
+                name="phone"
+                label="Số điện thoại"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập số điện thoại",
+                  },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message: "Vui lòng chỉ nhập số",
+                  },
+                ]}
+              >
+                <Input placeholder="Nhập nội dụng" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                name="address"
+                label="Địa chỉ"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input placeholder="Chọn nôi dụng" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                name="employee"
+                label="Nhân viên trong công ty"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Select
+                  mode="tags"
+                  showSearch
+                  placeholder="Chọn nội dung"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
                   }
-                ],
-                "UserID": selectedRow.UserID,
-                "Password": valueSelected.Password,
-                "RePassword": valueSelected.RePassword,
-                "RegionID": area
-              }
-        ))
-    }
+                  options={optionsStaff}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-    //add To Quan Ly
-    // useEffect(() => {
-    //     createManagement();
-    //     getList();
-    // }, [])
+          <Row>
+            <Col span={7}>
+              <Form.Item
+                name="account"
+                label="Tài khoản"
+                rules={[
+                  {
+                    required: mode === "edit" ? false : true,
+                    message: "Vui lòng nhập tên tài khoản",
+                  },
+                  {
+                    min: 6,
+                    message: "Tên tài khoản phải có ít nhất 6 ký tự!",
+                  },
+                  {
+                    max: 255,
+                    message: "Tên tài khoản không được vượt quá 255 ký tự!",
+                  },
+                ]}
+              >
+                <Input placeholder="Chọn nội dung" disabled={mode == "edit"} />
+              </Form.Item>
+            </Col>
+            <Col span={1}></Col>
+            <Col span={7}>
+              <Form.Item
+                name="pass"
+                label="Mật khẩu"
+                rules={[
+                  {
+                    required: true,
+                  },
+                  {
+                    min: 8,
+                    message: "Mật khẩu phải tối thiểu tám ký tự!",
+                  },
+                  {
+                    pattern: /(?=.*[A-Z])/,
+                    message: "Mật khẩu phải chứa ít nhất một chữ cái viết hoa!",
+                  },
+                  {
+                    pattern: /(?=.*[a-z])/,
+                    message:
+                      "Mật khẩu phải chứa ít nhất một chữ cái viết thường!",
+                  },
+                  {
+                    pattern: /(?=.*\d)/,
+                    message: "Mật khẩu phải chứa ít nhất một số!",
+                  },
+                  {
+                    pattern: /(?=.*[!@#$%^&*])/,
+                    message: "Mật khẩu phải chứa ít nhất một ký tự đặc biệt!",
+                  },
+                ]}
+              >
+                <Input placeholder="Chọn nôi dung" />
+              </Form.Item>
+            </Col>
+            <Col span={1}></Col>
+            <Col span={7}>
+              <Form.Item
+                name="repass"
+                label="Mật khẩu xác nhận"
+                rules={[
+                  {
+                    required: true,
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("pass") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("Mật khẩu nhập lại không khớp!")
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <Input placeholder="Chọn nội dung" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-   
-    const getRegionHP = () => {
-        dispatch(fetGetListRegionHP());
-    }
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                name="kv"
+                label="Khu vực quản lý"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <TreeSelect {...tProps} />
+              </Form.Item>
+            </Col>
+          </Row>
 
-    useEffect(() => {
-        getRegionHP();
-    }, [])
+          <Row>
+            <Col span={24}>
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  style={{
+                    float: "right",
+                    display: "block",
+                    background: "var(--btn-primary-color)",
+                    width: "108px",
+                  }}
+                >
+                  Ghi lại
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </WapperModal>
+    </>
+  );
+};
 
-    const listRegionAll = useSelector((state) => state?.manage?.regionAll?.regionAll?.Object)
-    const listRegion = useSelector((state) => state?.manage?.region?.region?.Object)
-    const listRegionByID = useSelector((state) => state?.manage?.regionByRegionID?.regionByRegionID?.Object)
-    const listStaff = useSelector((state) => state?.manage?.listStaff?.staffAll?.Object)
-    const listRegionHP = useSelector((state) => state?.manage?.regionListHP?.regionHP?.Object)
-    // console.log("listRegionHP>>>>>",listRegionHP);
-
-    const treeData = [];
-    {
-        listRegionHP && listRegionHP?.forEach((item) => {
-            treeData?.push({
-                title: item.RegionName,
-                value: item.RegionID,
-                children: [],
-            })
-            if (item.RegionLevel === 3) {
-                item.list.forEach((child) => {
-                  treeData[treeData.length - 1].children.push({
-                    title: child.RegionName,
-                    value: child.RegionID,
-                  });
-                });
-            }
-        })
-    }
-
-    useEffect(() => {
-        setValueSelected(selectedRow)
-    }, [selectedRow])
-
-    const optionsStaff = [];
-    {
-        listStaff && listStaff?.forEach((item) => {
-            optionsStaff.push({
-                value: item.UserID,
-                label: item.FullName,
-            });
-        })
-    }
-
-    // console.log("valueSelected", valueSelected);
-
-    const options = [];
-    {
-        listRegionAll && listRegionAll?.forEach((item) => {
-            options.push({
-                value: item.RegionID,
-                label: item.RegionName,
-            });
-        })
-    }
-
-    const optionsLevelOne = [];
-    {
-        listRegion && listRegion?.forEach((item) => {
-            optionsLevelOne.push({
-                value: item.RegionID,
-                label: item.RegionName,
-            });
-        })
-    }
-
-    const optionsLevelTwo = [];
-    {
-        listRegionByID && listRegionByID?.forEach((item) => {
-            optionsLevelTwo.push({
-                value: item.RegionID,
-                label: item.RegionName,
-            });
-        })
-    }
-
-    // SET EDIT
-    //name moi Edit
-    const handleChangeNameEdit = (e) => {
-        setInitialNameManagement(e.target.value);
-        setValueSelected({
-            ...valueSelected,
-            ManagementTeamName: e.target.value
-        })
-    }
-
-    //ma to chuc 
-    const handleCodeManagementEdit = (e) => {
-        setInitialNameManagement(e.target.value);
-        setValueSelected({
-            ...valueSelected,
-            ManagementTeamName: e.target.value
-        })
-    }
-
-     //sdt 
-     const handlePhonetEdit = (e) => {
-        setInitialNameManagement(e.target.value);
-        setValueSelected({
-            ...valueSelected,
-            ManagementTeamName: e.target.value
-        })
-    }
-
-    //diachi
-    const handleAdrressEdit = (e) => {
-        setInitialNameManagement(e.target.value);
-        setValueSelected({
-            ...valueSelected,
-            ManagementTeamName: e.target.value
-        })
-    }
-    //nhanvien trong cong ty
-    // const handleEnolyeeNameEdit = (e) => {
-    //     setInitialNameManagement(e.target.value);
-    //     setValueSelected({
-    //         ...valueSelected,
-    //         ManagementTeamName: e.target.value
-    //     })
-    // }
-
-    //Passord
-    const handlePasswordEdit = (e) => {
-        setInitialNameManagement(e.target.value);
-        setValueSelected({
-            ...valueSelected,
-            ManagementTeamName: e.target.value
-        })
-    }
-    //re mat khau
-    const handleRePasswordEdit = (e) => {
-        setInitialNameManagement(e.target.value);
-        setValueSelected({
-            ...valueSelected,
-            ManagementTeamName: e.target.value
-        })
-    }
-    //kkhu  vuc quan ly
-    const handleAreaEdit = (e) => {
-        setInitialNameManagement(e.target.value);
-        setValueSelected({
-            ...valueSelected,
-            ManagementTeamName: e.target.value
-        })
-    }
-
-    const getList = () => {
-        dispatch(fetchgetList(
-          {
-            "PageSize": 20,
-            "CurrentPage": 1,
-            "TextSearch": "",
-            "ManagementTeamStatus": "",
-            "ProvinceID": "",
-            "DistrictID": "",
-            "WardID": ""
-          }
-        ))
-    }
-
-    useEffect(() => {
-        getList()
-      }, [])
-
-    const onFinish = () => {
-        // createManagement().then(() => {
-        //         getList();
-        //         message.succeeded("Thêm thành công");
-        //     })
-        //     // .catch((error) => {
-        //     // console.error(error);
-        //     // message.failed("Thêm thất bại");
-        //     // });
-        updateManagement().then(() => {
-            message.success("Update thành công")
-        })
-    }
-
-    const handleChangeName = (e) => {
-        setNameManagement(e.target.value)
-    }
-
-    const handleDeparment = (e) => {
-        setCodeManagement(e.target.value)
-    }
-
-    const handlePhone = (e) => {
-        setPhoneNumber(e.target.value)
-    }
-
-    const handleAddress = (e) => {
-        setAddress(e.target.value)
-    }
-
-    const handleEmployee = (value) => {
-        setEmployee(value.value)
-    }
-
-    // const handleArea = (e) => {
-    //     setArea(e.target.value)
-    // }
-
-    const handleAccount = (e) => {
-        setAccount(e.target.value)
-    }
-
-    const handlePassword = (e) => {
-        setPassword(e.target.value)
-    }
-
-    const handleResspassword = (e) => {
-        setRepasword(e.target.value)
-    }
-
-    console.log(valueTinh,valueHuyen,valueXa);
-
-    // const [value, setValue] = useState(['0-0-0']);
-
-    const onChangeTree = (value) => {
-        console.log('onChange ', value);
-        // setValue(value);
-    };
-
-    const handleTreeArea = (value) => {
-        console.log(value.toString());
-        setArea(value.toString());
-    }
-
-    const tProps = {
-        treeData,
-        onChangeTree,
-        treeCheckable: true,
-        showCheckedStrategy: SHOW_PARENT,
-        placeholder: 'Chọn nội dung',
-        style: {
-        width: '100%',
-        },
-    };
-
-    
-
-    console.log("selectedRow: ", selectedRow);
-
-    // const [managementTeamName, setManagementTeamName] = useState('');
-
-    // useEffect(() => {
-    //     if (mode === 'edit') {
-    //       setManagementTeamName(selectedRow?.ManagementTeamName || '');
-    //     } else {
-    //       setManagementTeamName('');
-    //     }
-    //   }, [mode, selectedRow]);
-
-    return (
-        <>
-            <WapperModal style={{width: '900px'}} title={title} visible={isModalVisiable} onOk={onOk} onCancel={handlehideModal}>
-                <Form autoComplete="off" form={form} onFinish={onFinish} layout='vertical'>
-                    <Row>
-                        <Col span={24}>
-                            <Form.Item 
-                                name="name" 
-                                label="Tên tổ quản lý"
-                                rules={[
-                                    {
-                                    required: true,
-                                    },
-                                ]}
-                                key={valueSelected?.ManagementTeamID} // Sử dụng key để re-render component khi valueSelected thay đổi
-                            >
-                            <div>
-                                <Input 
-                                       defaultValue={valueSelected?.ManagementTeamName || ''}
-                                       onChange={mode === 'edit' ? handleChangeNameEdit : handleChangeName} 
-                                       placeholder='Nhập nội dụng' style={{ width: '100%', display: 'block' }}
-                                />   
-                            </div>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col span={12}>
-                            <Form.Item name="codeDepart" label="Mã tổ chức"
-                                rules={[
-                                    {
-                                    required: true,
-                                    },
-                                ]}
-                                key={valueSelected?.ManagementTeamCode}
-                                >
-                                <Input 
-                                defaultValue={valueSelected?.ManagementTeamCode || ''}
-                                onChange={mode === 'edit' ? handleCodeManagementEdit : handleDeparment} 
-                                placeholder='Nhập nội dụng' />
-                            </Form.Item>
-                        </Col>
-                        <Col span={1}>
-                        </Col>
-                        <Col span={11}>
-                            <Form.Item name="phone" label="Số điện thoại"
-                                rules={[
-                                    {
-                                    required: true,
-                                    },
-                                ]}
-                                key={valueSelected?.PhoneNumber}
-                                >
-                                <Input 
-                                defaultValue={valueSelected?.PhoneNumber || ''}
-                                onChange={mode === 'edit' ? handlePhonetEdit : handlePhone} 
-                                placeholder='Nhập nội dụng' />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
-        
-                    <Row>
-                        <Col span={24}>
-                            <Form.Item name="address" label="Địa chỉ"
-                                rules={[
-                                    {
-                                    required: true,
-                                    },
-                                ]}
-                                key={valueSelected?.Address}
-                                >
-                                <Input 
-                                defaultValue={valueSelected?.Address || ''}
-                                onChange={mode === 'edit' ? handleAdrressEdit : handleAddress} 
-                                placeholder='Chọn nôi dụng'
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col span={24}>
-                            <Form.Item name="employee" label="Nhân viên trong công ty"
-                                rules={[
-                                    {
-                                    required: true,
-                                    },
-                                ]}
-                                key={valueSelected?.UserName}
-                                >
-                                {/* <Input onChange={handleEmployee} /> */}
-                                <Select
-                                    mode="tags"
-                                    showSearch
-                                    placeholder="Chọn nội dung"
-                                    optionFilterProp="children"
-                                    onChange={handleEmployee}
-                                    onSearch={onSearch}
-                                    filterOption={(input, option) =>
-                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                                    }
-                                    options={optionsStaff}
-                                    defaultValue={valueSelected?.UserName || ''}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col span={7}>
-                            <Form.Item name="account" label="Tài khoản"
-                                rules={[
-                                    {
-                                    required: mode === 'edit' ? false : true ,
-                                    },
-                                ]}
-                                // key={valueSelected?.ManagementTeamID}
-                                >
-                                <Input defaultValue={ mode === 'edit' ? "Không được nhập" : "" } onChange={handleAccount} />
-                            </Form.Item>
-                        </Col>
-                        <Col span={1}>
-                        </Col>
-                        <Col span={7}>
-                                <Form.Item name="pass" label="Mật khẩu"
-                                    rules={[
-                                        {
-                                        required: true,
-                                        },
-                                    ]}
-                                    // key={valueSelected?.ManagementTeamID}
-                                    >
-                                    <Input 
-                                        defaultValue={""}
-                                        onChange={mode === 'edit' ? handlePasswordEdit : handlePassword} 
-                                        placeholder='Chọn nôi dung'
-                                    />
-                                </Form.Item>
-                        </Col>
-                        <Col span={1}>
-                        </Col>
-                        <Col span={7}>
-                                <Form.Item name="repass" label="Mật khẩu xác nhận"
-                                    rules={[
-                                        {
-                                        required: true,
-                                        },
-                                    ]}
-                                    // key={valueSelected?.ManagementTeamID}
-                                    >
-                                    <Input 
-                                        defaultValue={""}
-                                        onChange={mode === 'edit' ? handleRePasswordEdit : handleResspassword} 
-                                        placeholder='Chọn nôi dung'
-                                    />
-                                </Form.Item>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col span={24}>
-                            <Form.Item name="kv" label="Khu vực quản lý"
-                                rules={[
-                                    {
-                                    required: true,
-                                    },
-                                ]}
-                                key={valueSelected?.RegionName}
-                                >
-                                {/* <Input onChange={handleArea} /> */}
-                                <TreeSelect 
-                                {...tProps} 
-                                onChange={handleTreeArea}
-                                defaultValue={valueSelected?.RegionName || ''}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col span={24}>
-                            <Form.Item>
-                                <Button htmlType="submit" type='primary' style={{float: 'right', display: 'block', background: 'var(--btn-primary-color)', width: '108px'}}>Ghi lại</Button>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                </Form>
-
-            </WapperModal>
-        </>
-    )
-}
-
-export default ModalAddUnits
+export default ModalAddUnits;
 
 // <Row>
 // <Col span={7}>
@@ -618,7 +531,7 @@ export default ModalAddUnits
 //     </Form.Item>
 // </Col>
 // <Col span={1}></Col>
-// <Col span={7}> 
+// <Col span={7}>
 //     <Form.Item name="thanh pho" label="Quận/Huyện"
 //         rules={[
 //             {
@@ -640,7 +553,7 @@ export default ModalAddUnits
 //     </Form.Item>
 // </Col>
 // <Col span={1}></Col>
-// <Col span={7}> 
+// <Col span={7}>
 //     <Form.Item name="quanhuyen" label="Xã/Phường"
 //         rules={[
 //             {
