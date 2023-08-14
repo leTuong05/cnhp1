@@ -187,7 +187,7 @@ function ListPositions({ filteredPosition, listpositionView }) {
 
     return (
         <>
-            <Search placeholder="input search text" onChange={handleSearch} style={{ width: 200 }} />
+            <Search placeholder="input search text" onChange={handleSearch} style={{ width: '100%' }} />
             <CustomTable
                 columns={columns}
                 dataSource={dataListView?.length > 0 ? dataListView : dataDefault}

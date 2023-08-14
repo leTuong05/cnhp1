@@ -5,38 +5,32 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import { fetchDeleteUser, fetchUser } from '../../../../../reducers/UserSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import ModalAdd from './ModalAdd';
 
 const { confirm } = Modal;
 function ListDirector() {
     const [hoveredRow, setHoveredRow] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
-        setIsModalOpen(true);
+    const dispatch = useDispatch();
+    const getListUser = () => {
+        dispatch(
+            fetchUser({
+                PageSize: 10,
+                CurrentPage: 1,
+                TextSearch: '',
+                DepartmentID: '',
+                IsActive: 1
+            })
+        );
     };
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
+    useEffect(() => {
+        getListUser();
+    }, []);
+    const listUserView = useSelector((state) => state?.user?.getUser?.Object);
 
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-    const dataSource = [
-        {
-            key: '1',
-            positions: 'Giám đốc',
-            note: 'Phó giám đốc'
-        },
-        {
-            key: '2',
-            positions: 'Giám đốc',
-            note: 'Phó giám đốc'
-        },
-        {
-            key: '3',
-            positions: 'Trưởng phòng',
-            note: 'Phó giám đốc'
-        }
-    ];
+    console.log('listUserView', listUserView);
 
     const columns = [
         {
@@ -48,27 +42,27 @@ function ListDirector() {
         },
         {
             title: 'Ảnh',
-            dataIndex: 'image'
+            dataIndex: 'Avatar'
         },
         {
             title: 'Tài khoản',
-            dataIndex: 'account'
+            dataIndex: 'UserName'
         },
         {
             title: 'Họ Tên',
-            dataIndex: 'name'
+            dataIndex: 'FullName'
         },
         {
             title: 'Email / SĐT',
-            dataIndex: 'email'
+            dataIndex: 'Contact'
         },
         {
             title: 'NHÓM QUYỀN',
-            dataIndex: 'permission'
+            dataIndex: 'RoleName'
         },
         {
             title: 'Chức danh',
-            dataIndex: 'positions',
+            dataIndex: 'PositionName',
             render: (value, record) => (
                 <div className="action">
                     <div>{value}</div>
@@ -76,8 +70,13 @@ function ListDirector() {
                         <>
                             <Row gutter={8} className="edit">
                                 <Col span={12}>
-                                    <CustomButton className={'icon-edit icon'} onClick={showModal}>
-                                        <FontAwesomeIcon icon={faPen} />
+                                    <CustomButton className={'icon-edit icon'}>
+                                        <FontAwesomeIcon
+                                            icon={faPen}
+                                            onClick={() => {
+                                                setIsModalOpen(true);
+                                            }}
+                                        />
                                     </CustomButton>
                                 </Col>
                                 <Col span={12}>
@@ -92,7 +91,7 @@ function ListDirector() {
                                                 okType: 'danger',
                                                 cancelText: 'No',
                                                 onOk() {
-                                                    console.log('OK');
+                                                    dispatch(fetchDeleteUser({ UserID: '3468a55e-19b6-48ce-97ab-784933feaee0' }));
                                                 },
                                                 onCancel() {
                                                     console.log('Cancel');
@@ -114,7 +113,7 @@ function ListDirector() {
         <div>
             <CustomTable
                 columns={columns}
-                dataSource={dataSource}
+                dataSource={listUserView}
                 onRow={(record, rowIndex) => {
                     return {
                         onMouseEnter: () => {
@@ -127,6 +126,7 @@ function ListDirector() {
                 }}
                 bordered
             />
+            <ModalAdd open={isModalOpen} />
         </div>
     );
 }

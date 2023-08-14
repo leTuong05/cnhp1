@@ -11,6 +11,9 @@ import positionSlice from './reducers/positionSlice.js';
 import departmentReducer from "./reducers/departmentSlice.js";
 import guestServiceReducer from "./reducers/guestServicesSlice.js";
 import roleSlice from './reducers/roleSlice.js';
+import roleReducer from './reducers/roleSlice.js';
+import categoryReducer from './reducers/functionSlice.js';
+import userDirectSlice from './reducers/UserSlice.js';
 import agentDirectory from './reducers/agentDirectory.js';
 const authPersistConfig = {
     key: 'auth',
@@ -26,8 +29,10 @@ const rootReducer = combineReducers({
     manage: managementTeamReducer,
     position: positionSlice,
     department: departmentReducer,
+    role: roleReducer,
+    category: categoryReducer,
+    user: userDirectSlice.reducer
     guestSerives: guestServiceReducer,
-    role: roleSlice,
     agent: agentDirectory
 });
 

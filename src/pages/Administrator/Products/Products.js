@@ -12,10 +12,14 @@ import CustomTable from '../../../components/Table';
 import { getAllProductInCard } from '../../../services/apis/cart';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { getAdminProduct, getAllProduct } from '../../../services/apis/products';
+import { useDispatch } from 'react-redux';
+import { fetchDeleteProduct } from '../../../reducers/productSlice';
 const Products = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataProduct, setDataProduct] = useState([]);
     const [hoveredRow, setHoveredRow] = useState(null);
+
+    const dispatch = useDispatch();
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -93,11 +97,11 @@ const Products = () => {
                                 <Col span={12}>
                                     <CustomButton
                                         className={'icon-edit icon'}
-                                        // onClick={() => {
-                                        //     setIsModalOpen(true);
-                                        //     setDataInfo(record);
-                                        //     // console.log(record.PositionID);
-                                        // }}
+                                        onClick={() => {
+                                            setIsModalOpen(true);
+                                            // setDataInfo(record);
+                                            // console.log(record.PositionID);
+                                        }}
                                     >
                                         <FontAwesomeIcon icon={faPen} />
                                     </CustomButton>
@@ -173,27 +177,42 @@ const Products = () => {
             children: <CustomTable columns={columns} dataSource={data} rowSelection={rowSelection} />
         }
     ];
+    const getList = async () => {
+        try {
+            const response = await getAdminProduct();
+            setDataProduct(response.Object?.listProduct);
+            // debugger;
+            return response;
+        } catch (error) {
+            // debugger;
+            return error;
+        }
+    };
     const operations = (
         <div className="group-btn">
             <CustomButton onClick={showModal}>Thêm sản phẩm</CustomButton>
-            <CustomButton backgroundColor="transparent" color={colors.black}>
+            <CustomButton
+                backgroundColor="transparent"
+                color={colors.black}
+                onClick={() => {
+                    for (const id of selectedRowKeys) {
+                        dispatch(
+                            fetchDeleteProduct({
+                                ProductID: id
+                            })
+                        ).then(() => {
+                            getList();
+                        });
+                    }
+                }}
+            >
                 Xóa
             </CustomButton>
         </div>
     );
     console.log('dataProduct', dataProduct);
+
     useEffect(() => {
-        const getList = async () => {
-            try {
-                const response = await getAdminProduct();
-                setDataProduct(response.Object?.listProduct);
-                // debugger;
-                return response;
-            } catch (error) {
-                // debugger;
-                return error;
-            }
-        };
         getList();
     }, []);
     return (

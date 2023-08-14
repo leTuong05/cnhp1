@@ -17,7 +17,7 @@ function ListUser() {
                 <Divider />
             </div>
             <div className="head-group">
-                <div className="title">Danh sách nhóm quyền</div>
+                <div className="title">Danh sách nhóm quyề</div>
                 <div>
                     <CustomButton
                         backgroundColor={colors.primary}
