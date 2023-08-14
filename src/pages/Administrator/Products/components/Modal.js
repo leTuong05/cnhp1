@@ -1,4 +1,4 @@
-import { Form, Modal, Upload, Row, Col, Input, DatePicker, Button } from 'antd';
+import { Form, message, Upload, Row, Col, Input, DatePicker, Button } from 'antd';
 import { FileImageOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import TinyEditor from './TinyEditor';
 import { colors } from '../../../../styles';
@@ -11,29 +11,39 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
 function CustomModal({ open, onOk, onCancel, onClick }) {
     const [nameProduct, setNameProduct] = useState('');
-    const [fileList, setFileList] = useState([]);
+    const [priceProduct, setPriceProduct] = useState('');
+    const [stockProduct, setStockProduct] = useState('');
+    const [imgProduct, setImgProduct] = useState(undefined);
+    // const [fileList, setFileList] = useState([]);
 
     const dispatch = useDispatch();
     console.log('nameProduct', nameProduct);
-    const normFile = (e) => {
-        if (Array.isArray(e)) {
-            return e;
+
+    const props = {
+        beforeUpload: (file) => {
+            return new Promise((resolve, reject) => {
+                if (file.size > 9000000) {
+                    reject('File size exceeded');
+                    // message.error("File size exceeded");
+                } else {
+                    resolve('Success');
+                }
+            });
+        },
+        customRequest: (info) => {
+            setImgProduct([info.file]);
         }
-        return e?.fileList;
     };
+
     const onFinish = (values) => {
         console.log('Success:', values);
-        const FormData = require('form-data');
-
-        const formData = new FormData();
-        formData.append('ProductID', uuidv4());
-        formData.append('ProductName', values.ProductName);
-        formData.append('Price', values.Price);
-        formData.append('QuantityStock', values.QuantityStock);
-        console.log('formData', formData);
         dispatch(
-            fetchAddProduct(formData, {
-                headers: formData.getHeaders()
+            fetchAddProduct({
+                ProductID: uuidv4(),
+                ProductName: nameProduct,
+                Price: priceProduct,
+                QuantityStock: stockProduct,
+                fileImg: imgProduct
             })
         );
         // .then(() => {
@@ -47,23 +57,46 @@ function CustomModal({ open, onOk, onCancel, onClick }) {
         // });
     };
 
-    const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
-    console.log('fileList', fileList);
+    // const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+    // console.log('fileList', fileList);
     return (
         <ModalStyled title="Thêm sản phẩm" open={open} onOk={onOk} onCancel={onCancel} width={1024} footer={null}>
             <Form layout="vertical" onFinish={onFinish}>
-                <Form.Item label="Hình ảnh sản phẩm" name="Image" valuePropName="fileList" getValueFromEvent={normFile} required className="upload-form">
-                    <CustomUpload fileList={fileList} onChange={handleChange}>
-                        {fileList.length >= 10 ? null : (
-                            <div className="upload-items">
-                                <FileImageOutlined />
-                                <div style={{ color: colors.primary, fontSize: 12, fontWeight: 600 }}>Chọn ảnh</div>
-                            </div>
-                        )}
+                <Form.Item
+                    label="Hình ảnh sản phẩm"
+                    name="Image"
+                    valuePropName="fileList"
+                    required
+                    className="upload-form"
+                    getValueFromEvent={(event) => {
+                        return event?.fileList;
+                    }}
+                    rules={[
+                        {
+                            required: true
+                        },
+                        {
+                            validator(_, fileList) {
+                                return new Promise((resolve, reject) => {
+                                    if (fileList && fileList[0].size > 90000000) {
+                                        reject('File size exceeded');
+                                    } else {
+                                        resolve('Success');
+                                    }
+                                });
+                            }
+                        }
+                    ]}
+                >
+                    <CustomUpload {...props} showUploadList={false}>
+                        <div className="upload-items">
+                            <FileImageOutlined />
+                            <div style={{ color: colors.primary, fontSize: 12, fontWeight: 600 }}>Chọn ảnh</div>
+                        </div>
                     </CustomUpload>
                     <span className="upload-text">Dung lượng file tối đa 5MB, định dạng:.JPG, .JPEG, .PNG, .SVG</span>
                 </Form.Item>
-                <Form.Item label="Video sản phẩm" valuePropName="fileList" getValueFromEvent={normFile} required className="upload-form">
+                <Form.Item label="Video sản phẩm" valuePropName="fileList" required className="upload-form">
                     <Upload action="/upload.do">
                         <div className="upload-items">
                             <VideoCameraAddOutlined />
@@ -78,17 +111,34 @@ function CustomModal({ open, onOk, onCancel, onClick }) {
                     </ul>
                 </Form.Item>
                 <Form.Item label="Tên sản phẩm" name="ProductName" required>
-                    <Input placeholder="Nhập tên" />
+                    <Input
+                        placeholder="Nhập tên"
+                        onChange={(e) => {
+                            setNameProduct(e.target.value);
+                        }}
+                    />
                 </Form.Item>
                 <Row gutter={30}>
                     <Col span={12}>
                         <Form.Item label="Đơn giá" name="Price" required>
-                            <Input type="number" placeholder="Nhập giá" />
+                            <Input
+                                type="number"
+                                placeholder="Nhập giá"
+                                onChange={(e) => {
+                                    setPriceProduct(e.target.value);
+                                }}
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item label="Kho hàng" name="QuantityStock" required>
-                            <Input type="number" placeholder="Nhập số lượng" />
+                            <Input
+                                type="number"
+                                placeholder="Nhập số lượng"
+                                onChange={(e) => {
+                                    setStockProduct(e.target.value);
+                                }}
+                            />
                         </Form.Item>
                     </Col>
                 </Row>
