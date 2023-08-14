@@ -85,6 +85,7 @@ import GuestDirectory from "../pages/Administrator/ManageSystem/GuestDirectory";
 import WaterConfig from "../pages/Administrator/WaterConfig";
 import TemporarilyStopWater from "../pages/Administrator/TemporarilyStopWater";
 import PhonebookGuest from "../pages/Administrator/ManageSystem/PhonebookGuest";
+import PhonebookBusiness from "../pages/Administrator/PhonebookBusiness";
 
 export const routeAdmin = [
   { path: "/tong-quan", component: TongQuan, layout: true },
@@ -101,14 +102,7 @@ export const routeAdmin = [
     component: ContractRenewalService,
     layout: true,
   },
-  { path: "/dv-thanh-toan-tien-nuoc", component: PaymentService, layout: true },
   { path: "/dv-sua-chua", component: RepairService, layout: true },
-  {
-    path: "/dv-thong-tin-khach-hang",
-    component: EditInfoService,
-    layout: true,
-  },
-  { path: "/dv-tra-cuu", component: SearchInfoService, layout: true },
   { path: "/don-gia-dinh-muc", component: WaterConfig, layout: true },
 
   // SẢn phẩm
@@ -119,7 +113,7 @@ export const routeAdmin = [
   { path: "/danh-ba-nguoi-dung", component: UserDirectory, layout: true },
   { path: "/phan-quyen", component: ListUser, layout: true },
   { path: "/danh-ba-khach-hang", component: PhonebookGuest, layout: true },
-  { path: "/danh-ba-doanh-nghiep", component: GuestDirectory, layout: true },
+  { path: "/danh-ba-doanh-nghiep", component: PhonebookBusiness, layout: true },
 
   { path: "/to-quan-ly", component: ToQuanLy, layout: true },
   { path: "/danh-muc-the", component: DanhMucThe, layout: true },

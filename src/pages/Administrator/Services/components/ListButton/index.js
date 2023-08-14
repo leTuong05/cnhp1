@@ -8,23 +8,23 @@ const ListButton = ({ id, listTicket, setListTicket,type }) => {
     const [showReceive, setShowReceive] = useState(true)
     const [showComplete, setShowComplete] = useState(true)
 
-    const filteredListTicket = listTicket?.filter((ticket) => id.includes(ticket.TicketListID));
-    const filterListTicketReceive = filteredListTicket.filter((ticket) => ticket.TicketStatus === 1)
-    const filterListTicketComplete = filteredListTicket.filter((ticket) => ticket.TicketStatus === 2)
+    const filteredListTicket = listTicket?.filter((ticket) => id.includes(ticket?.TicketListID));
+    const filterListTicketReceive = filteredListTicket?.filter((ticket) => ticket?.TicketStatus === 1)
+    const filterListTicketComplete = filteredListTicket?.filter((ticket) => ticket?.TicketStatus === 2)
 
 
     console.log('listID', id);
     useEffect(() => {
-        if (filterListTicketReceive.length === 0) {
+        if (filterListTicketReceive?.length === 0) {
             setShowReceive(true);
         }
-        if (filterListTicketComplete.length === 0) {
+        if (filterListTicketComplete?.length === 0) {
             setShowComplete(true);
         }
-        if (filterListTicketReceive.length !== 0) {
+        if (filterListTicketReceive?.length !== 0) {
             setShowReceive(false);
         }
-        if (filterListTicketComplete.length !== 0) {
+        if (filterListTicketComplete?.length !== 0) {
             setShowComplete(false);
         }
 

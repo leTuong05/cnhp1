@@ -23,3 +23,15 @@ export const DeleteGuest = (UserID) => {
 export const UpdateGuest = (body) => {
     return axiosInstance.put('User/UpdateGuest', body)
 }
+
+export const GetAgent = (body) =>{
+    return axiosInstance.post('User/GetAgent',body)
+}
+
+export const DeleteAgent = (UserID) =>{
+    return axiosInstance.patch(`User/DeleteAgent?UserID=${UserID}`)
+}
+
+export const UpdateAgent = (body) => {
+    return axiosInstance.put('User/UpdateAgent', body)
+}
