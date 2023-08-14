@@ -233,19 +233,19 @@ const Private = () => {
     setValueContent(e.target.value);
   };
 
-  const onFinish = () => {
+  const onFinish = (values) => {
     dispatch(
       fetchLapDatTuNhan({
         CustomerName: nameClient,
         RequestType: 1,
-        PhoneNumber: valuePhone,
-        Email: valueEmail,
-        ProvinceID: valueTinh,
-        DistrictID: valueHuyen,
-        WardID: valueXa,
-        AddressUseWater: valueAdress,
-        PurposeUseType: valuePurpose,
-        Content: valueContent,
+        PhoneNumber: values.PhoneNumber,
+        Email: values.Email,
+        ProvinceID: values.ProvinceID,
+        DistrictID: values.DistrictID,
+        WardID: values.WardID,
+        AddressUseWater: values.AddressUseWater,
+        PurposeUseType: values.PurposeUseType,
+        Content: values.Content,
         file_CCCD: fileIDCard,
         file_QSD: fileUsing,
         file: "",
@@ -253,7 +253,9 @@ const Private = () => {
     );
   };
 
-  // const onFinish = () => {};
+  // const onFinish = (values) => {
+  //   console.log("values>>", values);
+  // };
 
   const handleOnclickBtn = () => {
     if (nameClient == null) {
@@ -274,15 +276,7 @@ const Private = () => {
       >
         <Row gutter={16}>
           <Col span={8}>
-            <Form.Item
-              label="Tên khách hàng"
-              name="tenKH"
-              // rules={[
-              //   {
-              //     required: true,
-              //   },
-              // ]}
-            >
+            <Form.Item label="Tên khách hàng" name="CustomerName">
               <Input
                 defaultValue={nameClient ? nameClient : null}
                 onChange={handleName}
@@ -295,7 +289,7 @@ const Private = () => {
           <Col span={8}>
             <Form.Item
               label="Điện thoại liên hệ"
-              name="dienthoai"
+              name="PhoneNumber"
               rules={[
                 {
                   required: true,
@@ -308,7 +302,7 @@ const Private = () => {
           <Col span={8}>
             <Form.Item
               label="Email liên hệ"
-              name="email"
+              name="Email"
               rules={[
                 {
                   required: true,
@@ -324,7 +318,7 @@ const Private = () => {
           <Col span={8}>
             <Form.Item
               label="Tỉnh"
-              name="Tinh"
+              name="ProvinceID"
               rules={[
                 {
                   required: true,
@@ -350,7 +344,7 @@ const Private = () => {
           <Col span={8}>
             <Form.Item
               label="Quận/ Huyện"
-              name="huyen"
+              name="DistrictID"
               rules={[
                 {
                   required: true,
@@ -377,7 +371,7 @@ const Private = () => {
           <Col span={8}>
             <Form.Item
               label="Xã/ Phường"
-              name="xa"
+              name="WardID"
               rules={[
                 {
                   required: true,
@@ -406,7 +400,7 @@ const Private = () => {
           <Col span={24}>
             <Form.Item
               label="Số nhà/tổ/thôn/xóm:"
-              name="sonha"
+              name="AddressUseWater"
               rules={[
                 {
                   required: true,
@@ -424,7 +418,7 @@ const Private = () => {
           <Col span={24}>
             <Form.Item
               label="Mục đích sử dụng:"
-              name="mucdich"
+              name="PurposeUseType"
               rules={[
                 {
                   required: true,
@@ -444,7 +438,7 @@ const Private = () => {
         </Row>
         <Row>
           <Col span={24}>
-            <Form.Item label="Nôi dung:">
+            <Form.Item label="Nôi dung:" name="Content">
               <TextArea
                 onChange={handleContent}
                 rows={4}
@@ -468,7 +462,7 @@ const Private = () => {
         <Row>
           <Form.Item
             label="Giấy chứng minh thư nhân dân/Căn cước công dân"
-            name="cccd"
+            name="file_CCCD"
             valuePropName="fileList"
             getValueFromEvent={(event) => {
               return event?.fileList;
@@ -518,7 +512,7 @@ const Private = () => {
         <Row>
           <Form.Item
             label="Giấy chứng nhận Quyền sở hữu/sử dụng nhà đất"
-            name="sohudat"
+            name="file_QSD"
             valuePropName="fileListUsing"
             getValueFromEvent={(event) => {
               return event?.fileList;
@@ -568,7 +562,7 @@ const Private = () => {
         <Row>
           <Form.Item
             label="Giấy tờ khác (nếu có)"
-            name="khac"
+            name="file"
             rules={[
               {
                 required: false,

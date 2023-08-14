@@ -84,7 +84,7 @@ const updateManageTeamSlice = createSlice({
       .addCase(fetchUpdateManageTeam.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.updateManageTeam = action.payload;
-        message.success("Sửa thành công")
+        message.success("Sửa thành công");
       })
       .addCase(fetchUpdateManageTeam.rejected, (state, action) => {
         state.status = "failed";
@@ -269,10 +269,8 @@ export const fetchgetList = createAsyncThunk(
   async (body, { rejectWithValue }) => {
     try {
       const response = await getListManagementTeam(body);
-      // debugger;
       return response;
     } catch (error) {
-      // debugger;
       return rejectWithValue(error);
     }
   }
@@ -284,7 +282,6 @@ export const fetchgetListAll = createAsyncThunk(
   async (rejectWithValue) => {
     try {
       const response = await getAll();
-      // debugger;
       return response;
     } catch (error) {
       return rejectWithValue(error);
@@ -298,10 +295,8 @@ export const fetchUpdateManageTeam = createAsyncThunk(
   async (body, { rejectWithValue }) => {
     try {
       const response = await updateManagementTeam(body);
-      debugger;
       return response;
     } catch (error) {
-      debugger;
       return rejectWithValue(error);
     }
   }
@@ -326,7 +321,6 @@ export const fetchCreateManageTeam = createAsyncThunk(
   async (body, { rejectWithValue }) => {
     try {
       const response = await createManagementTeam(body);
-      debugger;
       return response;
     } catch (error) {
       debugger;

@@ -96,13 +96,6 @@ const options = [
   },
 ];
 
-// for (let i = 10; i < 36; i++) {
-//   options.push({
-//     value: i.toString(36) + i,
-//     label: i.toString(36) + i,
-//   });
-// }
-
 const { Search } = Input;
 
 const ManagePosts = () => {
@@ -124,7 +117,7 @@ const ManagePosts = () => {
     (state) => state?.postCategory?.postList?.postList?.Object
   );
 
-  console.log(postList);
+  // console.log(postList);
 
   //treeData
   // const treeData = getTreeData(postCategoryList);
@@ -329,7 +322,7 @@ const ManagePosts = () => {
   ];
 
   const handleRowClick = (record) => {
-    console.log("recordddd", record.PostID);
+    // console.log("recordddd", record.PostID);
     setSelectedRow(record);
   };
   const cancel = (e) => {
@@ -338,11 +331,11 @@ const ManagePosts = () => {
   };
 
   const handleRepost = (record) => {
-    console.log("repost", record);
+    // console.log("repost", record);
   };
 
   const handleCacel = (record) => {
-    console.log("repost", record);
+    // console.log("repost", record);
   };
 
   //get danh muc
@@ -365,7 +358,7 @@ const ManagePosts = () => {
 
   //hàm SEARCH theo textSearch
   const onSearch = (value) => {
-    console.log(value);
+    // console.log(value);
     dispatch(
       fetchPostList({
         PageSize: 20,
@@ -379,7 +372,7 @@ const ManagePosts = () => {
 
   //LỌC TRẠNG THÁI
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
     dispatch(
       fetchPostList({
         PageSize: 20,
