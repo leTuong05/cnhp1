@@ -11,6 +11,7 @@ import positionSlice from './reducers/positionSlice.js';
 import departmentReducer from "./reducers/departmentSlice.js";
 import guestServiceReducer from "./reducers/guestServicesSlice.js";
 import roleSlice from './reducers/roleSlice.js';
+import agentDirectory from './reducers/agentDirectory.js';
 const authPersistConfig = {
     key: 'auth',
     storage
@@ -18,15 +19,16 @@ const authPersistConfig = {
 
 const rootReducer = combineReducers({
 
-  auth: persistReducer(authPersistConfig, authReducer),
-  overView: overViewReducer, //add OverviewSlice
-  tags: tagsReducer,
-  postCategory: postCategoryReducer,
-  manage: managementTeamReducer,
-  position: positionSlice,
-  department: departmentReducer,
-  guestSerives: guestServiceReducer,
-  role: roleSlice
+    auth: persistReducer(authPersistConfig, authReducer),
+    overView: overViewReducer, //add OverviewSlice
+    tags: tagsReducer,
+    postCategory: postCategoryReducer,
+    manage: managementTeamReducer,
+    position: positionSlice,
+    department: departmentReducer,
+    guestSerives: guestServiceReducer,
+    role: roleSlice,
+    agent: agentDirectory
 });
 
 const store = configureStore({

@@ -17,7 +17,7 @@ const items = [
     getItem('Tổng quan', '/tong-quan', <MailOutlined />),
 
     getItem('Quản lý phiếu', 'sub1', <AppstoreOutlined />, [getItem('Hóa đơn nước', '/hoa-don-nuoc'), getItem('Đơn hàng', '/don-hang')]),
-    getItem('Dịch vụ', 'sub2', <AppstoreOutlined />, [getItem('Lắp đặt/Sửa chữa máy nước', '/dv-lap-dat-may-nuoc'), getItem('Sang tên hợp đồng DVCN', '/dv-sang-ten-hop-dong'), getItem('Cấp lại hợp đồng DVCN', '/dv-cap-lai-hop-dong'), getItem('Đăng ký thanh toán tiền nước', '/dv-thanh-toan-tien-nuoc'), getItem('Sửa chữa (ĐH, mạng lưới cấp nước sau đồng hồ)', '/dv-sua-chua'), getItem('Đăng ký thay đổi thông tin', '/dv-thong-tin-khach-hang'), getItem('Tra cứu sử dụng nước', '/dv-tra-cuu')]),
+    getItem('Dịch vụ', 'sub2', <AppstoreOutlined />, [getItem('Lắp đặt/Sửa chữa máy nước', '/dv-lap-dat-may-nuoc'), getItem('Sang tên hợp đồng DVCN', '/dv-sang-ten-hop-dong'), getItem('Cấp lại hợp đồng DVCN', '/dv-cap-lai-hop-dong'), getItem('Sửa chữa (ĐH, mạng lưới cấp nước sau đồng hồ)', '/dv-sua-chua')]),
     getItem('Sản phẩm', 'sub3', <AppstoreOutlined />, [getItem('Kho hàng', '/kho-hang')]),
     getItem('Quản lý bài đăng', 'sub4', <AppstoreOutlined />, [getItem('Danh mục - Bài viết', '/danh-sach-bai-viet'), getItem('Danh mục thẻ', '/danh-muc-the')]),
     getItem('Lịch tạm ngừng cấp nước', '/lich-cap-nuoc', <MailOutlined />),

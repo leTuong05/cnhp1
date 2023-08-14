@@ -19,7 +19,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
     useEffect(() => {
         const getRegion = async () => {
             const res = await GetRegionByParentId(4050)
-            setListDistrict(res.Object)
+            setListDistrict(res?.Object)
         }
         getRegion()
     }, [])
@@ -31,7 +31,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
     useEffect(() => {
         const getRegion = async () => {
             const res = await GetRegionByParentId(parentID)
-            setListWard(res.Object)
+            setListWard(res?.Object)
         }
         getRegion()
     }, [parentID])
@@ -83,8 +83,7 @@ const ModalInsertGuest = ({ isModalOpen, onCancel, onInsertGuest, recordSelected
             const update = async () => {
                 try{
                     await UpdateGuest({
-                        UserID: recordSelected.UserID,
-    
+                        UserID: recordSelected.UserID,   
                         FullName: values.FullName,
                         PhoneNumber: values.PhoneNumber,
                         Email: values.Email,
