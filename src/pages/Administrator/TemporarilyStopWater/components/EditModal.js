@@ -1,4 +1,4 @@
-import { CloudUploadOutlined } from "@ant-design/icons";
+import { CloudUploadOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -8,11 +8,9 @@ import {
   Modal,
   Row,
   Select,
-  TimePicker,
   Upload,
-  message,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   InsertTemporarilyStopWater,
   UpdateTemporarilyStopWater,
@@ -33,6 +31,11 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
   const [type, setType] = useState(1);
   const [form] = Form.useForm();
   const currentTime = new Date();
+  const fromDate = moment(data?.FromDate);
+  const toDate = moment(data?.toDate);
+  const [fileList, setFileList] = useState([]);
+  const file = fileList ? Object.values(fileList)[0] : null;
+  console.log("fileList>>>>", file);
 
   const title = !!isEdit
     ? "Cập nhật lịch tạm ngừng cấp nước"
@@ -91,8 +94,6 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
               ProvinceID: values?.ProvinceID,
               DistrictID: values?.DistrictID,
               WardID: values?.WardID,
-              FromDate: values?.time[0],
-              ToDate: values?.time[1],
               File: values?.file,
             })
           : InsertTemporarilyStopWater({
@@ -117,9 +118,17 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
       console.log(info.fileList);
     },
   };
-  form.setFieldsValue({
-    ...data,
-  });
+  useEffect(() => {
+    console.log(data);
+    form.setFieldsValue({
+      DistrictID: "",
+      ProvinceID: "",
+      WardID: "",
+      company: data?.WaterCompany,
+      file: "",
+      // time: [fromDate, toDate],
+    });
+  }, []);
 
   return (
     <StopWaterModalStyle>
@@ -130,6 +139,14 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
         footer={footer}
         width={1000}
       >
+        <Button
+          onClick={() => {
+            console.log(form.validateFields());
+            console.log(data);
+          }}
+        >
+          test
+        </Button>
         <Form form={form} layout="vertical">
           <Row gutter={[16, 16]}>
             <Col span={16}>
@@ -160,10 +177,9 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
                   },
                 ]}
               >
-                <RangePicker
+                <DatePicker.RangePicker
                   showTime={{ format: "HH:mm" }}
                   format="YYYY-MM-DD HH:mm"
-                  defaultValue={[data?.FromDate, data?.ToDate]}
                 />
               </Form.Item>
             </Col>
@@ -240,17 +256,47 @@ const EditModal = ({ open, onCancel, data, isEdit, listProvince }) => {
             </Col>
           </Row>
 
-          <Form.Item name="file" label="file đính kèm">
-            <Dragger {...props} multiple={false}>
-              <div className="upload-div">
-                <p className="ant-upload-drag-icon">
-                  <CloudUploadOutlined />
-                </p>
-                <p className="ant-upload-text">
-                  Kéo thả file đính kèm hoặc chọn file
-                </p>
-              </div>
-            </Dragger>
+          <Form.Item
+            valuePropName="fileList"
+            getValueFromEvent={(event) => {
+              return event?.fileList;
+            }}
+            rules={[
+              {
+                validator(_, fileList) {
+                  return new Promise((resolve, reject) => {
+                    if (fileList && fileList[0].size > 90000000) {
+                      reject("File size exceeded");
+                    } else {
+                      resolve("Success");
+                    }
+                  });
+                },
+              },
+            ]}
+          >
+            <Upload
+              maxCount={1}
+              beforeUpload={(file) => {
+                return new Promise((resolve, reject) => {
+                  if (file.size > 9000000) {
+                    reject("File size exceeded");
+                    // message.error("File size exceeded");
+                  } else {
+                    resolve("Success");
+                  }
+                });
+              }}
+              customRequest={(info) => {
+                setFileList([info.file]);
+              }}
+              showUploadList={false}
+              defaultValue={file || null}
+            >
+              <Row />
+              <Button icon={<UploadOutlined />}>Thêm ảnh</Button>
+            </Upload>
+            {fileList[0]?.name}
           </Form.Item>
         </Form>
       </Modal>

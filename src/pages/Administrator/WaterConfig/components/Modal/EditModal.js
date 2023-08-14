@@ -30,17 +30,20 @@ const EditModal = ({ open, onCancel, isEdit, data, getList }) => {
     form
       .validateFields()
       .then((values) => {
-        if (form?.errors) return;
-
         UpdateWaterConfig({
           ...values,
           WaterPriceID: open?.WaterPriceID,
+        }).then(() => {
+          getList();
+          onCancel();
         });
       })
+      .catch((errors) => {
+        console.log(errors);
+        return;
+      })
       .finally(() => {
-        getList();
         setLoading(false);
-        onCancel();
       });
   };
 
@@ -52,19 +55,28 @@ const EditModal = ({ open, onCancel, isEdit, data, getList }) => {
         if (form?.errors) return;
         InsertWaterConfig({
           ...values,
+        }).then(() => {
+          getList();
+          onCancel();
         });
       })
+      .catch((errors) => {
+        console.log(errors);
+        return;
+      })
       .finally(() => {
-        getList();
         setLoading(false);
-        onCancel();
       });
   };
 
   useEffect(() => {
-    form.setFieldsValue({
-      ...data,
-    });
+    isEdit
+      ? form.setFieldsValue({
+          ...data,
+        })
+      : form.setFieldsValue({
+          WaterPriceType: 1,
+        });
   }, [data]);
 
   return (
